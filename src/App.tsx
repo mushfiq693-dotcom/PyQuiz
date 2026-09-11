@@ -91,10 +91,10 @@ export const App: React.FC = () => {
     } else if (newRole === 'student') {
       setCurrentView('student-join');
     } else if (newRole === 'practice') {
-      const set = syllabusSections[2].sets[0];
+      const set = syllabusSections[1].sets[0]; // Module 2: STL in Python
       const practiceSession: QuizSessionConfig = {
         quizId: `practice-${Date.now()}`,
-        quizTitle: 'Python Data Structures Practice Exam',
+        quizTitle: 'Python STL & Collections Practice Exam',
         sectionName: set.sectionName,
         setName: set.setName,
         joinCode: 'PRACTICE',
@@ -218,7 +218,7 @@ export const App: React.FC = () => {
       targetSession = {
         quizId: `session-${Date.now()}`,
         quizTitle: 'Python Assessment',
-        sectionName: 'Section 1',
+        sectionName: 'Module 1: Basics',
         setName: 'Set 1',
         joinCode: data.quizCode,
         totalQuestions: 30,

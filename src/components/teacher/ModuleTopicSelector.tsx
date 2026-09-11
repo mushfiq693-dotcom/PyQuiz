@@ -36,59 +36,59 @@ const COLOR_STYLES: Record<
 > = {
   blue: {
     headerBg: 'bg-[#1E3A8A] text-white',
-    badgeBg: 'bg-white text-[#1E3A8A] shadow-sm',
-    border: 'border-[#1E3A8A]/30',
-    accentText: 'text-[#1E3A8A]',
-    subtopicTagActive: 'bg-[#EFF6FF] text-[#1E40AF] border-[#BFDBFE]',
-    subtopicTagInactive: 'bg-[#F5F3F0] text-[#A8A29E] border-[#E8E4DF] line-through opacity-60',
+    badgeBg: 'bg-editorial-card text-editorial-fg shadow-sm',
+    border: 'border-blue-500/30',
+    accentText: 'text-blue-700 dark:text-blue-300',
+    subtopicTagActive: 'bg-blue-500/10 text-blue-800 dark:text-blue-300 border-blue-500/30 font-medium',
+    subtopicTagInactive: 'bg-editorial-muted text-editorial-muted-fg border-editorial-border line-through opacity-50',
   },
   emerald: {
     headerBg: 'bg-[#14532D] text-white',
-    badgeBg: 'bg-white text-[#14532D] shadow-sm',
-    border: 'border-[#14532D]/30',
-    accentText: 'text-[#14532D]',
-    subtopicTagActive: 'bg-[#F0FDF4] text-[#166534] border-[#BBF7D0]',
-    subtopicTagInactive: 'bg-[#F5F3F0] text-[#A8A29E] border-[#E8E4DF] line-through opacity-60',
+    badgeBg: 'bg-editorial-card text-editorial-fg shadow-sm',
+    border: 'border-emerald-500/30',
+    accentText: 'text-emerald-700 dark:text-emerald-300',
+    subtopicTagActive: 'bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/30 font-medium',
+    subtopicTagInactive: 'bg-editorial-muted text-editorial-muted-fg border-editorial-border line-through opacity-50',
   },
   purple: {
     headerBg: 'bg-[#581C87] text-white',
-    badgeBg: 'bg-white text-[#581C87] shadow-sm',
-    border: 'border-[#581C87]/30',
-    accentText: 'text-[#581C87]',
-    subtopicTagActive: 'bg-[#FAF5FF] text-[#6B21A8] border-[#E9D5FF]',
-    subtopicTagInactive: 'bg-[#F5F3F0] text-[#A8A29E] border-[#E8E4DF] line-through opacity-60',
+    badgeBg: 'bg-editorial-card text-editorial-fg shadow-sm',
+    border: 'border-purple-500/30',
+    accentText: 'text-purple-700 dark:text-purple-300',
+    subtopicTagActive: 'bg-purple-500/10 text-purple-800 dark:text-purple-300 border-purple-500/30 font-medium',
+    subtopicTagInactive: 'bg-editorial-muted text-editorial-muted-fg border-editorial-border line-through opacity-50',
   },
   amber: {
     headerBg: 'bg-[#92400E] text-white',
-    badgeBg: 'bg-white text-[#92400E] shadow-sm',
-    border: 'border-[#92400E]/30',
-    accentText: 'text-[#92400E]',
-    subtopicTagActive: 'bg-[#FFFBEB] text-[#92400E] border-[#FDE68A]',
-    subtopicTagInactive: 'bg-[#F5F3F0] text-[#A8A29E] border-[#E8E4DF] line-through opacity-60',
+    badgeBg: 'bg-editorial-card text-editorial-fg shadow-sm',
+    border: 'border-amber-500/30',
+    accentText: 'text-amber-700 dark:text-amber-300',
+    subtopicTagActive: 'bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/30 font-medium',
+    subtopicTagInactive: 'bg-editorial-muted text-editorial-muted-fg border-editorial-border line-through opacity-50',
   },
   cyan: {
     headerBg: 'bg-[#155E75] text-white',
-    badgeBg: 'bg-white text-[#155E75] shadow-sm',
-    border: 'border-[#155E75]/30',
-    accentText: 'text-[#155E75]',
-    subtopicTagActive: 'bg-[#ECFEFF] text-[#155E75] border-[#A5F3FC]',
-    subtopicTagInactive: 'bg-[#F5F3F0] text-[#A8A29E] border-[#E8E4DF] line-through opacity-60',
+    badgeBg: 'bg-editorial-card text-editorial-fg shadow-sm',
+    border: 'border-cyan-500/30',
+    accentText: 'text-cyan-700 dark:text-cyan-300',
+    subtopicTagActive: 'bg-cyan-500/10 text-cyan-800 dark:text-cyan-300 border-cyan-500/30 font-medium',
+    subtopicTagInactive: 'bg-editorial-muted text-editorial-muted-fg border-editorial-border line-through opacity-50',
   },
   rose: {
     headerBg: 'bg-[#9F1239] text-white',
-    badgeBg: 'bg-white text-[#9F1239] shadow-sm',
-    border: 'border-[#9F1239]/30',
-    accentText: 'text-[#9F1239]',
-    subtopicTagActive: 'bg-[#FFF1F2] text-[#9F1239] border-[#FECDD3]',
-    subtopicTagInactive: 'bg-[#F5F3F0] text-[#A8A29E] border-[#E8E4DF] line-through opacity-60',
+    badgeBg: 'bg-editorial-card text-editorial-fg shadow-sm',
+    border: 'border-rose-500/30',
+    accentText: 'text-rose-700 dark:text-rose-300',
+    subtopicTagActive: 'bg-rose-500/10 text-rose-800 dark:text-rose-300 border-rose-500/30 font-medium',
+    subtopicTagInactive: 'bg-editorial-muted text-editorial-muted-fg border-editorial-border line-through opacity-50',
   },
   indigo: {
     headerBg: 'bg-[#312E81] text-white',
-    badgeBg: 'bg-white text-[#312E81] shadow-sm',
-    border: 'border-[#312E81]/30',
-    accentText: 'text-[#312E81]',
-    subtopicTagActive: 'bg-[#EEF2FF] text-[#3730A3] border-[#C7D2FE]',
-    subtopicTagInactive: 'bg-[#F5F3F0] text-[#A8A29E] border-[#E8E4DF] line-through opacity-60',
+    badgeBg: 'bg-editorial-card text-editorial-fg shadow-sm',
+    border: 'border-indigo-500/30',
+    accentText: 'text-indigo-700 dark:text-indigo-300',
+    subtopicTagActive: 'bg-indigo-500/10 text-indigo-800 dark:text-indigo-300 border-indigo-500/30 font-medium',
+    subtopicTagInactive: 'bg-editorial-muted text-editorial-muted-fg border-editorial-border line-through opacity-50',
   },
 };
 
@@ -295,21 +295,21 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
   return (
     <div className="space-y-4">
       {/* Top Toolbar / Overview Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-lg bg-white border border-[#E8E4DF] shadow-sm">
+      <div className="card-editorial p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
         <div className="flex items-center space-x-3">
-          <div className="p-2 rounded-md bg-[#F5F3F0] text-[#B8860B] border border-[#E8E4DF]">
+          <div className="p-2 rounded-md bg-editorial-muted text-editorial-accent border border-editorial-border">
             <Layers className="w-4 h-4" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <h3 className="font-mono text-xs font-medium text-[#1A1A1A] uppercase tracking-[0.15em]">
+              <h3 className="small-caps text-[10px] text-editorial-fg">
                 Curriculum Blueprint Architecture
               </h3>
-              <span className="px-2 py-0.5 rounded font-mono text-[10px] font-medium bg-[#FAFAF8] text-[#B8860B] border border-[#E8E4DF]">
+              <span className="px-2 py-0.5 rounded font-mono text-[10px] font-medium bg-editorial-muted text-editorial-accent border border-editorial-border">
                 {activeModules}/{totalModules} Modules · {activeTopics}/{totalTopics} Topics Active
               </span>
             </div>
-            <p className="text-xs text-[#6B6B6B] mt-0.5 font-sans">
+            <p className="text-xs text-editorial-muted-fg mt-0.5 font-sans">
               4-Quadrant syllabus matrix with fine-grained topic and subtopic selection.
             </p>
           </div>
@@ -320,14 +320,14 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
           <button
             type="button"
             onClick={handleSelectAll}
-            className="px-2.5 py-1 rounded text-xs font-medium bg-[#FAFAF8] hover:bg-[#F5F3F0] text-[#1A1A1A] border border-[#E8E4DF] transition-all"
+            className="px-2.5 py-1 rounded text-xs font-medium bg-editorial-card hover:bg-editorial-muted text-editorial-fg border border-editorial-border transition-all"
           >
             Select All
           </button>
           <button
             type="button"
             onClick={handleDeselectAll}
-            className="px-2.5 py-1 rounded text-xs font-medium bg-[#FAFAF8] hover:bg-[#F5F3F0] text-[#6B6B6B] hover:text-[#1A1A1A] border border-[#E8E4DF] transition-all"
+            className="px-2.5 py-1 rounded text-xs font-medium bg-editorial-card hover:bg-editorial-muted text-editorial-muted-fg hover:text-editorial-fg border border-editorial-border transition-all"
           >
             Clear Selection
           </button>
@@ -335,7 +335,7 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
             type="button"
             onClick={handleResetToDefault}
             title="Reset to the 4 standard syllabus modules"
-            className="px-2.5 py-1 rounded text-xs font-medium bg-white hover:bg-[#F5F3F0] text-[#B8860B] border border-[#E8E4DF] hover:border-[#B8860B] transition-all flex items-center space-x-1"
+            className="px-2.5 py-1 rounded text-xs font-medium bg-editorial-card hover:bg-editorial-muted text-editorial-accent border border-editorial-border hover:border-editorial-accent transition-all flex items-center space-x-1"
           >
             <RotateCcw className="w-3 h-3" />
             <span>Standard 4 Modules</span>
@@ -343,7 +343,7 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
           <button
             type="button"
             onClick={handleAddNewModule}
-            className="px-2.5 py-1 rounded text-xs font-medium bg-[#B8860B] hover:bg-[#D4A84B] text-white shadow-sm transition-all flex items-center space-x-1"
+            className="btn-primary-serif text-xs py-1 px-3 flex items-center space-x-1"
           >
             <Plus className="w-3 h-3" />
             <span>Add Module</span>
@@ -362,10 +362,10 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
           return (
             <div
               key={mod.id}
-              className={`rounded-lg bg-white border transition-all duration-200 overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md ${
+              className={`card-editorial overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-200 ${
                 mod.selected
-                  ? 'border-[#E8E4DF]'
-                  : 'border-[#E8E4DF]/60 opacity-65'
+                  ? 'border-editorial-border'
+                  : 'border-editorial-border/60 opacity-65'
               }`}
             >
               {/* Module Header Bar */}
@@ -393,7 +393,7 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
                             if (e.key === 'Escape') setEditingModuleId(null);
                           }}
                           autoFocus
-                          className="px-2 py-0.5 rounded bg-white text-xs font-bold text-[#1A1A1A] border border-white focus:outline-none w-full"
+                          className="px-2 py-0.5 rounded bg-editorial-card text-xs font-bold text-editorial-fg border border-editorial-border focus:outline-none w-full"
                         />
                         <button
                           type="button"
@@ -446,7 +446,7 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
                       <button
                         type="button"
                         onClick={() => handleDeleteModule(mod.id)}
-                        className="p-1 rounded bg-black/20 hover:bg-[#DC2626] text-white/80 hover:text-white transition-colors"
+                        className="p-1 rounded bg-black/20 hover:bg-rose-600 text-white/80 hover:text-white transition-colors"
                         title="Delete Module"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -458,8 +458,8 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
                 {/* Module Body / Topics List */}
                 <div className="p-3 sm:p-4 space-y-2.5">
                   {mod.items.length === 0 ? (
-                    <div className="p-3 rounded bg-[#FAFAF8] border border-[#E8E4DF] text-center">
-                      <p className="text-xs text-[#6B6B6B]">No topics in this module.</p>
+                    <div className="p-3 rounded bg-editorial-muted/40 border border-editorial-border text-center">
+                      <p className="text-xs text-editorial-muted-fg">No topics in this module.</p>
                     </div>
                   ) : (
                     mod.items.map((item, itemIdx) => {
@@ -475,8 +475,8 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
                           key={item.id}
                           className={`rounded-md transition-all ${
                             item.selected
-                              ? 'bg-[#FAFAF8] border border-[#E8E4DF]'
-                              : 'bg-[#F5F3F0]/60 border border-[#E8E4DF]/50 opacity-60'
+                              ? 'bg-editorial-muted/40 border border-editorial-border'
+                              : 'bg-editorial-muted/10 border border-editorial-border/40 opacity-50'
                           }`}
                         >
                           {/* Topic Main Row */}
@@ -486,27 +486,27 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
                               <button
                                 type="button"
                                 onClick={() => handleToggleTopic(mod.id, item.id)}
-                                className="mt-0.5 text-[#6B6B6B] hover:text-[#B8860B] transition-colors shrink-0"
+                                className="mt-0.5 text-editorial-muted-fg hover:text-editorial-accent transition-colors shrink-0"
                               >
                                 {item.selected ? (
-                                  <CheckSquare className="w-4 h-4 text-[#B8860B]" />
+                                  <CheckSquare className="w-4 h-4 text-editorial-accent" />
                                 ) : (
-                                  <Square className="w-4 h-4 text-[#A8A29E]" />
+                                  <Square className="w-4 h-4 text-editorial-muted-fg/60" />
                                 )}
                               </button>
 
                               {/* Numbered Title */}
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-baseline space-x-1.5">
-                                  <span className="text-xs font-mono font-semibold text-[#8C827A]">
+                                  <span className="text-xs font-mono font-semibold text-editorial-muted-fg">
                                     {itemIdx + 1}.
                                   </span>
                                   <span
                                     onClick={() => handleToggleTopic(mod.id, item.id)}
                                     className={`text-xs sm:text-sm cursor-pointer select-none transition-colors ${
                                       item.selected
-                                        ? 'text-[#1A1A1A] font-medium hover:text-[#B8860B]'
-                                        : 'text-[#A8A29E] line-through'
+                                        ? 'text-editorial-fg font-medium hover:text-editorial-accent'
+                                        : 'text-editorial-muted-fg line-through'
                                     }`}
                                   >
                                     {item.title}
@@ -523,8 +523,8 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
                                   onClick={() => handleToggleCollapse(item.id)}
                                   className={`px-1.5 py-0.5 rounded font-mono text-[10px] font-medium flex items-center space-x-0.5 transition-colors ${
                                     item.selected
-                                      ? 'bg-white border border-[#E8E4DF] text-[#1A1A1A] hover:border-[#B8860B]'
-                                      : 'bg-[#F5F3F0] text-[#A8A29E]'
+                                      ? 'bg-editorial-card border border-editorial-border text-editorial-fg hover:border-editorial-accent'
+                                      : 'bg-editorial-muted text-editorial-muted-fg'
                                   }`}
                                   title={isCollapsed ? 'Expand subtopics' : 'Collapse subtopics'}
                                 >
@@ -542,7 +542,7 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
                               <button
                                 type="button"
                                 onClick={() => handleDeleteTopic(mod.id, item.id)}
-                                className="p-1 rounded text-[#A8A29E] hover:text-[#DC2626] hover:bg-[#FEF2F2] transition-colors"
+                                className="p-1 rounded text-editorial-muted-fg hover:text-rose-600 hover:bg-rose-500/10 transition-colors"
                                 title="Remove topic"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
@@ -552,7 +552,7 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
 
                           {/* Nested Subtopics Tree (Editorial Arrow Style) */}
                           {hasSubtopics && !isCollapsed && (
-                            <div className="px-3 pb-2.5 pt-0.5 ml-5 border-l border-[#E8E4DF] space-y-1">
+                            <div className="px-3 pb-2.5 pt-0.5 ml-5 border-l border-editorial-border space-y-1">
                               <div className="flex flex-wrap gap-1.5 pt-1">
                                 {item.subtopics!.map((sub) => {
                                   const isSubActive =
@@ -591,7 +591,7 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
               {/* Module Footer: Add Topic Input */}
               <div className="p-3 pt-0">
                 {isAddingTopic ? (
-                  <div className="p-2 rounded bg-[#FAFAF8] border border-[#E8E4DF] space-y-2">
+                  <div className="p-2 rounded bg-editorial-muted/40 border border-editorial-border space-y-2">
                     <input
                       type="text"
                       value={newTopicText}
@@ -608,7 +608,7 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
                       <button
                         type="button"
                         onClick={() => setAddingTopicModuleId(null)}
-                        className="px-2.5 py-1 rounded text-xs text-[#6B6B6B] hover:text-[#1A1A1A]"
+                        className="px-2.5 py-1 rounded text-xs text-editorial-muted-fg hover:text-editorial-fg"
                       >
                         Cancel
                       </button>
@@ -628,9 +628,9 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
                       setAddingTopicModuleId(mod.id);
                       setNewTopicText('');
                     }}
-                    className="w-full py-1.5 px-3 rounded border border-dashed border-[#E8E4DF] hover:border-[#B8860B] bg-[#FAFAF8] text-[#6B6B6B] hover:text-[#1A1A1A] text-xs font-medium flex items-center justify-center space-x-1.5 transition-all"
+                    className="w-full py-1.5 px-3 rounded border border-dashed border-editorial-border hover:border-editorial-accent bg-editorial-muted/30 text-editorial-muted-fg hover:text-editorial-fg text-xs font-medium flex items-center justify-center space-x-1.5 transition-all"
                   >
-                    <Plus className="w-3.5 h-3.5 text-[#B8860B]" />
+                    <Plus className="w-3.5 h-3.5 text-editorial-accent" />
                     <span>Add Topic to {mod.title.split(':')[0]}</span>
                   </button>
                 )}

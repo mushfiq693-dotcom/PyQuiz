@@ -5,18 +5,12 @@ import {
   ShieldCheck,
   Zap,
   Users,
-  Terminal,
   BookOpen,
-  CheckCircle2,
   Layers,
   Clock,
   Award,
-  ChevronRight,
-  Code2,
   GraduationCap,
-  Activity,
 } from 'lucide-react';
-import { DEFAULT_PYTHON_MODULES } from '../../types/syllabus';
 import { allQuestions } from '../../data/questions';
 
 interface Props {
@@ -141,106 +135,6 @@ export const LandingPage: React.FC<Props> = ({
             </span>
             <span className="text-xs text-editorial-muted-fg mt-1 block">Real-Time Sync Protocol</span>
           </div>
-        </div>
-      </section>
-
-      {/* 3. 4-QUADRANT CURRICULUM ARCHITECTURE */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rule-divider mb-8">
-          <span className="small-caps text-editorial-accent">Standardized Python Syllabus Architecture</span>
-        </div>
-
-        <div className="text-center mb-12">
-          <h2 className="font-serif text-3xl sm:text-4xl text-editorial-fg font-normal">
-            Four Foundational Mastery Quadrants
-          </h2>
-          <p className="text-sm text-editorial-muted-fg max-w-xl mx-auto mt-2 font-sans">
-            Every assessment in PyQuiz rigorously addresses the spectrum of Python engineering, from core primitives to advanced closures and decorators.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {DEFAULT_PYTHON_MODULES.map((module) => {
-            const moduleColorMap: Record<string, string> = {
-              blue: 'bg-[#1E3A8A]',
-              emerald: 'bg-[#14532D]',
-              purple: 'bg-[#581C87]',
-              amber: 'bg-[#92400E]',
-              cyan: 'bg-[#155E75]',
-              rose: 'bg-[#9F1239]',
-              indigo: 'bg-[#312E81]',
-            };
-            const headerBg = moduleColorMap[module.color] || 'bg-editorial-accent';
-
-            return (
-              <div
-                key={module.id}
-                className="card-editorial overflow-hidden flex flex-col justify-between"
-              >
-                <div>
-                  <div className={`px-5 py-3.5 text-white flex items-center justify-between ${headerBg}`}>
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center font-serif font-bold text-xs">
-                        {module.moduleNumber}
-                      </div>
-                      <h3 className="font-serif font-bold text-sm tracking-wide">{module.title}</h3>
-                    </div>
-                    <span className="small-caps text-[10px] bg-black/20 px-2 py-0.5 rounded text-white/90">
-                      {module.items.length} Core Domains
-                    </span>
-                  </div>
-
-                  <div className="p-5 space-y-3">
-                    {module.items.map((t, idx) => (
-                      <div
-                        key={t.id}
-                        className="p-3 rounded-md bg-editorial-muted/40 border border-editorial-border text-xs"
-                      >
-                        <div className="flex items-center justify-between font-semibold text-editorial-fg font-serif">
-                          <span>
-                            {idx + 1}. {t.title}
-                          </span>
-                          {t.subtopics && t.subtopics.length > 0 && (
-                            <span className="text-[10px] font-mono text-editorial-muted-fg font-normal">
-                              {t.subtopics.length} Subtopics
-                            </span>
-                          )}
-                        </div>
-                        {t.subtopics && t.subtopics.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 mt-2">
-                            {t.subtopics.slice(0, 5).map((sub, sIdx) => (
-                              <span
-                                key={sIdx}
-                                className="px-2 py-0.5 rounded text-[10px] font-mono bg-editorial-card border border-editorial-border text-editorial-muted-fg"
-                              >
-                                → {sub}
-                              </span>
-                            ))}
-                            {t.subtopics.length > 5 && (
-                              <span className="px-2 py-0.5 rounded text-[10px] font-mono text-editorial-accent">
-                                +{t.subtopics.length - 5} more
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="px-5 pb-5 pt-2 border-t border-editorial-border flex items-center justify-between">
-                  <span className="small-caps text-[10px] text-editorial-muted-fg">Module {module.moduleNumber} Readiness</span>
-                  <button
-                    onClick={onCreateQuiz}
-                    className="inline-flex items-center space-x-1 text-xs text-editorial-accent hover:text-editorial-accent-light font-medium"
-                  >
-                    <span>Synthesize from this Module</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
         </div>
       </section>
 

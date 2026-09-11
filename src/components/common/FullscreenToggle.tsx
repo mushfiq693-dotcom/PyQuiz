@@ -25,10 +25,14 @@ export const FullscreenToggle: React.FC = () => {
     <button
       onClick={toggle}
       title={isFullscreen ? 'Exit Fullscreen Mode' : 'Enter Fullscreen Mode'}
-      className="p-2 rounded-md bg-white hover:bg-[#F5F3F0] text-[#1A1A1A] hover:text-[#B8860B] transition-all border border-[#E8E4DF] hover:border-[#B8860B] shadow-sm"
+      className="p-2 rounded-md bg-editorial-card border border-editorial-border hover:border-editorial-accent text-editorial-muted-fg hover:text-editorial-fg transition-all shadow-sm group"
       aria-label="Toggle fullscreen"
     >
-      {isFullscreen ? <Minimize2 className="w-3.5 h-3.5 text-[#B8860B]" /> : <Maximize2 className="w-3.5 h-3.5 text-[#6B6B6B]" />}
+      {isFullscreen ? (
+        <Minimize2 className="w-3.5 h-3.5 text-editorial-accent transition-colors" />
+      ) : (
+        <Maximize2 className="w-3.5 h-3.5 text-editorial-muted-fg group-hover:text-editorial-accent transition-colors" />
+      )}
     </button>
   );
 };

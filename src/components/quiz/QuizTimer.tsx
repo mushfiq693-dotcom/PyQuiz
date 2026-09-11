@@ -58,10 +58,10 @@ export const QuizTimer: React.FC<Props> = ({
   const isWarning = timeLeft <= 10 && timeLeft > 5;
 
   const colorClass = isUrgent
-    ? 'text-rose-700 border-rose-300 bg-rose-50/80 shadow-sm'
+    ? 'text-rose-700 dark:text-rose-400 border-rose-500/40 bg-rose-500/10 shadow-sm'
     : isWarning
-    ? 'text-amber-800 border-amber-300 bg-amber-50/80 shadow-sm'
-    : 'text-editorial-foreground border-editorial-border bg-white shadow-sm';
+    ? 'text-amber-700 dark:text-amber-400 border-amber-500/40 bg-amber-500/10 shadow-sm'
+    : 'text-editorial-fg border-editorial-border bg-editorial-card shadow-sm';
 
   const strokeColor = isUrgent ? '#e11d48' : isWarning ? '#d97706' : '#B8860B';
 
@@ -107,7 +107,7 @@ export const QuizTimer: React.FC<Props> = ({
       </div>
 
       <div className="flex flex-col text-left">
-        <span className="small-caps text-[10px] text-editorial-muted-foreground flex items-center space-x-1">
+        <span className="small-caps text-[10px] text-editorial-muted-fg flex items-center space-x-1">
           <Clock className="w-2.5 h-2.5 mr-0.5 text-editorial-accent" />
           <span>Timer</span>
         </span>

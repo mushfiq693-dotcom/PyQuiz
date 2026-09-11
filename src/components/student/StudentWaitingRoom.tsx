@@ -62,17 +62,17 @@ export const StudentWaitingRoom: React.FC<Props> = ({
 
           {/* Assessment Protocol Rules */}
           <div className="flex flex-wrap items-center justify-center gap-2.5 pt-4">
-            <span className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-md bg-white border border-editorial-border text-editorial-foreground text-xs font-mono">
+            <span className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-md bg-editorial-card border border-editorial-border text-editorial-fg text-xs font-mono">
               <Clock className="w-3.5 h-3.5 text-editorial-accent" />
               <span>{session.timePerQuestion}s / Question</span>
             </span>
-            <span className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-md bg-white border border-editorial-border text-emerald-800 text-xs font-mono">
-              <Award className="w-3.5 h-3.5 text-emerald-600" />
+            <span className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-md bg-editorial-card border border-editorial-border text-emerald-700 dark:text-emerald-300 text-xs font-mono">
+              <Award className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
               <span>+1.0 Correct</span>
             </span>
             {session.negativeMarkingEnabled && (
-              <span className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-md bg-white border border-editorial-border text-amber-800 text-xs font-mono">
-                <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
+              <span className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-md bg-editorial-card border border-editorial-border text-amber-700 dark:text-amber-300 text-xs font-mono">
+                <ShieldCheck className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                 <span>-0.25 on &gt;9 Mistakes</span>
               </span>
             )}

@@ -58,7 +58,7 @@ export const ReviewScreen: React.FC<Props> = ({
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Performance Report</span>
             </button>
-            <h2 className="font-serif text-2xl text-editorial-foreground font-normal">
+            <h2 className="font-serif text-2xl text-editorial-fg font-normal">
               Item-by-Item Review ({questions.length} Items)
             </h2>
           </div>
@@ -69,8 +69,8 @@ export const ReviewScreen: React.FC<Props> = ({
               onClick={() => setFilter('all')}
               className={`px-3 py-1 rounded text-xs font-mono font-medium transition-all ${
                 filter === 'all'
-                  ? 'bg-editorial-foreground text-white shadow-sm'
-                  : 'text-editorial-muted-foreground hover:text-editorial-foreground'
+                  ? 'bg-editorial-fg text-editorial-bg shadow-sm font-bold'
+                  : 'text-editorial-muted-fg hover:text-editorial-fg'
               }`}
             >
               All
@@ -79,8 +79,8 @@ export const ReviewScreen: React.FC<Props> = ({
               onClick={() => setFilter('correct')}
               className={`px-2.5 py-1 rounded text-xs font-mono font-medium transition-all ${
                 filter === 'correct'
-                  ? 'bg-emerald-700 text-white shadow-sm'
-                  : 'text-emerald-800 hover:text-emerald-900'
+                  ? 'bg-emerald-700 text-white shadow-sm font-bold'
+                  : 'text-emerald-700 dark:text-emerald-300 hover:text-emerald-800'
               }`}
             >
               ✓ ({correctCount})
@@ -89,8 +89,8 @@ export const ReviewScreen: React.FC<Props> = ({
               onClick={() => setFilter('incorrect')}
               className={`px-2.5 py-1 rounded text-xs font-mono font-medium transition-all ${
                 filter === 'incorrect'
-                  ? 'bg-rose-700 text-white shadow-sm'
-                  : 'text-rose-800 hover:text-rose-900'
+                  ? 'bg-rose-700 text-white shadow-sm font-bold'
+                  : 'text-rose-700 dark:text-rose-300 hover:text-rose-800'
               }`}
             >
               ✗ ({incorrectCount})
@@ -99,8 +99,8 @@ export const ReviewScreen: React.FC<Props> = ({
               onClick={() => setFilter('timedOut')}
               className={`px-2.5 py-1 rounded text-xs font-mono font-medium transition-all ${
                 filter === 'timedOut'
-                  ? 'bg-amber-700 text-white shadow-sm'
-                  : 'text-amber-800 hover:text-amber-900'
+                  ? 'bg-amber-700 text-white shadow-sm font-bold'
+                  : 'text-amber-700 dark:text-amber-300 hover:text-amber-800'
               }`}
             >
               ⊘ ({timedOutCount})
@@ -122,38 +122,38 @@ export const ReviewScreen: React.FC<Props> = ({
                 key={q.id}
                 className={`p-6 rounded-lg border transition-all ${
                   isCorrect
-                    ? 'border-emerald-300/80 bg-white'
+                    ? 'border-emerald-500/40 bg-editorial-card'
                     : isTimedOut
-                    ? 'border-amber-300/80 bg-white'
-                    : 'border-rose-300/80 bg-white'
+                    ? 'border-amber-500/40 bg-editorial-card'
+                    : 'border-rose-500/40 bg-editorial-card'
                 } shadow-sm`}
               >
                 {/* Header */}
                 <div className="flex items-center justify-between pb-3 border-b border-editorial-border">
                   <div className="flex items-center space-x-2">
-                    <span className="small-caps px-2 py-0.5 rounded bg-editorial-muted text-editorial-foreground border border-editorial-border">
+                    <span className="small-caps px-2 py-0.5 rounded bg-editorial-muted text-editorial-fg border border-editorial-border">
                       Item {originalIndex + 1}
                     </span>
                     <DifficultyBadge difficulty={q.difficulty} />
-                    <span className="text-xs font-mono text-editorial-muted-foreground">
+                    <span className="text-xs font-mono text-editorial-muted-fg">
                       #{q.topic}
                     </span>
                   </div>
 
                   <div>
                     {isCorrect ? (
-                      <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded text-xs font-mono font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                      <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded text-xs font-mono font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/30">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                         <span>Correct (+1.0)</span>
                       </span>
                     ) : isTimedOut ? (
-                      <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded text-xs font-mono font-semibold text-amber-800 bg-amber-50 border border-amber-200">
-                        <Clock className="w-3.5 h-3.5 text-amber-600" />
+                      <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded text-xs font-mono font-semibold text-amber-700 dark:text-amber-300 bg-amber-500/10 border border-amber-500/30">
+                        <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                         <span>Timed Out</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded text-xs font-mono font-semibold text-rose-700 bg-rose-50 border border-rose-200">
-                        <XCircle className="w-3.5 h-3.5 text-rose-600" />
+                      <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded text-xs font-mono font-semibold text-rose-700 dark:text-rose-300 bg-rose-500/10 border border-rose-500/30">
+                        <XCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
                         <span>Incorrect</span>
                       </span>
                     )}
@@ -162,7 +162,7 @@ export const ReviewScreen: React.FC<Props> = ({
 
                 {/* Question Text & Code */}
                 <div className="mt-4">
-                  <h3 className="font-serif text-base sm:text-lg font-normal text-editorial-foreground leading-snug">
+                  <h3 className="font-serif text-base sm:text-lg font-normal text-editorial-fg leading-snug">
                     {q.question}
                   </h3>
                   {q.code && (
@@ -178,14 +178,14 @@ export const ReviewScreen: React.FC<Props> = ({
                     const isActualCorrect = optIdx === q.correctAnswer;
                     const isUserSelected = studentPick === optIdx;
 
-                    let cardStyle = 'bg-editorial-muted/30 border-editorial-border text-editorial-foreground';
-                    let badgeStyle = 'bg-editorial-muted border border-editorial-border text-editorial-muted-foreground';
+                    let cardStyle = 'bg-editorial-muted/30 border-editorial-border text-editorial-fg';
+                    let badgeStyle = 'bg-editorial-muted border border-editorial-border text-editorial-muted-fg';
 
                     if (isActualCorrect) {
-                      cardStyle = 'bg-emerald-50/70 border-emerald-400 text-emerald-950 ring-1 ring-emerald-400';
+                      cardStyle = 'bg-emerald-500/10 border-emerald-500/40 text-emerald-900 dark:text-emerald-200 ring-1 ring-emerald-500/40';
                       badgeStyle = 'bg-emerald-600 text-white font-bold';
                     } else if (isUserSelected && !isCorrect) {
-                      cardStyle = 'bg-rose-50/70 border-rose-400 text-rose-950 ring-1 ring-rose-400';
+                      cardStyle = 'bg-rose-500/10 border-rose-500/40 text-rose-900 dark:text-rose-200 ring-1 ring-rose-500/40';
                       badgeStyle = 'bg-rose-600 text-white font-bold';
                     }
 
@@ -200,16 +200,16 @@ export const ReviewScreen: React.FC<Props> = ({
                         <div className="flex-1">
                           <span className="break-all">{opt}</span>
                           {isUserSelected && (
-                            <span className="block small-caps text-[10px] mt-1 text-editorial-muted-foreground">
+                            <span className="block small-caps text-[10px] mt-1 text-editorial-muted-fg">
                               {isCorrect ? '• Candidate Selection' : '• Candidate Selection (Incorrect)'}
                             </span>
                           )}
                         </div>
                         {isActualCorrect && (
-                          <Check className="w-4 h-4 text-emerald-600 ml-auto shrink-0" />
+                          <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 ml-auto shrink-0" />
                         )}
                         {isUserSelected && !isCorrect && (
-                          <X className="w-4 h-4 text-rose-600 ml-auto shrink-0" />
+                          <X className="w-4 h-4 text-rose-600 dark:text-rose-400 ml-auto shrink-0" />
                         )}
                       </div>
                     );
@@ -217,7 +217,7 @@ export const ReviewScreen: React.FC<Props> = ({
                 </div>
 
                 {/* Explanation */}
-                <div className="mt-4 p-4 rounded-md bg-editorial-muted/50 border border-editorial-border text-xs text-editorial-foreground flex items-start space-x-2.5">
+                <div className="mt-4 p-4 rounded-md bg-editorial-muted/50 border border-editorial-border text-xs text-editorial-fg flex items-start space-x-2.5">
                   <HelpCircle className="w-4 h-4 text-editorial-accent shrink-0 mt-0.5" />
                   <div className="leading-relaxed">
                     <strong className="small-caps text-editorial-accent mr-1">

@@ -64,21 +64,21 @@ export const ResultsScreen: React.FC<Props> = ({
           <div className="w-12 h-12 rounded-full bg-editorial-muted border border-editorial-border mx-auto flex items-center justify-center mb-3 text-editorial-accent">
             <Award className="w-6 h-6" />
           </div>
-          <h1 className="font-serif text-2xl sm:text-3xl text-editorial-foreground font-normal">
+          <h1 className="font-serif text-2xl sm:text-3xl text-editorial-fg font-normal">
             {quizTitle}
           </h1>
-          <p className="text-sm text-editorial-muted-foreground mt-1 font-sans">
-            Candidate: <strong className="text-editorial-foreground font-semibold">{studentName}</strong>
+          <p className="text-sm text-editorial-muted-fg mt-1 font-sans">
+            Candidate: <strong className="text-editorial-fg font-semibold">{studentName}</strong>
           </p>
 
           {/* Final Score Card */}
           <div className="mt-6 p-6 rounded-lg bg-editorial-muted/40 border border-editorial-border max-w-sm mx-auto text-center">
-            <span className="small-caps text-editorial-muted-foreground block">
+            <span className="small-caps text-editorial-muted-fg block">
               Cumulative Final Score
             </span>
-            <div className="font-serif text-4xl sm:text-5xl font-normal text-editorial-foreground mt-2">
+            <div className="font-serif text-4xl sm:text-5xl font-normal text-editorial-fg mt-2">
               {result.finalScore.toFixed(2)}{' '}
-              <span className="font-serif text-2xl text-editorial-muted-foreground font-light">/ {result.totalQuestions}</span>
+              <span className="font-serif text-2xl text-editorial-muted-fg font-light">/ {result.totalQuestions}</span>
             </div>
             <span className="inline-block mt-3 px-3 py-1 rounded-full text-xs font-mono font-bold bg-editorial-accent/10 border border-editorial-accent/30 text-editorial-accent">
               {result.accuracyPercentage}% Overall Accuracy
@@ -88,67 +88,67 @@ export const ResultsScreen: React.FC<Props> = ({
 
         {/* Metrics Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 my-8">
-          <div className="p-4 rounded-lg bg-white border border-editorial-border shadow-sm">
-            <div className="flex items-center space-x-1.5 text-emerald-700 text-xs font-semibold mb-1">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+          <div className="p-4 rounded-lg bg-editorial-card border border-editorial-border shadow-sm">
+            <div className="flex items-center space-x-1.5 text-emerald-700 dark:text-emerald-400 text-xs font-semibold mb-1">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
               <span className="small-caps text-[10px]">Correct</span>
             </div>
-            <div className="font-serif text-2xl text-editorial-foreground">{result.correctCount}</div>
+            <div className="font-serif text-2xl text-editorial-fg">{result.correctCount}</div>
           </div>
 
-          <div className="p-4 rounded-lg bg-white border border-editorial-border shadow-sm">
-            <div className="flex items-center space-x-1.5 text-rose-700 text-xs font-semibold mb-1">
-              <XCircle className="w-3.5 h-3.5 text-rose-600" />
+          <div className="p-4 rounded-lg bg-editorial-card border border-editorial-border shadow-sm">
+            <div className="flex items-center space-x-1.5 text-rose-700 dark:text-rose-400 text-xs font-semibold mb-1">
+              <XCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
               <span className="small-caps text-[10px]">Incorrect</span>
             </div>
-            <div className="font-serif text-2xl text-editorial-foreground">
+            <div className="font-serif text-2xl text-editorial-fg">
               {result.wrongCount}{' '}
               {result.penalizedWrongCount > 0 && (
-                <span className="text-xs font-sans text-rose-600 font-normal">
+                <span className="text-xs font-sans text-rose-600 dark:text-rose-400 font-normal">
                   (-{result.penaltyDeductions.toFixed(2)})
                 </span>
               )}
             </div>
           </div>
 
-          <div className="p-4 rounded-lg bg-white border border-editorial-border shadow-sm">
-            <div className="flex items-center space-x-1.5 text-amber-800 text-xs font-semibold mb-1">
-              <Clock className="w-3.5 h-3.5 text-amber-600" />
+          <div className="p-4 rounded-lg bg-editorial-card border border-editorial-border shadow-sm">
+            <div className="flex items-center space-x-1.5 text-amber-700 dark:text-amber-400 text-xs font-semibold mb-1">
+              <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
               <span className="small-caps text-[10px]">Timed Out</span>
             </div>
-            <div className="font-serif text-2xl text-editorial-foreground">{result.unansweredCount}</div>
+            <div className="font-serif text-2xl text-editorial-fg">{result.unansweredCount}</div>
           </div>
 
-          <div className="p-4 rounded-lg bg-white border border-editorial-border shadow-sm">
+          <div className="p-4 rounded-lg bg-editorial-card border border-editorial-border shadow-sm">
             <div className="flex items-center space-x-1.5 text-editorial-accent text-xs font-semibold mb-1">
               <TrendingUp className="w-3.5 h-3.5 text-editorial-accent" />
               <span className="small-caps text-[10px]">Efficiency</span>
             </div>
-            <div className="font-serif text-2xl text-editorial-foreground">{result.accuracyPercentage}%</div>
+            <div className="font-serif text-2xl text-editorial-fg">{result.accuracyPercentage}%</div>
           </div>
         </div>
 
         {/* Difficulty Breakdown */}
         <div className="mb-6 p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border">
-          <h3 className="small-caps text-editorial-foreground mb-4">
+          <h3 className="small-caps text-editorial-fg mb-4">
             Proficiency by Cognitive Complexity
           </h3>
           <div className="grid grid-cols-3 gap-3 text-center">
-            <div className="p-3 rounded-md bg-white border border-editorial-border shadow-sm">
-              <span className="small-caps text-emerald-800 block text-[10px]">Level I (Foundational)</span>
-              <span className="font-serif text-base font-semibold text-editorial-foreground mt-1 block">
+            <div className="p-3 rounded-md bg-editorial-card border border-editorial-border shadow-sm">
+              <span className="small-caps text-emerald-700 dark:text-emerald-400 block text-[10px]">Level I (Foundational)</span>
+              <span className="font-serif text-base font-semibold text-editorial-fg mt-1 block">
                 {result.difficultyBreakdown.easy.correct} / {result.difficultyBreakdown.easy.total}
               </span>
             </div>
-            <div className="p-3 rounded-md bg-white border border-editorial-border shadow-sm">
-              <span className="small-caps text-amber-800 block text-[10px]">Level II (Intermediate)</span>
-              <span className="font-serif text-base font-semibold text-editorial-foreground mt-1 block">
+            <div className="p-3 rounded-md bg-editorial-card border border-editorial-border shadow-sm">
+              <span className="small-caps text-amber-700 dark:text-amber-400 block text-[10px]">Level II (Intermediate)</span>
+              <span className="font-serif text-base font-semibold text-editorial-fg mt-1 block">
                 {result.difficultyBreakdown.medium.correct} / {result.difficultyBreakdown.medium.total}
               </span>
             </div>
-            <div className="p-3 rounded-md bg-white border border-editorial-border shadow-sm">
-              <span className="small-caps text-rose-800 block text-[10px]">Level III (Advanced)</span>
-              <span className="font-serif text-base font-semibold text-editorial-foreground mt-1 block">
+            <div className="p-3 rounded-md bg-editorial-card border border-editorial-border shadow-sm">
+              <span className="small-caps text-rose-700 dark:text-rose-400 block text-[10px]">Level III (Advanced)</span>
+              <span className="font-serif text-base font-semibold text-editorial-fg mt-1 block">
                 {result.difficultyBreakdown.hard.correct} / {result.difficultyBreakdown.hard.total}
               </span>
             </div>
@@ -157,15 +157,15 @@ export const ResultsScreen: React.FC<Props> = ({
 
         {/* Topic Performance */}
         <div className="mb-8 p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border">
-          <h3 className="small-caps text-editorial-foreground mb-4">
+          <h3 className="small-caps text-editorial-fg mb-4">
             Thematic Mastery Index
           </h3>
           <div className="space-y-3">
             {Object.entries(result.topicBreakdown).map(([topic, stats]) => (
               <div key={topic} className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-mono text-editorial-foreground">#{topic}</span>
-                  <span className="font-mono text-editorial-muted-foreground">
+                  <span className="font-mono text-editorial-fg">#{topic}</span>
+                  <span className="font-mono text-editorial-muted-fg">
                     {stats.correct}/{stats.total} ({stats.percentage}%)
                   </span>
                 </div>

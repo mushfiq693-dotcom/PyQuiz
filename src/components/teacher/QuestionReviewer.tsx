@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Question, Difficulty } from '../../data/questions/types';
 import { CodeSnippet } from '../common/CodeSnippet';
 import { DifficultyBadge } from '../common/DifficultyBadge';
+import { EditorialSelect } from '../common/EditorialSelect';
 import {
   makeQuestionHarder,
   makeQuestionEasier,
@@ -239,17 +240,19 @@ export const QuestionReviewer: React.FC<Props> = ({
                       Editing Item #{originalIndex + 1}
                     </span>
                     <div className="flex items-center space-x-2">
-                      <select
+                      <EditorialSelect
                         value={editDraft.difficulty}
-                        onChange={(e) =>
-                          setEditDraft({ ...editDraft, difficulty: e.target.value as Difficulty })
+                        onChange={(val) =>
+                          setEditDraft({ ...editDraft, difficulty: val as Difficulty })
                         }
-                        className="input-editorial text-xs py-1"
-                      >
-                        <option value="easy">Level I (Easy)</option>
-                        <option value="medium">Level II (Medium)</option>
-                        <option value="hard">Level III (Hard)</option>
-                      </select>
+                        size="sm"
+                        className="w-36"
+                        options={[
+                          { value: 'easy', label: 'Level I (Easy)' },
+                          { value: 'medium', label: 'Level II (Medium)' },
+                          { value: 'hard', label: 'Level III (Hard)' },
+                        ]}
+                      />
                       <input
                         type="text"
                         value={editDraft.topic}

@@ -15,6 +15,7 @@ import {
   normalizeMimeType,
 } from '../../utils/geminiApi';
 import { AISettingsModal } from '../common/AISettingsModal';
+import { EditorialSelect } from '../common/EditorialSelect';
 import {
   Sparkles,
   ArrowRight,
@@ -301,15 +302,15 @@ export const QuizCreator: React.FC<Props> = ({
 
   return (
     <>
-      <div className="max-w-5xl mx-auto my-10 p-6 sm:p-10 rounded-lg bg-white border border-[#E8E4DF] shadow-md text-[#1A1A1A]">
+      <div className="card-editorial max-w-5xl mx-auto my-10 p-6 sm:p-10 shadow-md text-editorial-fg">
         {/* Header & Mode Switcher */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#E8E4DF]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-editorial-border">
           <div>
-            <span className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-[#B8860B]">
+            <span className="small-caps text-[10px] text-editorial-accent">
               Assessment Design Studio
             </span>
             <div className="flex items-center space-x-2.5 mt-0.5">
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#1A1A1A]">
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-editorial-fg">
                 Configure Assessment
               </h2>
               {mode === 'ai' && (
@@ -318,42 +319,42 @@ export const QuizCreator: React.FC<Props> = ({
                   onClick={() => setShowAiSettingsModal(true)}
                   className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full border flex items-center space-x-1 transition-all ${
                     hasGeminiKey
-                      ? 'bg-[#F0FDF4] text-[#166534] border-[#BBF7D0]'
-                      : 'bg-[#F5F3F0] text-[#6B6B6B] border-[#E8E4DF] hover:text-[#1A1A1A]'
+                      ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
+                      : 'bg-editorial-muted text-editorial-muted-fg border-editorial-border hover:text-editorial-fg'
                   }`}
                 >
-                  <Bot className="w-3 h-3 text-[#B8860B]" />
+                  <Bot className="w-3 h-3 text-editorial-accent" />
                   <span>{hasGeminiKey ? 'Gemini 2.5 Live' : 'AI Setup'}</span>
                   <Key className="w-2.5 h-2.5 ml-0.5 opacity-60" />
                 </button>
               )}
             </div>
-            <p className="text-xs text-[#6B6B6B] mt-1 font-sans">
+            <p className="text-xs text-editorial-muted-fg mt-1 font-sans">
               Calibrate syllabus topics, upload curriculum documents, or deploy standard sets.
             </p>
           </div>
 
-          <div className="flex p-1 bg-[#F5F3F0] rounded-md border border-[#E8E4DF] self-start sm:self-auto">
+          <div className="flex p-1 bg-editorial-muted rounded-md border border-editorial-border self-start sm:self-auto">
             <button
               onClick={() => setMode('ai')}
               className={`px-3.5 py-1.5 rounded text-xs font-medium transition-all flex items-center space-x-1 ${
                 mode === 'ai'
-                  ? 'bg-white text-[#1A1A1A] shadow-sm border border-[#E8E4DF]'
-                  : 'text-[#6B6B6B] hover:text-[#1A1A1A]'
+                  ? 'bg-editorial-card text-editorial-fg shadow-sm border border-editorial-border'
+                  : 'text-editorial-muted-fg hover:text-editorial-fg'
               }`}
             >
-              <Wand2 className="w-3.5 h-3.5 mr-1 text-[#B8860B]" />
+              <Wand2 className="w-3.5 h-3.5 mr-1 text-editorial-accent" />
               <span>Generative Studio</span>
             </button>
             <button
               onClick={() => setMode('syllabus')}
               className={`px-3.5 py-1.5 rounded text-xs font-medium transition-all flex items-center space-x-1 ${
                 mode === 'syllabus'
-                  ? 'bg-white text-[#1A1A1A] shadow-sm border border-[#E8E4DF]'
-                  : 'text-[#6B6B6B] hover:text-[#1A1A1A]'
+                  ? 'bg-editorial-card text-editorial-fg shadow-sm border border-editorial-border'
+                  : 'text-editorial-muted-fg hover:text-editorial-fg'
               }`}
             >
-              <BookOpen className="w-3.5 h-3.5 mr-1 text-[#B8860B]" />
+              <BookOpen className="w-3.5 h-3.5 mr-1 text-editorial-accent" />
               <span>Standard Sets</span>
             </button>
           </div>
@@ -363,7 +364,7 @@ export const QuizCreator: React.FC<Props> = ({
         <div className="mt-8 space-y-8">
           {/* Assessment Title */}
           <div>
-            <label className="block font-mono text-xs font-medium text-[#6B6B6B] uppercase tracking-[0.15em] mb-1.5">
+            <label className="block font-mono text-xs font-medium text-editorial-muted-fg uppercase tracking-[0.15em] mb-1.5">
               Assessment Title
             </label>
             <input
@@ -383,39 +384,39 @@ export const QuizCreator: React.FC<Props> = ({
             /* ======================== AI GENERATION OPTIONS ======================== */
             <div className="space-y-8">
               {/* 1. SYLLABUS ATTACHMENT UPLOADER (IMAGE OR PDF) */}
-              <div className="p-5 rounded-lg bg-[#FAFAF8] border border-[#E8E4DF] space-y-3.5">
+              <div className="p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-3.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <FileUp className="w-4 h-4 text-[#B8860B]" />
-                    <label className="font-mono text-xs font-medium text-[#1A1A1A] uppercase tracking-[0.15em]">
+                    <FileUp className="w-4 h-4 text-editorial-accent" />
+                    <label className="font-mono text-xs font-medium text-editorial-fg uppercase tracking-[0.15em]">
                       Curriculum Document OCR (Image or PDF)
                     </label>
                   </div>
-                  <span className="font-mono text-[10px] text-[#6B6B6B]">
+                  <span className="font-mono text-[10px] text-editorial-muted-fg">
                     PNG, JPG, WEBP, PDF
                   </span>
                 </div>
 
                 {attachment ? (
                   /* Attached File Card */
-                  <div className="p-4 rounded-md bg-white border border-[#E8E4DF] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="p-4 rounded-md bg-editorial-card border border-editorial-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center space-x-3.5">
                       {attachment.previewUrl ? (
                         <img
                           src={attachment.previewUrl}
                           alt="Syllabus Preview"
-                          className="w-12 h-12 object-cover rounded border border-[#E8E4DF] shrink-0"
+                          className="w-12 h-12 object-cover rounded border border-editorial-border shrink-0"
                         />
                       ) : (
-                        <div className="w-12 h-12 rounded bg-[#F5F3F0] border border-[#E8E4DF] flex items-center justify-center text-[#B8860B] shrink-0">
+                        <div className="w-12 h-12 rounded bg-editorial-muted border border-editorial-border flex items-center justify-center text-editorial-accent shrink-0">
                           <FileText className="w-6 h-6" />
                         </div>
                       )}
                       <div>
-                        <span className="text-xs font-serif font-bold text-[#1A1A1A] block truncate max-w-xs">
+                        <span className="text-xs font-serif font-bold text-editorial-fg block truncate max-w-xs">
                           {attachment.name}
                         </span>
-                        <span className="text-[10px] text-[#6B6B6B] font-mono">
+                        <span className="text-[10px] text-editorial-muted-fg font-mono">
                           {(attachment.size / 1024).toFixed(1)} KB · Attached for OCR Calibration
                         </span>
                       </div>
@@ -447,7 +448,7 @@ export const QuizCreator: React.FC<Props> = ({
                           setAttachment(null);
                           setExtractionMessage('');
                         }}
-                        className="p-1.5 rounded text-[#6B6B6B] hover:text-[#DC2626] hover:bg-[#FEF2F2] transition-colors"
+                        className="p-1.5 rounded text-editorial-muted-fg hover:text-rose-600 hover:bg-rose-500/10 transition-colors"
                         title="Remove attachment"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -471,8 +472,8 @@ export const QuizCreator: React.FC<Props> = ({
                     }}
                     className={`p-6 border-2 border-dashed rounded-md transition-all cursor-pointer text-center group ${
                       isDraggingFile
-                        ? 'border-[#B8860B] bg-[#FFFBEB]/50'
-                        : 'border-[#E8E4DF] hover:border-[#B8860B] bg-white'
+                        ? 'border-editorial-accent bg-editorial-accent/10'
+                        : 'border-editorial-border hover:border-editorial-accent bg-editorial-card'
                     }`}
                   >
                     <input
@@ -483,13 +484,13 @@ export const QuizCreator: React.FC<Props> = ({
                       className="hidden"
                     />
                     <div className="flex flex-col items-center justify-center space-y-1.5">
-                      <div className="p-2 rounded-md bg-[#F5F3F0] text-[#B8860B] group-hover:bg-[#B8860B] group-hover:text-white transition-colors">
+                      <div className="p-2 rounded-md bg-editorial-muted text-editorial-accent group-hover:bg-editorial-accent group-hover:text-editorial-bg transition-colors">
                         <Upload className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-serif font-bold text-[#1A1A1A] mt-1">
+                      <span className="text-xs font-serif font-bold text-editorial-fg mt-1">
                         Upload Syllabus Outline or Module Image
                       </span>
-                      <p className="text-[11px] text-[#6B6B6B] max-w-sm font-sans">
+                      <p className="text-[11px] text-editorial-muted-fg max-w-sm font-sans">
                         Drag and drop your syllabus. Gemini OCR will automatically populate the 4-quadrant modules and topics below.
                       </p>
                     </div>
@@ -497,8 +498,8 @@ export const QuizCreator: React.FC<Props> = ({
                 )}
 
                 {extractionMessage && (
-                  <p className="text-xs text-[#166534] bg-[#F0FDF4] border border-[#BBF7D0] p-2.5 rounded-md flex items-center space-x-2 font-mono">
-                    <Sparkles className="w-3.5 h-3.5 text-[#16A34A] shrink-0" />
+                  <p className="text-xs text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 p-2.5 rounded-md flex items-center space-x-2 font-mono">
+                    <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <span>{extractionMessage}</span>
                   </p>
                 )}
@@ -509,32 +510,25 @@ export const QuizCreator: React.FC<Props> = ({
 
               {/* 3. Question Style & Keywords */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div className="p-5 rounded-lg bg-[#FAFAF8] border border-[#E8E4DF] space-y-2">
-                  <label className="block font-mono text-xs font-medium text-[#6B6B6B] uppercase tracking-[0.15em]">
+                <div className="p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-2">
+                  <label className="block font-mono text-xs font-medium text-editorial-muted-fg uppercase tracking-[0.15em]">
                     Question Paradigm
                   </label>
-                  <select
+                  <EditorialSelect
                     value={questionStyle}
-                    onChange={(e) => setQuestionStyle(e.target.value as any)}
-                    className="input-editorial w-full font-sans text-xs"
-                  >
-                    <option value="all">Balanced / Comprehensive Mix</option>
-                    <option value="code-tracing">Code Output Tracing (Predict stdout)</option>
-                    <option value="conceptual">Language Semantics & Scope Rules</option>
-                    <option value="error-handling">Exceptions & Runtime Faults</option>
-                    <option value="edge-cases">Subtle Gotchas & Corner Cases</option>
-                  </select>
-                  <p className="text-[11px] text-[#6B6B6B] font-sans">
-                    {questionStyle === 'all' && 'Harmonious blend across syntax rules and code analysis.'}
-                    {questionStyle === 'code-tracing' && 'Direct focus on predictive code execution.'}
-                    {questionStyle === 'conceptual' && 'Focus on mutability, scopes, and keywords.'}
-                    {questionStyle === 'error-handling' && 'Focus on TypeError, IndexError, and try-except.'}
-                    {questionStyle === 'edge-cases' && 'Focus on tricky Python subtleties and traps.'}
-                  </p>
+                    onChange={(val) => setQuestionStyle(val as any)}
+                    options={[
+                      { value: 'all', label: 'Balanced / Comprehensive Mix', sublabel: 'Harmonious blend across syntax rules and code analysis.' },
+                      { value: 'code-tracing', label: 'Code Output Tracing (Predict stdout)', sublabel: 'Direct focus on predictive code execution.' },
+                      { value: 'conceptual', label: 'Language Semantics & Scope Rules', sublabel: 'Focus on mutability, scopes, and keywords.' },
+                      { value: 'error-handling', label: 'Exceptions & Runtime Faults', sublabel: 'Focus on TypeError, IndexError, and try-except.' },
+                      { value: 'edge-cases', label: 'Subtle Gotchas & Corner Cases', sublabel: 'Focus on tricky Python subtleties and traps.' },
+                    ]}
+                  />
                 </div>
 
-                <div className="p-5 rounded-lg bg-[#FAFAF8] border border-[#E8E4DF] space-y-2">
-                  <label className="block font-mono text-xs font-medium text-[#6B6B6B] uppercase tracking-[0.15em]">
+                <div className="p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-2">
+                  <label className="block font-mono text-xs font-medium text-editorial-muted-fg uppercase tracking-[0.15em]">
                     Specific Focus Keywords
                   </label>
                   <input
@@ -544,24 +538,24 @@ export const QuizCreator: React.FC<Props> = ({
                     placeholder="e.g. walrus, slicing, closures, mro"
                     className="input-editorial w-full font-mono text-xs"
                   />
-                  <p className="text-[11px] text-[#6B6B6B] font-sans">
+                  <p className="text-[11px] text-editorial-muted-fg font-sans">
                     Optional: Comma-separated keywords to prioritize during generation.
                   </p>
                 </div>
               </div>
 
               {/* 4. Question Count & Difficulty Allocation */}
-              <div className="p-5 rounded-lg bg-[#FAFAF8] border border-[#E8E4DF] space-y-5">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E8E4DF]">
+              <div className="p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-editorial-border">
                   <div>
-                    <span className="font-mono text-xs font-medium text-[#1A1A1A] uppercase tracking-[0.15em]">
-                      Total Assessment Items: <strong className="text-[#B8860B] font-serif text-base">{totalQuestions} Qs</strong>
+                    <span className="font-mono text-xs font-medium text-editorial-fg uppercase tracking-[0.15em]">
+                      Total Assessment Items: <strong className="text-editorial-accent font-serif text-base">{totalQuestions} Qs</strong>
                     </span>
                   </div>
 
                   {/* Question Count Presets */}
-                  <div className="flex items-center space-x-1.5 bg-white p-1 rounded-md border border-[#E8E4DF] text-xs">
-                    <span className="font-mono text-[10px] text-[#6B6B6B] px-1.5">Preset:</span>
+                  <div className="flex items-center space-x-1.5 bg-editorial-card p-1 rounded-md border border-editorial-border text-xs">
+                    <span className="font-mono text-[10px] text-editorial-muted-fg px-1.5">Preset:</span>
                     {[10, 15, 20, 30].map((cnt) => (
                       <button
                         key={cnt}
@@ -569,8 +563,8 @@ export const QuizCreator: React.FC<Props> = ({
                         onClick={() => applyCountPreset(cnt)}
                         className={`px-2 py-0.5 rounded font-mono transition-all ${
                           totalQuestions === cnt
-                            ? 'bg-[#B8860B] text-white font-bold shadow-sm'
-                            : 'text-[#6B6B6B] hover:text-[#1A1A1A]'
+                            ? 'bg-editorial-accent text-editorial-bg font-bold shadow-sm'
+                            : 'text-editorial-muted-fg hover:text-editorial-fg'
                         }`}
                       >
                         {cnt}
@@ -581,7 +575,7 @@ export const QuizCreator: React.FC<Props> = ({
 
                 {/* Difficulty Ratio Selector */}
                 <div className="flex flex-wrap gap-2">
-                  <span className="font-mono text-[11px] text-[#6B6B6B] uppercase tracking-wider self-center mr-1">
+                  <span className="font-mono text-[11px] text-editorial-muted-fg uppercase tracking-wider self-center mr-1">
                     Profile:
                   </span>
                   {[
@@ -595,8 +589,8 @@ export const QuizCreator: React.FC<Props> = ({
                       onClick={() => applyDifficultyPreset(item.id as any)}
                       className={`px-2.5 py-1 rounded text-xs font-medium border transition-all ${
                         difficultyPreset === item.id
-                          ? 'bg-[#FFFBEB] border-[#B8860B] text-[#92400E] font-semibold'
-                          : 'bg-white border-[#E8E4DF] text-[#6B6B6B] hover:text-[#1A1A1A]'
+                          ? 'bg-editorial-accent/15 border-editorial-accent text-editorial-accent font-semibold'
+                          : 'bg-editorial-card border-editorial-border text-editorial-muted-fg hover:text-editorial-fg'
                       }`}
                     >
                       {item.label}
@@ -606,10 +600,10 @@ export const QuizCreator: React.FC<Props> = ({
 
                 {/* Sliders for Easy / Med / Hard */}
                 <div className="grid grid-cols-3 gap-3.5 pt-1">
-                  <div className="p-3.5 rounded-md bg-white border border-[#E8E4DF]">
+                  <div className="p-3.5 rounded-md bg-editorial-card border border-editorial-border">
                     <div className="flex items-center justify-between text-xs mb-1.5">
-                      <span className="text-[#16A34A] font-semibold font-mono text-[11px] uppercase tracking-wider">Level I</span>
-                      <span className="font-serif font-bold text-[#1A1A1A]">{easyCount}</span>
+                      <span className="text-emerald-700 dark:text-emerald-400 font-semibold font-mono text-[11px] uppercase tracking-wider">Level I</span>
+                      <span className="font-serif font-bold text-editorial-fg">{easyCount}</span>
                     </div>
                     <input
                       type="range"
@@ -620,14 +614,14 @@ export const QuizCreator: React.FC<Props> = ({
                         setEasyCount(Number(e.target.value));
                         setDifficultyPreset('custom');
                       }}
-                      className="w-full accent-[#16A34A] cursor-pointer"
+                      className="w-full accent-emerald-600 dark:accent-emerald-400 cursor-pointer"
                     />
                   </div>
 
-                  <div className="p-3.5 rounded-md bg-white border border-[#E8E4DF]">
+                  <div className="p-3.5 rounded-md bg-editorial-card border border-editorial-border">
                     <div className="flex items-center justify-between text-xs mb-1.5">
-                      <span className="text-[#D97706] font-semibold font-mono text-[11px] uppercase tracking-wider">Level II</span>
-                      <span className="font-serif font-bold text-[#1A1A1A]">{mediumCount}</span>
+                      <span className="text-amber-700 dark:text-amber-400 font-semibold font-mono text-[11px] uppercase tracking-wider">Level II</span>
+                      <span className="font-serif font-bold text-editorial-fg">{mediumCount}</span>
                     </div>
                     <input
                       type="range"
@@ -638,14 +632,14 @@ export const QuizCreator: React.FC<Props> = ({
                         setMediumCount(Number(e.target.value));
                         setDifficultyPreset('custom');
                       }}
-                      className="w-full accent-[#D97706] cursor-pointer"
+                      className="w-full accent-amber-600 dark:accent-amber-400 cursor-pointer"
                     />
                   </div>
 
-                  <div className="p-3.5 rounded-md bg-white border border-[#E8E4DF]">
+                  <div className="p-3.5 rounded-md bg-editorial-card border border-editorial-border">
                     <div className="flex items-center justify-between text-xs mb-1.5">
-                      <span className="text-[#DC2626] font-semibold font-mono text-[11px] uppercase tracking-wider">Level III</span>
-                      <span className="font-serif font-bold text-[#1A1A1A]">{hardCount}</span>
+                      <span className="text-rose-700 dark:text-rose-400 font-semibold font-mono text-[11px] uppercase tracking-wider">Level III</span>
+                      <span className="font-serif font-bold text-editorial-fg">{hardCount}</span>
                     </div>
                     <input
                       type="range"
@@ -656,7 +650,7 @@ export const QuizCreator: React.FC<Props> = ({
                         setHardCount(Number(e.target.value));
                         setDifficultyPreset('custom');
                       }}
-                      className="w-full accent-[#DC2626] cursor-pointer"
+                      className="w-full accent-rose-600 dark:accent-rose-400 cursor-pointer"
                     />
                   </div>
                 </div>
@@ -665,65 +659,63 @@ export const QuizCreator: React.FC<Props> = ({
           ) : (
             /* ======================== SYLLABUS SET SELECTION ======================== */
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <div className="p-5 rounded-lg bg-[#FAFAF8] border border-[#E8E4DF] space-y-2">
-                <label className="block font-mono text-xs font-medium text-[#6B6B6B] uppercase tracking-[0.15em]">
-                  Section
+              <div className="p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-2">
+                <label className="block font-mono text-xs font-medium text-editorial-muted-fg uppercase tracking-[0.15em]">
+                  Curriculum Module
                 </label>
-                <select
+                <EditorialSelect
                   value={selectedSectionId}
-                  onChange={(e) => {
-                    setSelectedSectionId(e.target.value);
-                    const sec = syllabusSections.find((s) => s.id === e.target.value);
+                  onChange={(val) => {
+                    setSelectedSectionId(val);
+                    const sec = syllabusSections.find((s) => s.id === val);
                     if (sec && sec.sets.length > 0) {
                       setSelectedSetId(sec.sets[0].id);
                     }
                   }}
-                  className="input-editorial w-full text-xs font-sans"
-                >
-                  {syllabusSections.map((sec) => (
-                    <option key={sec.id} value={sec.id}>
-                      {sec.name}: {sec.title}
-                    </option>
-                  ))}
-                </select>
+                  options={syllabusSections.map((sec) => ({
+                    value: sec.id,
+                    label: `${sec.name}: ${sec.title}`,
+                    badge: `${sec.sets.length} Sets`,
+                    sublabel: sec.description,
+                  }))}
+                />
               </div>
 
-              <div className="p-5 rounded-lg bg-[#FAFAF8] border border-[#E8E4DF] space-y-2">
-                <label className="block font-mono text-xs font-medium text-[#6B6B6B] uppercase tracking-[0.15em]">
-                  Set (30 Items)
+              <div className="p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-2">
+                <label className="block font-mono text-xs font-medium text-editorial-muted-fg uppercase tracking-[0.15em]">
+                  Standard Set (30 Items)
                 </label>
-                <select
+                <EditorialSelect
                   value={selectedSetId}
-                  onChange={(e) => setSelectedSetId(e.target.value)}
-                  className="input-editorial w-full text-xs font-mono"
-                >
-                  {currentSection?.sets.map((set) => (
-                    <option key={set.id} value={set.id}>
-                      {set.setName} (10 Easy · 10 Med · 10 Hard)
-                    </option>
-                  ))}
-                </select>
+                  onChange={(val) => setSelectedSetId(val)}
+                  options={(currentSection?.sets || []).map((set) => ({
+                    value: set.id,
+                    label: set.setName,
+                    badge: '30 Qs',
+                    sublabel: set.description,
+                  }))}
+                />
               </div>
             </div>
           )}
 
           {/* ======================== DELIVERY & EXAM RULES ======================== */}
-          <div className="p-5 rounded-lg bg-[#FAFAF8] border border-[#E8E4DF] space-y-4">
-            <div className="flex items-center space-x-2 pb-3 border-b border-[#E8E4DF]">
-              <Clock className="w-4 h-4 text-[#B8860B]" />
-              <span className="font-mono text-xs font-medium text-[#1A1A1A] uppercase tracking-[0.15em]">
+          <div className="p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-4">
+            <div className="flex items-center space-x-2 pb-3 border-b border-editorial-border">
+              <Clock className="w-4 h-4 text-editorial-accent" />
+              <span className="font-mono text-xs font-medium text-editorial-fg uppercase tracking-[0.15em]">
                 Examination Protocol & Rules
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Timer per question */}
-              <div className="p-4 rounded-md bg-white border border-[#E8E4DF]">
+              <div className="p-4 rounded-md bg-editorial-card border border-editorial-border">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-medium text-[#1A1A1A]">
+                  <span className="text-xs font-medium text-editorial-fg">
                     Countdown Timer per Item
                   </span>
-                  <span className="font-mono text-xs font-bold text-[#B8860B]">
+                  <span className="font-mono text-xs font-bold text-editorial-accent">
                     {timePerQuestion}s
                   </span>
                 </div>
@@ -734,17 +726,17 @@ export const QuizCreator: React.FC<Props> = ({
                   step={5}
                   value={timePerQuestion}
                   onChange={(e) => setTimePerQuestion(Number(e.target.value))}
-                  className="w-full accent-[#B8860B] cursor-pointer"
+                  className="w-full accent-editorial-accent cursor-pointer"
                 />
               </div>
 
               {/* Negative Marking Toggle */}
-              <div className="p-4 rounded-md bg-white border border-[#E8E4DF] flex items-center justify-between">
+              <div className="p-4 rounded-md bg-editorial-card border border-editorial-border flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-medium text-[#1A1A1A] block">
+                  <span className="text-xs font-medium text-editorial-fg block">
                     Negative Penalty Calibration
                   </span>
-                  <span className="text-[11px] text-[#6B6B6B]">
+                  <span className="text-[11px] text-editorial-muted-fg">
                     {negativeMarking ? '-0.25 penalty on >30% incorrect' : 'No penalty deductions'}
                   </span>
                 </div>
@@ -755,7 +747,7 @@ export const QuizCreator: React.FC<Props> = ({
                     onChange={(e) => setNegativeMarking(e.target.checked)}
                     className="sr-only peer"
                   />
-                  <div className="w-9 h-5 bg-[#E8E4DF] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#B8860B]"></div>
+                  <div className="w-9 h-5 bg-editorial-muted border border-editorial-border rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-editorial-accent"></div>
                 </label>
               </div>
             </div>
@@ -763,22 +755,22 @@ export const QuizCreator: React.FC<Props> = ({
             {/* Randomization toggles (AI Mode) */}
             {mode === 'ai' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                <label className="flex items-center space-x-2.5 p-3 rounded-md bg-white border border-[#E8E4DF] cursor-pointer text-xs text-[#1A1A1A]">
+                <label className="flex items-center space-x-2.5 p-3 rounded-md bg-editorial-card border border-editorial-border cursor-pointer text-xs text-editorial-fg">
                   <input
                     type="checkbox"
                     checked={shuffleQuestions}
                     onChange={(e) => setShuffleQuestions(e.target.checked)}
-                    className="rounded border-[#E8E4DF] text-[#B8860B] focus:ring-[#B8860B]"
+                    className="rounded border-editorial-border text-editorial-accent focus:ring-editorial-accent"
                   />
                   <span>Permute Question Sequence</span>
                 </label>
 
-                <label className="flex items-center space-x-2.5 p-3 rounded-md bg-white border border-[#E8E4DF] cursor-pointer text-xs text-[#1A1A1A]">
+                <label className="flex items-center space-x-2.5 p-3 rounded-md bg-editorial-card border border-editorial-border cursor-pointer text-xs text-editorial-fg">
                   <input
                     type="checkbox"
                     checked={shuffleOptions}
                     onChange={(e) => setShuffleOptions(e.target.checked)}
-                    className="rounded border-[#E8E4DF] text-[#B8860B] focus:ring-[#B8860B]"
+                    className="rounded border-editorial-border text-editorial-accent focus:ring-editorial-accent"
                   />
                   <span>Permute Multiple-Choice Distractors (A/B/C/D)</span>
                 </label>
@@ -787,7 +779,7 @@ export const QuizCreator: React.FC<Props> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-between pt-6 border-t border-[#E8E4DF]">
+          <div className="flex items-center justify-between pt-6 border-t border-editorial-border">
             <button
               type="button"
               onClick={onCancel}
