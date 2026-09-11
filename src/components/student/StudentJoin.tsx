@@ -54,38 +54,38 @@ export const StudentJoin: React.FC<Props> = ({
   };
 
   return (
-    <div className="max-w-md mx-auto my-12 px-4">
-      <div className="card-editorial accent-top p-6 sm:p-8">
+    <div className="max-w-md mx-auto my-6 sm:my-12 px-3 sm:px-4">
+      <div className="card-editorial accent-top p-5 sm:p-8">
         {/* Section Label */}
-        <div className="rule-divider mb-6">
-          <span className="small-caps">Examination Portal</span>
+        <div className="rule-divider mb-5 sm:mb-6">
+          <span className="small-caps text-[10px] sm:text-xs">Examination Portal</span>
         </div>
 
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <div className="w-12 h-12 rounded-full bg-editorial-muted border border-editorial-border mx-auto flex items-center justify-center mb-3 text-editorial-accent">
             <UserCheck className="w-6 h-6" />
           </div>
           <h2 className="font-serif text-2xl sm:text-3xl text-editorial-foreground font-normal">
             Join Assessment
           </h2>
-          <p className="text-sm text-editorial-muted-foreground mt-1">
+          <p className="text-xs sm:text-sm text-editorial-muted-foreground mt-1">
             Enter your candidate credentials and quiz access code
           </p>
         </div>
 
         {/* Error alert */}
         {error && (
-          <div className="mb-6 p-3.5 rounded-md bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center space-x-2.5">
+          <div className="mb-5 sm:mb-6 p-3.5 rounded-md bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center space-x-2.5">
             <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
             <span className="font-medium">{error}</span>
           </div>
         )}
 
         {/* Form */}
-        <form onSubmit={handleJoin} className="space-y-5">
+        <form onSubmit={handleJoin} className="space-y-4 sm:space-y-5">
           <div>
-            <label className="block small-caps text-editorial-foreground mb-1.5">
+            <label className="block small-caps text-editorial-foreground mb-1.5 text-[10px] sm:text-xs">
               Quiz PIN
             </label>
             <div className="relative">
@@ -99,13 +99,13 @@ export const StudentJoin: React.FC<Props> = ({
                   setError('');
                 }}
                 placeholder="e.g. PY-2026"
-                className="input-editorial pl-10 pr-4 py-2.5 text-editorial-accent font-mono text-base font-bold placeholder-editorial-muted-foreground/50 uppercase tracking-widest"
+                className="input-editorial pl-10 pr-4 py-2.5 text-editorial-accent font-mono text-base font-bold placeholder-editorial-muted-foreground/50 uppercase tracking-widest w-full"
               />
             </div>
           </div>
 
           <div>
-            <label className="block small-caps text-editorial-foreground mb-1.5">
+            <label className="block small-caps text-editorial-foreground mb-1.5 text-[10px] sm:text-xs">
               Candidate Full Name
             </label>
             <div className="relative">
@@ -118,14 +118,14 @@ export const StudentJoin: React.FC<Props> = ({
                   setError('');
                 }}
                 placeholder="e.g. Eleanor Vance"
-                className="input-editorial pl-10 pr-4 py-2.5 text-sm text-editorial-foreground placeholder-editorial-muted-foreground/50 font-sans"
+                className="input-editorial pl-10 pr-4 py-2.5 text-base sm:text-sm text-editorial-foreground placeholder-editorial-muted-foreground/50 font-sans w-full"
               />
             </div>
           </div>
 
           <button
             type="submit"
-            className="btn-primary-serif w-full py-3 mt-2 flex items-center justify-center space-x-2"
+            className="btn-primary-serif w-full py-3 mt-2 flex items-center justify-center space-x-2 touch-manipulation"
           >
             <span>Enter Examination Room</span>
             <ArrowRight className="w-4 h-4" />

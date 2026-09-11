@@ -302,15 +302,15 @@ export const QuizCreator: React.FC<Props> = ({
 
   return (
     <>
-      <div className="card-editorial max-w-5xl mx-auto my-10 p-6 sm:p-10 shadow-md text-editorial-fg">
+      <div className="card-editorial max-w-5xl mx-auto my-4 sm:my-10 p-4 sm:p-8 md:p-10 shadow-md text-editorial-fg">
         {/* Header & Mode Switcher */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-editorial-border">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 sm:pb-6 border-b border-editorial-border">
           <div>
             <span className="small-caps text-[10px] text-editorial-accent">
               Assessment Design Studio
             </span>
-            <div className="flex items-center space-x-2.5 mt-0.5">
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-editorial-fg">
+            <div className="flex flex-wrap items-center gap-2 mt-0.5">
+              <h2 className="text-xl sm:text-3xl font-serif font-bold text-editorial-fg">
                 Configure Assessment
               </h2>
               {mode === 'ai' && (
@@ -337,9 +337,9 @@ export const QuizCreator: React.FC<Props> = ({
           <div className="flex p-1 bg-editorial-muted rounded-md border border-editorial-border self-start sm:self-auto">
             <button
               onClick={() => setMode('ai')}
-              className={`px-3.5 py-1.5 rounded text-xs font-medium transition-all flex items-center space-x-1 ${
+              className={`px-3 sm:px-3.5 py-1.5 rounded text-xs font-medium transition-all flex items-center space-x-1 ${
                 mode === 'ai'
-                  ? 'bg-editorial-card text-editorial-fg shadow-sm border border-editorial-border'
+                  ? 'bg-editorial-card text-editorial-fg shadow-xs border border-editorial-border'
                   : 'text-editorial-muted-fg hover:text-editorial-fg'
               }`}
             >
@@ -348,9 +348,9 @@ export const QuizCreator: React.FC<Props> = ({
             </button>
             <button
               onClick={() => setMode('syllabus')}
-              className={`px-3.5 py-1.5 rounded text-xs font-medium transition-all flex items-center space-x-1 ${
+              className={`px-3 sm:px-3.5 py-1.5 rounded text-xs font-medium transition-all flex items-center space-x-1 ${
                 mode === 'syllabus'
-                  ? 'bg-editorial-card text-editorial-fg shadow-sm border border-editorial-border'
+                  ? 'bg-editorial-card text-editorial-fg shadow-xs border border-editorial-border'
                   : 'text-editorial-muted-fg hover:text-editorial-fg'
               }`}
             >
@@ -361,7 +361,7 @@ export const QuizCreator: React.FC<Props> = ({
         </div>
 
         {/* Form Content */}
-        <div className="mt-8 space-y-8">
+        <div className="mt-6 sm:mt-8 space-y-6 sm:space-y-8">
           {/* Assessment Title */}
           <div>
             <label className="block font-mono text-xs font-medium text-editorial-muted-fg uppercase tracking-[0.15em] mb-1.5">
@@ -376,7 +376,7 @@ export const QuizCreator: React.FC<Props> = ({
                   ? 'e.g. Python Diagnostic & Language Runtime Evaluation'
                   : 'e.g. Midterm Examination · Section I'
               }
-              className="input-editorial w-full font-serif text-sm font-medium"
+              className="input-editorial w-full font-serif text-base sm:text-sm font-medium"
             />
           </div>
 
@@ -599,7 +599,7 @@ export const QuizCreator: React.FC<Props> = ({
                 </div>
 
                 {/* Sliders for Easy / Med / Hard */}
-                <div className="grid grid-cols-3 gap-3.5 pt-1">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1">
                   <div className="p-3.5 rounded-md bg-editorial-card border border-editorial-border">
                     <div className="flex items-center justify-between text-xs mb-1.5">
                       <span className="text-emerald-700 dark:text-emerald-400 font-semibold font-mono text-[11px] uppercase tracking-wider">Level I</span>
@@ -659,7 +659,7 @@ export const QuizCreator: React.FC<Props> = ({
           ) : (
             /* ======================== SYLLABUS SET SELECTION ======================== */
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <div className="p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-2">
+              <div className="p-4 sm:p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-2">
                 <label className="block font-mono text-xs font-medium text-editorial-muted-fg uppercase tracking-[0.15em]">
                   Curriculum Module
                 </label>
@@ -681,7 +681,7 @@ export const QuizCreator: React.FC<Props> = ({
                 />
               </div>
 
-              <div className="p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-2">
+              <div className="p-4 sm:p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-2">
                 <label className="block font-mono text-xs font-medium text-editorial-muted-fg uppercase tracking-[0.15em]">
                   Standard Set (30 Items)
                 </label>
@@ -700,7 +700,7 @@ export const QuizCreator: React.FC<Props> = ({
           )}
 
           {/* ======================== DELIVERY & EXAM RULES ======================== */}
-          <div className="p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-4">
+          <div className="p-4 sm:p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-4">
             <div className="flex items-center space-x-2 pb-3 border-b border-editorial-border">
               <Clock className="w-4 h-4 text-editorial-accent" />
               <span className="font-mono text-xs font-medium text-editorial-fg uppercase tracking-[0.15em]">
@@ -710,7 +710,7 @@ export const QuizCreator: React.FC<Props> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Timer per question */}
-              <div className="p-4 rounded-md bg-editorial-card border border-editorial-border">
+              <div className="p-3.5 sm:p-4 rounded-md bg-editorial-card border border-editorial-border">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-medium text-editorial-fg">
                     Countdown Timer per Item
@@ -731,7 +731,7 @@ export const QuizCreator: React.FC<Props> = ({
               </div>
 
               {/* Negative Marking Toggle */}
-              <div className="p-4 rounded-md bg-editorial-card border border-editorial-border flex items-center justify-between">
+              <div className="p-3.5 sm:p-4 rounded-md bg-editorial-card border border-editorial-border flex items-center justify-between">
                 <div>
                   <span className="text-xs font-medium text-editorial-fg block">
                     Negative Penalty Calibration
@@ -779,11 +779,11 @@ export const QuizCreator: React.FC<Props> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-between pt-6 border-t border-editorial-border">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6 border-t border-editorial-border">
             <button
               type="button"
               onClick={onCancel}
-              className="btn-secondary-serif text-xs py-2 px-4"
+              className="btn-secondary-serif text-xs py-2.5 px-4 text-center justify-center"
             >
               Cancel
             </button>
@@ -792,7 +792,7 @@ export const QuizCreator: React.FC<Props> = ({
               type="button"
               onClick={handleCreate}
               disabled={isGenerating}
-              className="btn-primary-serif text-xs py-2.5 px-6 disabled:opacity-50"
+              className="btn-primary-serif text-xs py-2.5 px-6 disabled:opacity-50 flex items-center justify-center space-x-2"
             >
               {isGenerating ? (
                 <>

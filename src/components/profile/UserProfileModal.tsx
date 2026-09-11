@@ -67,26 +67,26 @@ export const UserProfileModal: React.FC<Props> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-      <div className="card-editorial w-full max-w-lg p-6 sm:p-8 relative bg-editorial-card border border-editorial-border shadow-2xl rounded-lg overflow-hidden space-y-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-fadeIn overflow-y-auto">
+      <div className="card-editorial w-[94vw] max-w-lg p-5 sm:p-8 relative bg-editorial-card border border-editorial-border shadow-2xl rounded-lg overflow-hidden max-h-[90vh] overflow-y-auto my-auto space-y-5 sm:space-y-6">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-full text-editorial-muted-fg hover:text-editorial-fg hover:bg-editorial-muted transition-colors"
+          className="absolute top-3.5 right-3.5 sm:top-4 sm:right-4 p-1.5 rounded-full text-editorial-muted-fg hover:text-editorial-fg hover:bg-editorial-muted transition-colors z-10"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Modal Header */}
-        <div className="flex items-center space-x-3 border-b border-editorial-border pb-4">
-          <div className="w-12 h-12 rounded-full bg-editorial-muted border border-editorial-border flex items-center justify-center text-editorial-accent font-serif font-bold text-lg">
+        <div className="flex items-center space-x-3 border-b border-editorial-border pb-4 pr-6">
+          <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-editorial-muted border border-editorial-border flex items-center justify-center text-editorial-accent font-serif font-bold text-base sm:text-lg shrink-0">
             {user.fullName.charAt(0).toUpperCase()}
           </div>
-          <div>
-            <h2 className="font-serif text-xl font-bold text-editorial-fg">
+          <div className="min-w-0">
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-editorial-fg truncate">
               Account Dossier & Preferences
             </h2>
-            <div className="flex items-center space-x-2 mt-0.5">
+            <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
               <span
                 className={`inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[10px] font-mono capitalize ${
                   user.role === 'admin'
@@ -104,7 +104,7 @@ export const UserProfileModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 <span>
                   {user.role === 'teacher'
                     ? isPendingTeacher
-                      ? 'Instructor (Pending Approval)'
+                      ? 'Instructor (Pending)'
                       : 'Instructor (Approved)'
                     : user.role}
                 </span>
@@ -147,7 +147,7 @@ export const UserProfileModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent font-sans"
+                className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-base sm:text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent font-sans"
               />
             </div>
           </div>
@@ -162,7 +162,7 @@ export const UserProfileModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 type="email"
                 disabled
                 value={user.email}
-                className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-muted text-editorial-muted-fg text-sm font-mono cursor-not-allowed"
+                className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-muted text-editorial-muted-fg text-base sm:text-sm font-mono cursor-not-allowed"
               />
             </div>
           </div>
@@ -188,7 +188,7 @@ export const UserProfileModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
                   placeholder="AIzaSy..."
-                  className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-xs font-mono focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent"
+                  className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-base sm:text-xs font-mono focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent"
                 />
               </div>
             </div>
@@ -198,7 +198,7 @@ export const UserProfileModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <button
               type="button"
               onClick={handleSignOut}
-              className="text-xs font-medium text-red-600 hover:text-red-700 hover:underline flex items-center space-x-1.5"
+              className="text-xs font-medium text-red-600 hover:text-red-700 hover:underline flex items-center space-x-1.5 py-1.5"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Sign Out</span>
@@ -207,7 +207,7 @@ export const UserProfileModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <button
               type="submit"
               disabled={isSaving}
-              className="btn-primary-serif text-xs py-2 px-4 flex items-center space-x-1.5 shadow-sm"
+              className="btn-primary-serif text-xs py-2 px-4 flex items-center space-x-1.5 shadow-xs"
             >
               <Save className="w-3.5 h-3.5" />
               <span>{isSaving ? 'Saving...' : 'Save Profile'}</span>

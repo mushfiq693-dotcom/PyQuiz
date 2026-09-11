@@ -161,7 +161,7 @@ export const QuizScreen: React.FC<Props> = ({
   const progressPercent = ((currentIndex + 1) / questions.length) * 100;
 
   return (
-    <div className="max-w-4xl mx-auto my-6 px-4">
+    <div className="max-w-4xl mx-auto my-4 sm:my-6 px-3 sm:px-4">
       {/* Anti-Cheat Alert */}
       {antiCheatAlert && (
         <div className="mb-4 p-3 rounded-md bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center justify-between shadow-sm">
@@ -173,28 +173,30 @@ export const QuizScreen: React.FC<Props> = ({
       )}
 
       {/* Progress Bar & Header Strip */}
-      <div className="card-editorial mb-6 p-4 sm:p-5">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <span className="small-caps text-editorial-muted-foreground block">
+      <div className="card-editorial mb-4 sm:mb-6 p-3.5 sm:p-5">
+        <div className="flex items-center justify-between gap-2 mb-3 sm:mb-4">
+          <div className="min-w-0 flex-1 pr-2">
+            <span className="small-caps text-editorial-muted-foreground block text-[10px] sm:text-xs truncate">
               {quizTitle}
             </span>
-            <div className="flex items-baseline space-x-2 mt-0.5">
-              <span className="font-serif text-lg sm:text-xl font-normal text-editorial-foreground">
+            <div className="flex items-baseline space-x-1.5 sm:space-x-2 mt-0.5">
+              <span className="font-serif text-base sm:text-xl font-normal text-editorial-foreground whitespace-nowrap">
                 Item {currentIndex + 1}
               </span>
-              <span className="text-xs text-editorial-muted-foreground font-mono">
+              <span className="text-xs text-editorial-muted-foreground font-mono whitespace-nowrap">
                 of {questions.length}
               </span>
             </div>
           </div>
 
-          <QuizTimer
-            initialSeconds={timePerQuestion}
-            questionIndex={currentIndex}
-            onTimeExpired={handleTimeExpired}
-            isPaused={isLocked}
-          />
+          <div className="shrink-0">
+            <QuizTimer
+              initialSeconds={timePerQuestion}
+              questionIndex={currentIndex}
+              onTimeExpired={handleTimeExpired}
+              isPaused={isLocked}
+            />
+          </div>
         </div>
 
         {/* Linear Progress */}
@@ -207,7 +209,7 @@ export const QuizScreen: React.FC<Props> = ({
       </div>
 
       {/* Question Card */}
-      <div className="card-editorial accent-top p-6 sm:p-10">
+      <div className="card-editorial accent-top p-4 sm:p-8 md:p-10">
         <QuizQuestion
           question={currentQ}
           questionNumber={currentIndex + 1}

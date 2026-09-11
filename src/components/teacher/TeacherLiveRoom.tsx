@@ -104,9 +104,9 @@ export const TeacherLiveRoom: React.FC<Props> = ({
   };
 
   return (
-    <div className="max-w-5xl mx-auto my-10 p-6 sm:p-10 rounded-lg bg-editorial-card border border-editorial-border shadow-md text-editorial-fg">
+    <div className="max-w-5xl mx-auto my-4 sm:my-10 p-4 sm:p-8 md:p-10 rounded-lg bg-editorial-card border border-editorial-border shadow-md text-editorial-fg">
       {/* Top Session Code Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-editorial-border">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 sm:pb-6 border-b border-editorial-border">
         <div>
           <div className="flex items-center space-x-2">
             <span
@@ -126,7 +126,7 @@ export const TeacherLiveRoom: React.FC<Props> = ({
                 : 'Concluded'}
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-editorial-fg mt-1">
+          <h2 className="text-xl sm:text-3xl font-serif font-bold text-editorial-fg mt-1">
             {session.quizTitle}
           </h2>
           <p className="text-xs text-editorial-muted-fg mt-0.5 font-mono">
@@ -135,18 +135,18 @@ export const TeacherLiveRoom: React.FC<Props> = ({
         </div>
 
         {/* Join Code Display Card */}
-        <div className="flex items-center space-x-3 p-3.5 rounded-md bg-editorial-muted/50 border border-editorial-border">
+        <div className="flex items-center justify-between sm:justify-start space-x-3 p-3 sm:p-3.5 rounded-md bg-editorial-muted/50 border border-editorial-border self-start sm:self-auto w-full sm:w-auto">
           <div>
             <span className="small-caps text-[9px] text-editorial-muted-fg block">
               Access PIN
             </span>
-            <span className="text-2xl font-serif font-bold text-editorial-accent tracking-wider">
+            <span className="text-xl sm:text-2xl font-serif font-bold text-editorial-accent tracking-wider">
               {session.joinCode}
             </span>
           </div>
           <button
             onClick={handleCopyCode}
-            className="p-2 rounded bg-editorial-card hover:bg-editorial-muted text-editorial-fg border border-editorial-border hover:border-editorial-accent transition-all"
+            className="p-2 rounded bg-editorial-card hover:bg-editorial-muted text-editorial-fg border border-editorial-border hover:border-editorial-accent transition-all shrink-0"
             title="Copy Access PIN"
           >
             {copied ? <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-4 h-4 text-editorial-muted-fg" />}
@@ -155,8 +155,8 @@ export const TeacherLiveRoom: React.FC<Props> = ({
       </div>
 
       {/* Waiting Room Body & Student Roster */}
-      <div className="my-8">
-        <div className="flex items-center justify-between gap-4 mb-4">
+      <div className="my-6 sm:my-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div className="flex items-center space-x-2">
             <Users className="w-4 h-4 text-editorial-accent" />
             <h3 className="font-serif text-base font-bold text-editorial-fg">
@@ -164,7 +164,7 @@ export const TeacherLiveRoom: React.FC<Props> = ({
             </h3>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={addSimulatedStudent}
               className="btn-secondary-serif text-xs py-1.5 px-3"
@@ -185,7 +185,7 @@ export const TeacherLiveRoom: React.FC<Props> = ({
 
         {/* Student Cards Grid */}
         {students.length === 0 ? (
-          <div className="text-center py-12 px-4 rounded-md bg-editorial-muted/40 border border-editorial-border">
+          <div className="text-center py-10 sm:py-12 px-4 rounded-md bg-editorial-muted/40 border border-editorial-border">
             <Users className="w-8 h-8 text-editorial-muted-fg mx-auto mb-2 opacity-50" />
             <p className="text-xs text-editorial-muted-fg font-sans">
               Waiting for candidate enrollment with PIN <strong className="text-editorial-accent font-serif text-sm">{session.joinCode}</strong>
@@ -198,12 +198,12 @@ export const TeacherLiveRoom: React.FC<Props> = ({
                 key={student.id}
                 className="p-3 rounded-md bg-editorial-muted/40 border border-editorial-border flex items-center justify-between"
               >
-                <div className="flex items-center space-x-2.5">
-                  <div className="w-7 h-7 rounded bg-editorial-accent flex items-center justify-center text-white font-serif font-bold text-xs">
+                <div className="flex items-center space-x-2.5 min-w-0 pr-2">
+                  <div className="w-7 h-7 rounded bg-editorial-accent flex items-center justify-center text-white font-serif font-bold text-xs shrink-0">
                     {student.name.charAt(0)}
                   </div>
-                  <div>
-                    <span className="text-xs font-serif font-bold text-editorial-fg block">
+                  <div className="min-w-0">
+                    <span className="text-xs font-serif font-bold text-editorial-fg block truncate">
                       {student.name}
                     </span>
                     <span className="font-mono text-[10px] text-editorial-muted-fg">
@@ -212,7 +212,7 @@ export const TeacherLiveRoom: React.FC<Props> = ({
                   </div>
                 </div>
 
-                <div>
+                <div className="shrink-0">
                   {sessionStatus === 'waiting' ? (
                     <span className="px-2 py-0.5 rounded font-mono text-[10px] bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
                       Ready
@@ -234,11 +234,11 @@ export const TeacherLiveRoom: React.FC<Props> = ({
       </div>
 
       {/* Start Quiz Action */}
-      <div className="flex items-center justify-end pt-6 border-t border-editorial-border">
+      <div className="flex items-center justify-end pt-5 sm:pt-6 border-t border-editorial-border">
         {sessionStatus === 'waiting' ? (
           <button
             onClick={handleStartLive}
-            className="btn-primary-serif text-xs sm:text-sm py-2.5 px-6 font-medium"
+            className="w-full sm:w-auto btn-primary-serif text-xs sm:text-sm py-2.5 px-6 font-medium flex items-center justify-center space-x-2"
           >
             <Play className="w-4 h-4 fill-current" />
             <span>Commence Assessment ({students.length} Enrolled)</span>
@@ -246,7 +246,7 @@ export const TeacherLiveRoom: React.FC<Props> = ({
         ) : (
           <button
             onClick={onFinishSession}
-            className="btn-secondary-serif text-xs py-2 px-4"
+            className="w-full sm:w-auto btn-secondary-serif text-xs py-2 px-4"
           >
             Return to Dashboard
           </button>

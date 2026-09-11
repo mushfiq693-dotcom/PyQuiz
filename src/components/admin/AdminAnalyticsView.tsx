@@ -229,7 +229,7 @@ export const AdminAnalyticsView: React.FC<Props> = ({ activeSessions, onBackToCo
         </div>
 
         {submissions.length === 0 ? (
-          <div className="card-editorial p-8 text-center bg-editorial-muted/30">
+          <div className="card-editorial p-6 sm:p-8 text-center bg-editorial-muted/30">
             <FileText className="w-8 h-8 text-editorial-muted-fg mx-auto mb-2" />
             <p className="text-xs text-editorial-muted-fg">
               No examination submissions recorded yet. Once students take practice or live quizzes, analytics will populate here.
@@ -237,50 +237,52 @@ export const AdminAnalyticsView: React.FC<Props> = ({ activeSessions, onBackToCo
           </div>
         ) : (
           <div className="card-editorial overflow-hidden">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="border-b border-editorial-border bg-editorial-muted/50 text-editorial-muted-fg small-caps">
-                  <th className="py-3 px-4 font-semibold">Candidate</th>
-                  <th className="py-3 px-4 font-semibold">Exam Title</th>
-                  <th className="py-3 px-4 font-semibold">Score</th>
-                  <th className="py-3 px-4 font-semibold">Accuracy</th>
-                  <th className="py-3 px-4 font-semibold">Anti-Cheat Flags</th>
-                  <th className="py-3 px-4 font-semibold">Timestamp</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-editorial-border font-sans">
-                {submissions.slice(0, 10).map((sub) => (
-                  <tr key={sub.id} className="hover:bg-editorial-muted/30 transition-colors">
-                    <td className="py-3 px-4 font-semibold text-editorial-fg">
-                      {sub.studentName}
-                    </td>
-                    <td className="py-3 px-4 text-editorial-fg">{sub.quizTitle}</td>
-                    <td className="py-3 px-4 font-serif font-bold text-editorial-accent">
-                      {sub.score.finalScore.toFixed(2)} / {sub.score.totalQuestions}
-                    </td>
-                    <td className="py-3 px-4 font-mono font-semibold">
-                      {sub.score.accuracyPercentage}%
-                    </td>
-                    <td className="py-3 px-4">
-                      {sub.antiCheatEvents?.length > 0 ? (
-                        <span className="inline-flex items-center space-x-1 text-amber-600 dark:text-amber-400 font-mono text-[11px]">
-                          <AlertTriangle className="w-3 h-3" />
-                          <span>{sub.antiCheatEvents.length} Event(s)</span>
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center space-x-1 text-emerald-600 dark:text-emerald-400 font-mono text-[11px]">
-                          <CheckCircle className="w-3 h-3" />
-                          <span>Clean Record</span>
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-3 px-4 font-mono text-editorial-muted-fg text-[11px]">
-                      {new Date(sub.submittedAt).toLocaleDateString()}
-                    </td>
+            <div className="overflow-x-auto touch-scroll">
+              <table className="w-full text-left text-xs border-collapse min-w-[550px]">
+                <thead>
+                  <tr className="border-b border-editorial-border bg-editorial-muted/50 text-editorial-muted-fg small-caps">
+                    <th className="py-3 px-4 font-semibold">Candidate</th>
+                    <th className="py-3 px-4 font-semibold">Exam Title</th>
+                    <th className="py-3 px-4 font-semibold">Score</th>
+                    <th className="py-3 px-4 font-semibold">Accuracy</th>
+                    <th className="py-3 px-4 font-semibold">Anti-Cheat Flags</th>
+                    <th className="py-3 px-4 font-semibold">Timestamp</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-editorial-border font-sans">
+                  {submissions.slice(0, 10).map((sub) => (
+                    <tr key={sub.id} className="hover:bg-editorial-muted/30 transition-colors">
+                      <td className="py-3 px-4 font-semibold text-editorial-fg">
+                        {sub.studentName}
+                      </td>
+                      <td className="py-3 px-4 text-editorial-fg">{sub.quizTitle}</td>
+                      <td className="py-3 px-4 font-serif font-bold text-editorial-accent">
+                        {sub.score.finalScore.toFixed(2)} / {sub.score.totalQuestions}
+                      </td>
+                      <td className="py-3 px-4 font-mono font-semibold">
+                        {sub.score.accuracyPercentage}%
+                      </td>
+                      <td className="py-3 px-4">
+                        {sub.antiCheatEvents?.length > 0 ? (
+                          <span className="inline-flex items-center space-x-1 text-amber-600 dark:text-amber-400 font-mono text-[11px]">
+                            <AlertTriangle className="w-3 h-3" />
+                            <span>{sub.antiCheatEvents.length} Event(s)</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center space-x-1 text-emerald-600 dark:text-emerald-400 font-mono text-[11px]">
+                            <CheckCircle className="w-3 h-3" />
+                            <span>Clean Record</span>
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3 px-4 font-mono text-editorial-muted-fg text-[11px]">
+                        {new Date(sub.submittedAt).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </section>

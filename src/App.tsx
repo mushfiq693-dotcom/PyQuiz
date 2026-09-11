@@ -548,7 +548,7 @@ const MainAppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-editorial-bg text-editorial-fg flex flex-col selection:bg-editorial-accent/20 selection:text-editorial-fg font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-editorial-bg text-editorial-fg flex flex-col selection:bg-editorial-accent/20 selection:text-editorial-fg font-sans transition-colors duration-200 overflow-x-hidden w-full">
       {/* HEADER WITH INTEGRATED PROFILE DROPDOWN */}
       <Header
         onNavigate={handleNavigate}
@@ -566,7 +566,7 @@ const MainAppContent: React.FC = () => {
       />
 
       {/* MAIN VIEW CONTROLLER */}
-      <main className="flex-1 pb-12">
+      <main className="flex-1 pb-8 sm:pb-12 w-full max-w-full">
         {/* 1. LANDING PAGE VIEW */}
         {currentView === 'landing' && (
           <LandingPage
@@ -745,11 +745,11 @@ const MainAppContent: React.FC = () => {
       </main>
 
       {/* EDITORIAL FOOTER */}
-      <footer className="py-8 border-t border-editorial-border bg-editorial-bg text-center">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center space-x-3">
+      <footer className="py-6 sm:py-8 border-t border-editorial-border bg-editorial-bg text-center pb-safe">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
+          <div className="flex flex-wrap items-center justify-center space-x-2 sm:space-x-3">
             <PyQuizLogo size="xs" variant="badge" />
-            <span className="font-serif text-base font-bold tracking-tight text-editorial-fg">
+            <span className="font-serif text-sm sm:text-base font-bold tracking-tight text-editorial-fg">
               PyQuiz
             </span>
             <span className="text-xs text-editorial-muted-fg">•</span>
@@ -758,7 +758,7 @@ const MainAppContent: React.FC = () => {
             </span>
           </div>
 
-          <div className="text-[11px] font-mono text-editorial-muted-fg">
+          <div className="text-[10px] sm:text-[11px] font-mono text-editorial-muted-fg">
             © {new Date().getFullYear()} PyQuiz • Academic & Competitive Python Evaluation Protocol
           </div>
         </div>

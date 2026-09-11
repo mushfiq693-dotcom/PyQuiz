@@ -202,7 +202,7 @@ export const StudentAnalyticsView: React.FC<Props> = ({
         </div>
 
         {submissions.length === 0 ? (
-          <div className="card-editorial p-8 text-center bg-editorial-muted/30">
+          <div className="card-editorial p-6 sm:p-8 text-center bg-editorial-muted/30">
             <FileText className="w-8 h-8 text-editorial-muted-fg mx-auto mb-2" />
             <p className="text-xs text-editorial-muted-fg">
               No examination submissions found. Launch a solo practice exam or join an instructor live room to generate your analytics.
@@ -210,45 +210,47 @@ export const StudentAnalyticsView: React.FC<Props> = ({
           </div>
         ) : (
           <div className="card-editorial overflow-hidden">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="border-b border-editorial-border bg-editorial-muted/50 text-editorial-muted-fg small-caps">
-                  <th className="py-3 px-4 font-semibold">Assessment</th>
-                  <th className="py-3 px-4 font-semibold">Score</th>
-                  <th className="py-3 px-4 font-semibold">Accuracy</th>
-                  <th className="py-3 px-4 font-semibold">Date Completed</th>
-                  <th className="py-3 px-4 font-semibold text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-editorial-border font-sans">
-                {submissions.map((sub) => (
-                  <tr key={sub.id} className="hover:bg-editorial-muted/30 transition-colors">
-                    <td className="py-3 px-4 font-semibold text-editorial-fg">
-                      {sub.quizTitle}
-                    </td>
-                    <td className="py-3 px-4 font-serif font-bold text-editorial-accent">
-                      {sub.score.finalScore.toFixed(2)} / {sub.score.totalQuestions}
-                    </td>
-                    <td className="py-3 px-4 font-mono font-semibold">
-                      {sub.score.accuracyPercentage}%
-                    </td>
-                    <td className="py-3 px-4 font-mono text-editorial-muted-fg text-[11px]">
-                      {new Date(sub.submittedAt).toLocaleDateString()}
-                    </td>
-                    <td className="py-3 px-4 text-right">
-                      {onViewScorecard && (
-                        <button
-                          onClick={() => onViewScorecard(sub)}
-                          className="text-xs font-semibold text-editorial-accent hover:underline"
-                        >
-                          Review Scorecard
-                        </button>
-                      )}
-                    </td>
+            <div className="overflow-x-auto touch-scroll">
+              <table className="w-full text-left text-xs border-collapse min-w-[500px]">
+                <thead>
+                  <tr className="border-b border-editorial-border bg-editorial-muted/50 text-editorial-muted-fg small-caps">
+                    <th className="py-3 px-4 font-semibold">Assessment</th>
+                    <th className="py-3 px-4 font-semibold">Score</th>
+                    <th className="py-3 px-4 font-semibold">Accuracy</th>
+                    <th className="py-3 px-4 font-semibold">Date Completed</th>
+                    <th className="py-3 px-4 font-semibold text-right">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-editorial-border font-sans">
+                  {submissions.map((sub) => (
+                    <tr key={sub.id} className="hover:bg-editorial-muted/30 transition-colors">
+                      <td className="py-3 px-4 font-semibold text-editorial-fg">
+                        {sub.quizTitle}
+                      </td>
+                      <td className="py-3 px-4 font-serif font-bold text-editorial-accent">
+                        {sub.score.finalScore.toFixed(2)} / {sub.score.totalQuestions}
+                      </td>
+                      <td className="py-3 px-4 font-mono font-semibold">
+                        {sub.score.accuracyPercentage}%
+                      </td>
+                      <td className="py-3 px-4 font-mono text-editorial-muted-fg text-[11px]">
+                        {new Date(sub.submittedAt).toLocaleDateString()}
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        {onViewScorecard && (
+                          <button
+                            onClick={() => onViewScorecard(sub)}
+                            className="text-xs font-semibold text-editorial-accent hover:underline py-1"
+                          >
+                            Review Scorecard
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </section>

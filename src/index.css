@@ -39,6 +39,12 @@
 }
 
 @layer base {
+  html {
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: var(--background);
     color: var(--foreground);
@@ -47,7 +53,16 @@
     letter-spacing: 0.01em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
     transition: background-color 0.2s ease-out, color 0.2s ease-out;
+  }
+
+  #root {
+    overflow-x: hidden;
+    min-height: 100vh;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -72,6 +87,33 @@
   ::-webkit-scrollbar-thumb:hover {
     background: var(--accent);
   }
+}
+
+/* Touch & Mobile Utilities */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.touch-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Safe Area Insets for iOS Notch / Dynamic Island / Home Indicator */
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.pl-safe {
+  padding-left: env(safe-area-inset-left, 0px);
+}
+.pr-safe {
+  padding-right: env(safe-area-inset-right, 0px);
 }
 
 /* Typography Utilities */

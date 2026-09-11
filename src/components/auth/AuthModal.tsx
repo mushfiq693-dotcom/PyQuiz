@@ -181,23 +181,23 @@ export const AuthModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-      <div className="card-editorial w-full max-w-md p-6 sm:p-8 relative bg-editorial-card border border-editorial-border shadow-2xl rounded-lg overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-fadeIn overflow-y-auto">
+      <div className="card-editorial w-[94vw] max-w-md p-5 sm:p-8 relative bg-editorial-card border border-editorial-border shadow-2xl rounded-lg max-h-[90vh] overflow-y-auto my-auto">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-full text-editorial-muted-fg hover:text-editorial-fg hover:bg-editorial-muted transition-colors"
+          className="absolute top-3.5 right-3.5 sm:top-4 sm:right-4 p-1.5 rounded-full text-editorial-muted-fg hover:text-editorial-fg hover:bg-editorial-muted transition-colors z-10"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Brand Header */}
-        <div className="flex flex-col items-center text-center mb-6">
-          <PyQuizLogo size="md" variant="emblem" className="mb-3" />
-          <h2 className="font-serif text-2xl font-bold text-editorial-fg tracking-tight">
+        <div className="flex flex-col items-center text-center mb-5 sm:mb-6">
+          <PyQuizLogo size="md" variant="emblem" className="mb-2 sm:mb-3" />
+          <h2 className="font-serif text-xl sm:text-2xl font-bold text-editorial-fg tracking-tight">
             {tab === 'signin' ? 'Welcome Back to PyQuiz' : 'Join the PyQuiz Platform'}
           </h2>
-          <p className="text-xs text-editorial-muted-fg mt-1">
+          <p className="text-xs text-editorial-muted-fg mt-1 px-2">
             {tab === 'signin'
               ? 'Sign in to access your dashboard, rooms, and score history'
               : 'Create an account to evaluate candidates or test your Python mastery'}
@@ -207,17 +207,17 @@ export const AuthModal: React.FC<Props> = ({
         {/* Email Verification Pending View */}
         {verificationPendingEmail ? (
           <div className="text-center py-4 space-y-4 animate-fadeIn">
-            <div className="w-14 h-14 mx-auto rounded-full bg-editorial-accent/10 border border-editorial-accent/30 flex items-center justify-center text-editorial-accent animate-pulse">
-              <Mail className="w-7 h-7" />
+            <div className="w-12 h-12 sm:w-14 sm:h-14 mx-auto rounded-full bg-editorial-accent/10 border border-editorial-accent/30 flex items-center justify-center text-editorial-accent animate-pulse">
+              <Mail className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
             <div>
-              <h3 className="font-serif text-lg font-bold text-editorial-fg">
+              <h3 className="font-serif text-base sm:text-lg font-bold text-editorial-fg">
                 Check Your Email Inbox
               </h3>
               <p className="text-xs text-editorial-muted-fg mt-1">
                 We sent a secure verification link to:
               </p>
-              <p className="font-mono text-xs font-semibold text-editorial-fg mt-1 bg-editorial-muted py-1 px-3 rounded-md inline-block border border-editorial-border">
+              <p className="font-mono text-xs font-semibold text-editorial-fg mt-1 bg-editorial-muted py-1 px-3 rounded-md inline-block border border-editorial-border break-all max-w-full">
                 {verificationPendingEmail}
               </p>
             </div>
@@ -250,7 +250,7 @@ export const AuthModal: React.FC<Props> = ({
         ) : (
           <>
             {/* Tab Switcher */}
-            <div className="grid grid-cols-2 p-1 bg-editorial-muted border border-editorial-border rounded-md mb-6">
+            <div className="grid grid-cols-2 p-1 bg-editorial-muted border border-editorial-border rounded-md mb-5 sm:mb-6">
               <button
                 type="button"
                 onClick={() => {
@@ -260,7 +260,7 @@ export const AuthModal: React.FC<Props> = ({
                 }}
                 className={`py-2 text-xs font-semibold rounded transition-all ${
                   tab === 'signin'
-                    ? 'bg-editorial-card text-editorial-fg shadow-sm border border-editorial-border'
+                    ? 'bg-editorial-card text-editorial-fg shadow-xs border border-editorial-border'
                     : 'text-editorial-muted-fg hover:text-editorial-fg'
                 }`}
               >
@@ -275,7 +275,7 @@ export const AuthModal: React.FC<Props> = ({
                 }}
                 className={`py-2 text-xs font-semibold rounded transition-all ${
                   tab === 'signup'
-                    ? 'bg-editorial-card text-editorial-fg shadow-sm border border-editorial-border'
+                    ? 'bg-editorial-card text-editorial-fg shadow-xs border border-editorial-border'
                     : 'text-editorial-muted-fg hover:text-editorial-fg'
                 }`}
               >
@@ -289,7 +289,7 @@ export const AuthModal: React.FC<Props> = ({
                 type="button"
                 onClick={handleGoogleSignIn}
                 disabled={submitting}
-                className="w-full py-2.5 px-4 rounded-lg border-2 border-editorial-accent/30 bg-editorial-card hover:bg-editorial-muted hover:border-editorial-accent text-editorial-fg font-sans font-semibold text-xs flex items-center justify-center space-x-2.5 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 group"
+                className="w-full py-2.5 px-4 rounded-lg border-2 border-editorial-accent/30 bg-editorial-card hover:bg-editorial-muted hover:border-editorial-accent text-editorial-fg font-sans font-semibold text-xs flex items-center justify-center space-x-2.5 transition-all shadow-xs hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 group"
               >
                 <GoogleIcon />
                 <span className="tracking-wide">
@@ -321,7 +321,7 @@ export const AuthModal: React.FC<Props> = ({
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2.5 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent font-sans"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-base sm:text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent font-sans"
                 />
               </div>
             </div>
@@ -336,7 +336,7 @@ export const AuthModal: React.FC<Props> = ({
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2.5 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent font-sans"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-base sm:text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent font-sans"
                 />
               </div>
             </div>
@@ -362,36 +362,36 @@ export const AuthModal: React.FC<Props> = ({
                 <button
                   type="button"
                   onClick={() => setRole('student')}
-                  className={`p-2.5 rounded-md border text-left transition-all ${
+                  className={`p-2 sm:p-2.5 rounded-md border text-left transition-all ${
                     role === 'student'
-                      ? 'bg-editorial-accent/10 border-editorial-accent text-editorial-fg shadow-sm'
+                      ? 'bg-editorial-accent/10 border-editorial-accent text-editorial-fg shadow-xs'
                       : 'border-editorial-border text-editorial-muted-fg hover:border-editorial-accent/50'
                   }`}
                 >
                   <div className="flex items-center space-x-1.5 font-semibold text-xs">
-                    <BookOpen className="w-3.5 h-3.5 text-editorial-accent" />
-                    <span>Candidate / Student</span>
+                    <BookOpen className="w-3.5 h-3.5 text-editorial-accent shrink-0" />
+                    <span className="truncate">Candidate</span>
                   </div>
-                  <div className="text-[10px] text-editorial-muted-fg mt-0.5">
-                    Take live & practice exams
+                  <div className="text-[10px] text-editorial-muted-fg mt-0.5 leading-tight">
+                    Take live exams
                   </div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setRole('teacher')}
-                  className={`p-2.5 rounded-md border text-left transition-all ${
+                  className={`p-2 sm:p-2.5 rounded-md border text-left transition-all ${
                     role === 'teacher'
-                      ? 'bg-editorial-accent/10 border-editorial-accent text-editorial-fg shadow-sm'
+                      ? 'bg-editorial-accent/10 border-editorial-accent text-editorial-fg shadow-xs'
                       : 'border-editorial-border text-editorial-muted-fg hover:border-editorial-accent/50'
                   }`}
                 >
                   <div className="flex items-center space-x-1.5 font-semibold text-xs">
-                    <GraduationCap className="w-3.5 h-3.5 text-editorial-accent" />
-                    <span>Instructor / Teacher</span>
+                    <GraduationCap className="w-3.5 h-3.5 text-editorial-accent shrink-0" />
+                    <span className="truncate">Instructor</span>
                   </div>
-                  <div className="text-[10px] text-editorial-muted-fg mt-0.5">
-                    Requires Admin Approval
+                  <div className="text-[10px] text-editorial-muted-fg mt-0.5 leading-tight">
+                    Admin Approval
                   </div>
                 </button>
               </div>
@@ -409,7 +409,7 @@ export const AuthModal: React.FC<Props> = ({
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent"
+                  className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-base sm:text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent"
                 />
               </div>
             </div>
@@ -428,7 +428,7 @@ export const AuthModal: React.FC<Props> = ({
                     value={studentId}
                     onChange={(e) => setStudentId(e.target.value)}
                     placeholder="24CSE031"
-                    className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-sm placeholder:text-editorial-muted-fg/60 focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent font-mono uppercase"
+                    className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-base sm:text-sm placeholder:text-editorial-muted-fg/60 focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent font-mono uppercase"
                   />
                 </div>
               </div>
@@ -446,7 +446,7 @@ export const AuthModal: React.FC<Props> = ({
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent"
+                  className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-base sm:text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent"
                 />
               </div>
             </div>
@@ -462,7 +462,7 @@ export const AuthModal: React.FC<Props> = ({
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent"
+                  className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-base sm:text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent"
                 />
               </div>
             </div>
@@ -481,7 +481,7 @@ export const AuthModal: React.FC<Props> = ({
                   required
                   value={teacherNote}
                   onChange={(e) => setTeacherNote(e.target.value)}
-                  className="w-full p-2 rounded border border-editorial-border bg-editorial-bg text-editorial-fg text-xs focus:outline-none focus:border-editorial-accent font-sans"
+                  className="w-full p-2 rounded border border-editorial-border bg-editorial-bg text-editorial-fg text-base sm:text-xs focus:outline-none focus:border-editorial-accent font-sans"
                 />
               </div>
             )}

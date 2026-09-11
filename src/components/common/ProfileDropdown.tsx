@@ -80,7 +80,7 @@ export const ProfileDropdown: React.FC<Props> = ({
 
       {/* DROPDOWN MENU */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 rounded-xl bg-editorial-card border border-editorial-border shadow-2xl z-50 overflow-hidden animate-fadeIn font-sans text-xs">
+        <div className="absolute right-0 mt-2 w-[calc(100vw-20px)] max-w-xs sm:w-64 rounded-xl bg-editorial-card border border-editorial-border shadow-2xl z-50 overflow-hidden animate-fadeIn font-sans text-xs max-h-[85vh] overflow-y-auto">
           {/* User Info Header */}
           <div className="p-3.5 border-b border-editorial-border bg-editorial-muted/40">
             <div className="flex items-center space-x-2.5">

@@ -44,30 +44,30 @@ export const Header: React.FC<Props> = ({
 
   return (
     <>
-      <header className="sticky top-0 z-40 backdrop-blur-md bg-editorial-bg/90 border-b border-editorial-border transition-colors">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <header className="sticky top-0 z-40 backdrop-blur-md bg-editorial-bg/90 border-b border-editorial-border transition-colors pt-safe">
+        <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
           {/* Brand Wordmark & Animated Mascot Logo */}
           <div
-            className="flex items-center space-x-3 cursor-pointer group"
+            className="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer group select-none shrink-0"
             onClick={onGoLanding ? onGoLanding : () => onNavigate('landing')}
             title="PyQuiz — Unlocking Deep Python Mastery Through Live Quizzing"
           >
             <PyQuizLogo size="sm" />
             <div className="flex flex-col">
-              <span className="text-xl font-serif font-bold tracking-tight text-editorial-fg leading-none">
+              <span className="text-lg sm:text-xl font-serif font-bold tracking-tight text-editorial-fg leading-none">
                 PyQuiz
               </span>
-              <span className="small-caps text-[9px] text-editorial-muted-fg mt-0.5">
+              <span className="hidden xs:inline-block small-caps text-[9px] text-editorial-muted-fg mt-0.5">
                 Live Assessment Platform
               </span>
             </div>
           </div>
 
           {/* Right Tools & User Profile / Auth Actions */}
-          <div className="flex items-center space-x-2.5">
+          <div className="flex items-center space-x-1.5 sm:space-x-2.5">
             {/* Live Quiz Room PIN Badge (when connected) */}
             {activeQuizCode && (
-              <div className="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-editorial-muted border border-editorial-border text-editorial-fg text-xs font-mono">
+              <div className="hidden md:flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-editorial-muted border border-editorial-border text-editorial-fg text-xs font-mono">
                 <Activity className="w-3 h-3 text-editorial-accent animate-pulse" />
                 <span>PIN: {activeQuizCode}</span>
               </div>
@@ -78,7 +78,7 @@ export const Header: React.FC<Props> = ({
               <button
                 onClick={() => setShowAiModal(true)}
                 title="Configure Google Gemini AI Key"
-                className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md border text-xs font-medium transition-all ${
+                className={`flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-2.5 py-1.5 rounded-md border text-xs font-medium transition-all ${
                   hasAiKey
                     ? 'bg-editorial-card border-editorial-accent/40 text-editorial-fg hover:border-editorial-accent shadow-xs'
                     : 'bg-editorial-muted border-editorial-border text-editorial-muted-fg hover:text-editorial-fg hover:border-editorial-accent'
@@ -98,7 +98,9 @@ export const Header: React.FC<Props> = ({
 
             <ThemeToggle />
             <SoundToggle />
-            <FullscreenToggle />
+            <div className="hidden sm:inline-flex">
+              <FullscreenToggle />
+            </div>
 
             {/* Authenticated Profile Dropdown OR Sign In Button */}
             {isAuthenticated && user ? (
@@ -110,7 +112,7 @@ export const Header: React.FC<Props> = ({
             ) : (
               <button
                 onClick={() => onOpenAuthModal('signin')}
-                className="btn-primary-serif text-xs py-1.5 px-4 flex items-center space-x-1.5 shadow-sm ml-1"
+                className="btn-primary-serif text-xs py-1.5 sm:py-2 px-3 sm:px-4 flex items-center space-x-1.5 shadow-sm ml-0.5 sm:ml-1"
               >
                 <LogIn className="w-3.5 h-3.5" />
                 <span>Sign In</span>

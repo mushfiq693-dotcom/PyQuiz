@@ -101,11 +101,11 @@ export const DevCreditWidget: React.FC = () => {
   return (
     <>
       {/* FLOATING TRIGGER BUTTON */}
-      <div className="fixed bottom-6 right-6 z-50 flex items-center justify-end">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 pb-safe pr-safe z-50 flex items-center justify-end">
         <button
           ref={triggerRef}
           onClick={() => setIsOpen((prev) => !prev)}
-          className="group relative w-12 h-12 sm:w-13 sm:h-13 rounded-full p-[2px] transition-all duration-300 transform hover:scale-105 active:scale-95 focus:outline-none bg-gradient-to-tr from-rose-500 via-fuchsia-500 to-indigo-500 shadow-[0_0_18px_rgba(244,63,94,0.35),0_0_22px_rgba(168,85,247,0.25)]"
+          className="group relative w-11 h-11 sm:w-13 sm:h-13 rounded-full p-[2px] transition-all duration-300 transform hover:scale-105 active:scale-95 focus:outline-none bg-gradient-to-tr from-rose-500 via-fuchsia-500 to-indigo-500 shadow-[0_0_18px_rgba(244,63,94,0.35),0_0_22px_rgba(168,85,247,0.25)]"
           aria-label="Developer Credits"
           title="Developer Profile: Mushfiqur Rahman"
         >
@@ -122,7 +122,7 @@ export const DevCreditWidget: React.FC = () => {
                 onError={() => setImgError(true)}
               />
             ) : (
-              <div className="w-full h-full bg-editorial-accent text-editorial-bg flex items-center justify-center font-serif font-bold text-base">
+              <div className="w-full h-full bg-editorial-accent text-editorial-bg flex items-center justify-center font-serif font-bold text-sm sm:text-base">
                 MR
               </div>
             )}
@@ -132,17 +132,17 @@ export const DevCreditWidget: React.FC = () => {
 
       {/* MODAL / POPUP CARD */}
       {isOpen && (
-        <div className="fixed inset-0 z-[60] flex items-end sm:items-end justify-center sm:justify-end p-4 sm:p-6 sm:pb-20 pointer-events-none">
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-end justify-center sm:justify-end p-3 sm:p-6 sm:pb-20 pb-safe pointer-events-none">
           {/* Overlay backdrop on small mobile screens */}
           <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm sm:hidden pointer-events-auto transition-opacity"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm sm:hidden pointer-events-auto transition-opacity"
             onClick={() => setIsOpen(false)}
           />
 
           {/* Popup Card: Theme-Adaptive Glass Frame with Gradient Accents */}
           <div
             ref={modalRef}
-            className="pointer-events-auto relative w-full max-w-[295px] sm:max-w-[315px] rounded-2xl bg-editorial-card/95 backdrop-blur-2xl border border-editorial-border dark:border-white/10 text-editorial-fg shadow-2xl shadow-editorial-fg/10 dark:shadow-black/80 overflow-hidden transform transition-all animate-in fade-in zoom-in-95 duration-200"
+            className="pointer-events-auto relative w-full max-w-[300px] sm:max-w-[315px] rounded-2xl bg-editorial-card/95 backdrop-blur-2xl border border-editorial-border dark:border-white/10 text-editorial-fg shadow-2xl shadow-editorial-fg/10 dark:shadow-black/80 overflow-hidden transform transition-all animate-in fade-in zoom-in-95 duration-200 mb-16 sm:mb-0"
           >
             {/* Top Glowing Ambient Gradient Arc */}
             <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-44 h-44 bg-gradient-to-b from-rose-500/15 via-fuchsia-500/10 to-transparent rounded-full blur-2xl pointer-events-none" />

@@ -118,19 +118,19 @@ export const QuestionReviewer: React.FC<Props> = ({
   const hardCount = questions.filter((q) => q.difficulty === 'hard').length;
 
   return (
-    <div className="max-w-5xl mx-auto my-10 p-6 sm:p-10 rounded-lg bg-editorial-card border border-editorial-border shadow-md text-editorial-fg">
+    <div className="max-w-5xl mx-auto my-4 sm:my-10 p-4 sm:p-8 md:p-10 rounded-lg bg-editorial-card border border-editorial-border shadow-md text-editorial-fg">
       {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-editorial-border">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 sm:pb-6 border-b border-editorial-border">
         <div>
           <button
             onClick={onBack}
-            className="flex items-center space-x-1 text-xs text-editorial-muted-fg hover:text-editorial-fg transition-colors mb-1.5"
+            className="flex items-center space-x-1 text-xs text-editorial-muted-fg hover:text-editorial-fg transition-colors mb-1.5 py-1"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Return to Configurator</span>
           </button>
-          <div className="flex items-center space-x-2.5">
-            <h2 className="text-2xl font-serif font-bold text-editorial-fg">{quizTitle}</h2>
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-editorial-fg">{quizTitle}</h2>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-editorial-muted text-editorial-accent border border-editorial-border">
               {questions.length} Items
             </span>
@@ -138,10 +138,10 @@ export const QuestionReviewer: React.FC<Props> = ({
         </div>
 
         {/* Action Controls & Publish */}
-        <div className="flex items-center space-x-2.5">
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto w-full sm:w-auto">
           <button
             onClick={handleAddNew}
-            className="btn-secondary-serif text-xs py-2 px-3.5"
+            className="flex-1 sm:flex-initial btn-secondary-serif text-xs py-2 px-3.5 flex items-center justify-center space-x-1.5"
           >
             <Plus className="w-3.5 h-3.5 text-editorial-accent" />
             <span>Add Item</span>
@@ -149,7 +149,7 @@ export const QuestionReviewer: React.FC<Props> = ({
 
           <button
             onClick={() => onPublishQuiz(questions)}
-            className="btn-primary-serif text-xs py-2 px-4.5"
+            className="flex-1 sm:flex-initial btn-primary-serif text-xs py-2 px-4.5 flex items-center justify-center space-x-1.5"
           >
             <Send className="w-3.5 h-3.5" />
             <span>Deploy Live Assessment</span>
@@ -158,16 +158,16 @@ export const QuestionReviewer: React.FC<Props> = ({
       </div>
 
       {/* Stats and Filter Strip */}
-      <div className="flex flex-wrap items-center justify-between gap-3 my-6 p-3.5 rounded-md bg-editorial-muted/50 border border-editorial-border text-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 my-5 sm:my-6 p-3 sm:p-3.5 rounded-md bg-editorial-muted/50 border border-editorial-border text-xs">
         {/* Breakdown counters */}
-        <div className="flex items-center space-x-2 font-mono">
-          <span className="px-2.5 py-0.5 rounded font-mono text-[10px] font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 font-mono">
+          <span className="px-2 sm:px-2.5 py-0.5 rounded font-mono text-[10px] font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
             {easyCount} Level I
           </span>
-          <span className="px-2.5 py-0.5 rounded font-mono text-[10px] font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+          <span className="px-2 sm:px-2.5 py-0.5 rounded font-mono text-[10px] font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30">
             {medCount} Level II
           </span>
-          <span className="px-2.5 py-0.5 rounded font-mono text-[10px] font-semibold bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/30">
+          <span className="px-2 sm:px-2.5 py-0.5 rounded font-mono text-[10px] font-semibold bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/30">
             {hardCount} Level III
           </span>
         </div>

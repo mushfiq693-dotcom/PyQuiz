@@ -27,7 +27,7 @@ export const CodeSnippet: React.FC<Props> = ({ code, className = '', allowCopy =
       className={`rounded-lg overflow-hidden border border-editorial-border bg-editorial-card shadow-sm my-4 text-left select-none ${className}`}
     >
       {/* Code Header Bar */}
-      <div className="flex items-center justify-between px-4 py-2 bg-editorial-muted border-b border-editorial-border text-xs font-mono">
+      <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-editorial-muted border-b border-editorial-border text-xs font-mono">
         <div className="flex items-center space-x-2">
           <div className="flex space-x-1.5 mr-1.5">
             <div className="w-2 h-2 rounded-full bg-editorial-border" />
@@ -35,7 +35,7 @@ export const CodeSnippet: React.FC<Props> = ({ code, className = '', allowCopy =
             <div className="w-2 h-2 rounded-full bg-editorial-border" />
           </div>
           <Terminal className="w-3.5 h-3.5 text-editorial-accent" />
-          <span className="text-editorial-fg font-semibold text-[11px] tracking-wide">python 3.10+</span>
+          <span className="text-editorial-fg font-semibold text-[10px] sm:text-[11px] tracking-wide">python 3.10+</span>
         </div>
         {allowCopy && (
           <button
@@ -58,7 +58,7 @@ export const CodeSnippet: React.FC<Props> = ({ code, className = '', allowCopy =
       </div>
 
       {/* Code Content */}
-      <div className="p-4 overflow-x-auto font-mono text-sm leading-relaxed bg-editorial-card">
+      <div className="p-3 sm:p-4 overflow-x-auto touch-scroll font-mono text-xs sm:text-sm leading-relaxed bg-editorial-card">
         <table className="w-full border-collapse">
           <tbody>
             {lines.map((line, idx) => (

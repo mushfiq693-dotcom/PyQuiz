@@ -73,41 +73,41 @@ export const LandingPage: React.FC<Props> = ({
 
   // Shared identical button styling for UI consistency
   const actionBtnClass =
-    'flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl border border-editorial-border bg-editorial-card hover:border-editorial-accent/70 hover:bg-editorial-muted/70 text-editorial-fg shadow-xs hover:shadow-editorial-md transition-all font-sans font-medium text-sm hover:-translate-y-0.5 active:translate-y-0 text-center min-w-[200px]';
+    'w-full sm:w-auto flex items-center justify-center space-x-2 px-5 sm:px-6 py-3.5 rounded-xl border border-editorial-border bg-editorial-card hover:border-editorial-accent/70 hover:bg-editorial-muted/70 text-editorial-fg shadow-xs hover:shadow-editorial-md transition-all font-sans font-medium text-sm hover:-translate-y-0.5 active:translate-y-0 text-center min-w-0 sm:min-w-[190px] touch-manipulation';
 
   return (
-    <div className="space-y-24 py-10 sm:py-16">
+    <div className="space-y-16 sm:space-y-24 py-8 sm:py-16">
       {/* 1. HERO SECTION */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Editorial Top Badge */}
-        <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-editorial-muted border border-editorial-border text-editorial-accent mb-8 shadow-sm">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span className="small-caps text-[11px] font-semibold tracking-[0.18em]">
+        <div className="inline-flex items-center space-x-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-editorial-muted border border-editorial-border text-editorial-accent mb-6 sm:mb-8 shadow-xs max-w-full">
+          <Sparkles className="w-3.5 h-3.5 shrink-0" />
+          <span className="small-caps text-[10px] sm:text-[11px] font-semibold tracking-[0.14em] sm:tracking-[0.18em] truncate">
             Standard Protocol for Python Competency
           </span>
         </div>
 
         {/* Brand Mascot Logo with Animated Snake Slither */}
-        <div className="flex items-center justify-center mb-6">
+        <div className="flex items-center justify-center mb-5 sm:mb-6">
           <PyQuizLogo size="xl" variant="emblem" className="shadow-xl" />
         </div>
 
         {/* Product Name & Motto */}
-        <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-normal tracking-tight text-editorial-fg leading-[1.1] mb-6">
+        <h1 className="font-serif text-3xl sm:text-5xl md:text-7xl font-normal tracking-tight text-editorial-fg leading-[1.12] mb-4 sm:mb-6">
           PyQuiz
         </h1>
-        <p className="font-serif italic text-xl sm:text-2xl md:text-3xl text-editorial-accent font-medium max-w-3xl mx-auto mb-8 leading-relaxed">
+        <p className="font-serif italic text-lg sm:text-2xl md:text-3xl text-editorial-accent font-medium max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed px-2">
           "Unlocking Deep Python Mastery Through Live Quizzing"
         </p>
 
         {/* Concise Subtitle Description */}
-        <p className="text-base sm:text-lg text-editorial-muted-fg max-w-xl mx-auto font-sans leading-relaxed mb-6">
+        <p className="text-sm sm:text-base md:text-lg text-editorial-muted-fg max-w-xl mx-auto font-sans leading-relaxed mb-6 sm:mb-8 px-2">
           Standardized assessment platform engineered for computer science educators and candidates.
         </p>
 
         {/* Unified Editorial Specification Bar */}
-        <div className="max-w-xl mx-auto mb-10">
-          <div className="grid grid-cols-2 sm:grid-cols-4 rounded-lg border border-editorial-border bg-editorial-card/70 divide-x divide-y sm:divide-y-0 divide-editorial-border overflow-hidden text-xs font-mono shadow-xs">
+        <div className="max-w-xl mx-auto mb-8 sm:mb-10 px-1">
+          <div className="grid grid-cols-2 sm:grid-cols-4 rounded-xl border border-editorial-border bg-editorial-card/70 divide-x divide-y sm:divide-y-0 divide-editorial-border overflow-hidden text-xs font-mono shadow-xs">
             <div className="flex items-center justify-center space-x-2 py-2.5 px-3">
               <Zap className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
               <span className="text-editorial-fg font-medium tracking-tight">Live Sync</span>
@@ -128,7 +128,7 @@ export const LandingPage: React.FC<Props> = ({
         </div>
 
         {/* PRIMARY CTA BUTTONS - UNIFIED MATCHING UI */}
-        <div className="flex flex-wrap items-center justify-center gap-3.5 max-w-3xl mx-auto">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center gap-3 sm:gap-3.5 max-w-3xl mx-auto px-2">
           {/* GUEST (UNAUTHENTICATED) HERO BUTTONS */}
           {!isAuthenticated && (
             <>
@@ -355,18 +355,18 @@ export const LandingPage: React.FC<Props> = ({
 
       {/* 4. CALL TO ACTION BANNER (ROLE SPECIFIC & BALANCED) */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="card-editorial accent-top p-8 sm:p-12 text-center relative overflow-hidden">
-          <span className="small-caps text-editorial-accent block mb-3">
+        <div className="card-editorial accent-top p-6 sm:p-12 text-center relative overflow-hidden">
+          <span className="small-caps text-editorial-accent block mb-2 sm:mb-3 text-[10px] sm:text-xs">
             Begin Your Python Evaluation
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-editorial-fg font-normal max-w-2xl mx-auto mb-4 leading-tight">
+          <h2 className="font-serif text-2xl sm:text-4xl md:text-5xl text-editorial-fg font-normal max-w-2xl mx-auto mb-3 sm:mb-4 leading-tight">
             Ready to Unlock Deep Python Mastery?
           </h2>
-          <p className="text-sm text-editorial-muted-fg max-w-lg mx-auto mb-8 font-sans">
+          <p className="text-xs sm:text-sm text-editorial-muted-fg max-w-lg mx-auto mb-6 sm:mb-8 font-sans">
             Launch a proctored assessment room or configure custom curriculum questions in seconds.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-3.5">
+          <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center gap-3 sm:gap-3.5">
             {/* If Teacher */}
             {isAuthenticated && isTeacher ? (
               <>

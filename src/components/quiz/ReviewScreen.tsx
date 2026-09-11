@@ -46,30 +46,30 @@ export const ReviewScreen: React.FC<Props> = ({
   const timedOutCount = answers.filter((a) => a.isTimedOut || a.selectedOption === null).length;
 
   return (
-    <div className="max-w-4xl mx-auto my-8 px-4">
-      <div className="card-editorial accent-top p-6 sm:p-8">
+    <div className="max-w-4xl mx-auto my-4 sm:my-8 px-3 sm:px-4">
+      <div className="card-editorial accent-top p-4 sm:p-8">
         {/* Top Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-editorial-border">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-6 border-b border-editorial-border">
           <div>
             <button
               onClick={onBackToResults}
-              className="btn-ghost-serif inline-flex items-center space-x-1.5 text-xs mb-2"
+              className="btn-ghost-serif inline-flex items-center space-x-1.5 text-xs mb-1.5 sm:mb-2 py-1.5 px-2"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Performance Report</span>
             </button>
-            <h2 className="font-serif text-2xl text-editorial-fg font-normal">
+            <h2 className="font-serif text-xl sm:text-2xl text-editorial-fg font-normal">
               Item-by-Item Review ({questions.length} Items)
             </h2>
           </div>
 
-          {/* Filter Strip */}
-          <div className="flex items-center space-x-1 bg-editorial-muted p-1 rounded-md border border-editorial-border self-start sm:self-auto text-xs">
+          {/* Filter Strip - Touch Scrollable */}
+          <div className="flex items-center space-x-1 bg-editorial-muted p-1 rounded-md border border-editorial-border self-start sm:self-auto text-xs overflow-x-auto touch-scroll no-scrollbar max-w-full">
             <button
               onClick={() => setFilter('all')}
-              className={`px-3 py-1 rounded text-xs font-mono font-medium transition-all ${
+              className={`px-3 py-1 rounded text-xs font-mono font-medium shrink-0 transition-all ${
                 filter === 'all'
-                  ? 'bg-editorial-fg text-editorial-bg shadow-sm font-bold'
+                  ? 'bg-editorial-fg text-editorial-bg shadow-xs font-bold'
                   : 'text-editorial-muted-fg hover:text-editorial-fg'
               }`}
             >
@@ -77,9 +77,9 @@ export const ReviewScreen: React.FC<Props> = ({
             </button>
             <button
               onClick={() => setFilter('correct')}
-              className={`px-2.5 py-1 rounded text-xs font-mono font-medium transition-all ${
+              className={`px-2.5 py-1 rounded text-xs font-mono font-medium shrink-0 transition-all ${
                 filter === 'correct'
-                  ? 'bg-emerald-700 text-white shadow-sm font-bold'
+                  ? 'bg-emerald-700 text-white shadow-xs font-bold'
                   : 'text-emerald-700 dark:text-emerald-300 hover:text-emerald-800'
               }`}
             >
@@ -87,9 +87,9 @@ export const ReviewScreen: React.FC<Props> = ({
             </button>
             <button
               onClick={() => setFilter('incorrect')}
-              className={`px-2.5 py-1 rounded text-xs font-mono font-medium transition-all ${
+              className={`px-2.5 py-1 rounded text-xs font-mono font-medium shrink-0 transition-all ${
                 filter === 'incorrect'
-                  ? 'bg-rose-700 text-white shadow-sm font-bold'
+                  ? 'bg-rose-700 text-white shadow-xs font-bold'
                   : 'text-rose-700 dark:text-rose-300 hover:text-rose-800'
               }`}
             >
@@ -97,9 +97,9 @@ export const ReviewScreen: React.FC<Props> = ({
             </button>
             <button
               onClick={() => setFilter('timedOut')}
-              className={`px-2.5 py-1 rounded text-xs font-mono font-medium transition-all ${
+              className={`px-2.5 py-1 rounded text-xs font-mono font-medium shrink-0 transition-all ${
                 filter === 'timedOut'
-                  ? 'bg-amber-700 text-white shadow-sm font-bold'
+                  ? 'bg-amber-700 text-white shadow-xs font-bold'
                   : 'text-amber-700 dark:text-amber-300 hover:text-amber-800'
               }`}
             >
@@ -109,7 +109,7 @@ export const ReviewScreen: React.FC<Props> = ({
         </div>
 
         {/* Review List */}
-        <div className="mt-6 space-y-6">
+        <div className="mt-5 sm:mt-6 space-y-4 sm:space-y-6">
           {filteredQuestions.map((q) => {
             const originalIndex = questions.findIndex((item) => item.id === q.id);
             const ans = getAnswerForQuestion(q.id, originalIndex);

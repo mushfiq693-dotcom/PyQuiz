@@ -81,12 +81,12 @@ export const StudentDashboard: React.FC<Props> = ({
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-editorial-border pb-6">
         <div>
           <div className="flex items-center space-x-2 text-editorial-accent mb-1">
-            <BookOpen className="w-4 h-4" />
+            <BookOpen className="w-4 h-4 shrink-0" />
             <span className="small-caps text-xs font-semibold tracking-wider">
               Candidate Academic Portal
             </span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl text-editorial-fg font-normal tracking-tight">
+          <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl text-editorial-fg font-normal tracking-tight">
             Welcome, {user?.fullName || 'Candidate'}
           </h1>
           <p className="text-xs text-editorial-muted-fg mt-1">
@@ -94,11 +94,11 @@ export const StudentDashboard: React.FC<Props> = ({
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full md:w-auto">
           {onOpenAnalytics && (
             <button
               onClick={onOpenAnalytics}
-              className="btn-secondary-serif text-xs py-2 px-3.5 flex items-center space-x-1.5 shadow-xs"
+              className="btn-secondary-serif text-xs py-2 px-3.5 flex items-center justify-center space-x-1.5 shadow-xs"
             >
               <TrendingUp className="w-3.5 h-3.5 text-editorial-accent" />
               <span>My Analytics</span>
@@ -108,7 +108,7 @@ export const StudentDashboard: React.FC<Props> = ({
           {/* Quick PIN Join Bar */}
           <form
             onSubmit={handleJoinPin}
-            className="flex items-center space-x-2 p-1.5 bg-editorial-muted/80 border border-editorial-border rounded-lg shadow-sm"
+            className="flex items-center space-x-2 p-1.5 bg-editorial-muted/80 border border-editorial-border rounded-lg shadow-xs w-full sm:w-auto"
           >
             <Activity className="w-4 h-4 text-editorial-accent ml-2 shrink-0 animate-pulse" />
             <input
@@ -118,15 +118,15 @@ export const StudentDashboard: React.FC<Props> = ({
                 setPinCode(e.target.value.toUpperCase());
                 setPinError(null);
               }}
-              placeholder="ENTER QUIZ PIN"
+              placeholder="ENTER PIN"
               maxLength={10}
-              className="w-36 px-2.5 py-1.5 bg-editorial-bg border border-editorial-border rounded text-xs font-mono font-bold tracking-widest text-editorial-fg focus:outline-none focus:border-editorial-accent uppercase placeholder:text-editorial-muted-fg"
+              className="flex-1 sm:w-32 px-2.5 py-1.5 bg-editorial-bg border border-editorial-border rounded text-xs font-mono font-bold tracking-widest text-editorial-fg focus:outline-none focus:border-editorial-accent uppercase placeholder:text-editorial-muted-fg text-center sm:text-left"
             />
             <button
               type="submit"
               className="btn-primary-serif text-xs py-1.5 px-3.5 shadow-sm whitespace-nowrap"
             >
-              Join Live Room
+              Join Room
             </button>
           </form>
         </div>
@@ -140,8 +140,8 @@ export const StudentDashboard: React.FC<Props> = ({
       )}
 
       {/* 2. CANDIDATE METRICS */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="card-editorial p-5">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <div className="card-editorial p-3.5 sm:p-5">
           <div className="flex items-center justify-between text-editorial-muted-fg mb-1">
             <span className="small-caps text-[11px]">Completed Exams</span>
             <FileText className="w-4 h-4 text-editorial-accent" />
@@ -260,11 +260,11 @@ export const StudentDashboard: React.FC<Props> = ({
         </div>
 
         {/* Module Filter Navigation Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar touch-scroll flex-nowrap shrink-0 scroll-smooth">
           <button
             type="button"
             onClick={() => setSelectedModuleFilter('all')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all shrink-0 ${
               selectedModuleFilter === 'all'
                 ? 'bg-editorial-fg text-editorial-bg shadow-sm font-semibold'
                 : 'bg-editorial-muted text-editorial-muted-fg hover:text-editorial-fg hover:bg-editorial-border/60 border border-editorial-border'
@@ -277,7 +277,7 @@ export const StudentDashboard: React.FC<Props> = ({
               key={section.id}
               type="button"
               onClick={() => setSelectedModuleFilter(section.id)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all shrink-0 ${
                 selectedModuleFilter === section.id
                   ? 'bg-editorial-accent text-editorial-bg shadow-sm font-semibold'
                   : 'bg-editorial-muted text-editorial-muted-fg hover:text-editorial-fg hover:bg-editorial-border/60 border border-editorial-border'
@@ -289,7 +289,7 @@ export const StudentDashboard: React.FC<Props> = ({
         </div>
 
         {/* Modules & Sets List */}
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           {syllabusSections
             .map((section, secIdx) => ({ section, secIdx }))
             .filter(
@@ -299,7 +299,7 @@ export const StudentDashboard: React.FC<Props> = ({
             .map(({ section, secIdx }) => (
               <div
                 key={section.id}
-                className="card-editorial p-6 space-y-5 border border-editorial-border bg-editorial-card shadow-sm rounded-xl"
+                className="card-editorial p-4 sm:p-6 space-y-4 sm:space-y-5 border border-editorial-border bg-editorial-card shadow-sm rounded-xl"
               >
                 {/* Module Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-4 border-b border-editorial-border/60">
