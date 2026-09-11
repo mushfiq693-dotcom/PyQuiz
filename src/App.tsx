@@ -47,27 +47,64 @@ import { QuizScreen } from './components/quiz/QuizScreen';
 import { ResultsScreen } from './components/quiz/ResultsScreen';
 import { ReviewScreen } from './components/quiz/ReviewScreen';
 
+type ViewType =
+  | 'landing'
+  | 'admin-dashboard'
+  | 'admin-analytics'
+  | 'teacher-dashboard'
+  | 'teacher-analytics'
+  | 'teacher-pending'
+  | 'student-dashboard'
+  | 'student-analytics'
+  | 'quiz-creator'
+  | 'question-reviewer'
+  | 'teacher-live-room'
+  | 'student-join'
+  | 'student-waiting-room'
+  | 'quiz-active'
+  | 'quiz-results'
+  | 'quiz-review';
+
+const VALID_VIEWS: ViewType[] = [
+  'landing',
+  'admin-dashboard',
+  'admin-analytics',
+  'teacher-dashboard',
+  'teacher-analytics',
+  'teacher-pending',
+  'student-dashboard',
+  'student-analytics',
+  'quiz-creator',
+  'question-reviewer',
+  'teacher-live-room',
+  'student-join',
+  'student-waiting-room',
+  'quiz-active',
+  'quiz-results',
+  'quiz-review',
+];
+
 const MainAppContent: React.FC = () => {
   const { user, isAuthenticated, isAdmin, isTeacher, isStudent, isPendingTeacher } = useAuth();
 
-  const [currentView, setCurrentView] = useState<
-    | 'landing'
-    | 'admin-dashboard'
-    | 'admin-analytics'
-    | 'teacher-dashboard'
-    | 'teacher-analytics'
-    | 'teacher-pending'
-    | 'student-dashboard'
-    | 'student-analytics'
-    | 'quiz-creator'
-    | 'question-reviewer'
-    | 'teacher-live-room'
-    | 'student-join'
-    | 'student-waiting-room'
-    | 'quiz-active'
-    | 'quiz-results'
-    | 'quiz-review'
-  >('landing');
+  // Initialize view from URL hash if valid, otherwise landing
+  const [currentView, _setCurrentView] = useState<ViewType>(() => {
+    const hash = window.location.hash.replace('#', '') as ViewType;
+    return VALID_VIEWS.includes(hash) ? hash : 'landing';
+  });
+
+  // History-aware view updater: Pushes state to browser history so Back/Forward buttons work seamlessly
+  const setCurrentView = (view: ViewType, replace: boolean = false) => {
+    _setCurrentView(view);
+    const hash = `#${view}`;
+    if (replace) {
+      window.history.replaceState({ view }, '', hash);
+    } else {
+      if (window.location.hash !== hash || window.history.state?.view !== view) {
+        window.history.pushState({ view }, '', hash);
+      }
+    }
+  };
 
   // Auth & Profile Modals
   const [authModalConfig, setAuthModalConfig] = useState<{
@@ -108,6 +145,54 @@ const MainAppContent: React.FC = () => {
   const [studentAnswers, setStudentAnswers] = useState<StudentAnswer[]>([]);
   const [studentAntiCheatEvents, setStudentAntiCheatEvents] = useState<AntiCheatEvent[]>([]);
 
+  // Initialize history state on load & listen for browser Back / Forward (popstate)
+  useEffect(() => {
+    if (!window.history.state?.view) {
+      window.history.replaceState({ view: currentView }, '', window.location.hash || `#${currentView}`);
+    }
+
+    const handlePopState = (event: PopStateEvent) => {
+      const stateView = event.state?.view;
+      const hashView = window.location.hash.replace('#', '') as ViewType;
+      const targetView: ViewType = stateView || (VALID_VIEWS.includes(hashView) ? hashView : 'landing');
+
+      // 1. Check authentication for protected views
+      if (!isAuthenticated && targetView !== 'landing') {
+        _setCurrentView('landing');
+        window.history.replaceState({ view: 'landing' }, '', '#landing');
+        return;
+      }
+
+      // 2. Role-specific routing checks
+      if (targetView === 'teacher-dashboard' && isPendingTeacher) {
+        _setCurrentView('teacher-pending');
+        return;
+      }
+
+      // 3. Prevent landing on empty active quiz if session is cleared
+      if (
+        (targetView === 'quiz-active' || targetView === 'quiz-results' || targetView === 'quiz-review') &&
+        !currentSession
+      ) {
+        const fallback = isStudent ? 'student-dashboard' : isTeacher ? 'teacher-dashboard' : 'landing';
+        _setCurrentView(fallback);
+        window.history.replaceState({ view: fallback }, '', `#${fallback}`);
+        return;
+      }
+
+      if (targetView === 'question-reviewer' && !reviewDraftConfig) {
+        _setCurrentView('quiz-creator');
+        window.history.replaceState({ view: 'quiz-creator' }, '', '#quiz-creator');
+        return;
+      }
+
+      _setCurrentView(targetView);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [isAuthenticated, isPendingTeacher, isAdmin, isTeacher, isStudent, currentSession, reviewDraftConfig]);
+
   // Sync active sessions with local storage
   useEffect(() => {
     try {
@@ -129,6 +214,13 @@ const MainAppContent: React.FC = () => {
     });
     return () => unsubscribe();
   }, []);
+
+  // Redirect to landing if signed out from protected view
+  useEffect(() => {
+    if (!isAuthenticated && currentView !== 'landing') {
+      setCurrentView('landing', true);
+    }
+  }, [isAuthenticated]);
 
   // Open Auth Modal helper
   const openAuthModal = (tab: 'signin' | 'signup' = 'signin', intendedRole: UserRole = 'student') => {
@@ -464,6 +556,7 @@ const MainAppContent: React.FC = () => {
             onStartStudent={() => handleNavigate('student-dashboard')}
             onStartPractice={() => handleStartSoloPractice(0, 0)}
             onCreateQuiz={handleStartCreateQuiz}
+            onOpenAnalytics={() => handleNavigate(isAdmin ? 'admin-analytics' : isTeacher ? 'teacher-analytics' : 'student-analytics')}
             onRequireAuth={(tab, role) => openAuthModal(tab, role)}
             activeSessionsCount={activeSessions.length}
           />
@@ -647,38 +740,9 @@ const MainAppContent: React.FC = () => {
             </span>
           </div>
 
-          <div className="flex items-center space-x-4 text-xs font-mono text-editorial-muted-fg">
-            <button
-              onClick={() => handleNavigate('landing')}
-              className="hover:text-editorial-fg transition-colors"
-            >
-              Overview
-            </button>
-            <span>•</span>
-            <button
-              onClick={() => handleNavigate(isAdmin ? 'admin-dashboard' : 'teacher-dashboard')}
-              className="hover:text-editorial-fg transition-colors"
-            >
-              Instructor
-            </button>
-            <span>•</span>
-            <button
-              onClick={() => handleNavigate('student-dashboard')}
-              className="hover:text-editorial-fg transition-colors"
-            >
-              Candidate
-            </button>
-            <span>•</span>
-            <button
-              onClick={() => handleStartSoloPractice(0, 0)}
-              className="hover:text-editorial-fg transition-colors"
-            >
-              Practice
-            </button>
+          <div className="text-[11px] font-mono text-editorial-muted-fg">
+            © {new Date().getFullYear()} PyQuiz • Academic & Competitive Python Evaluation Protocol
           </div>
-        </div>
-        <div className="mt-4 text-[10px] small-caps text-editorial-muted-fg">
-          © {new Date().getFullYear()} PyQuiz • Academic & Competitive Python Evaluation Protocol
         </div>
       </footer>
 

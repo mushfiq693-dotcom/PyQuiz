@@ -1,26 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { UserRole } from '../../types/quiz';
 import {
   ShieldCheck,
   GraduationCap,
   BookOpen,
   BarChart3,
   TrendingUp,
-  Settings,
   LogOut,
   ChevronDown,
   Sparkles,
-  Home,
-  User,
   Clock,
-  Activity,
   Layers,
 } from 'lucide-react';
 
 interface Props {
   onNavigate: (view: string) => void;
-  onOpenProfile: () => void;
+  onOpenProfile?: () => void;
   onOpenAiSettings?: () => void;
 }
 
@@ -223,25 +218,6 @@ export const ProfileDropdown: React.FC<Props> = ({
                 </button>
               </>
             )}
-
-            {/* GENERAL NAVIGATION & SETTINGS */}
-            <div className="pt-1 mt-1 border-t border-editorial-border">
-              <button
-                onClick={() => handleItemClick(() => onNavigate('landing'))}
-                className="w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-left text-editorial-muted-fg hover:text-editorial-fg hover:bg-editorial-muted transition-colors"
-              >
-                <Home className="w-4 h-4" />
-                <span>Overview Page</span>
-              </button>
-
-              <button
-                onClick={() => handleItemClick(onOpenProfile)}
-                className="w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-left text-editorial-muted-fg hover:text-editorial-fg hover:bg-editorial-muted transition-colors"
-              >
-                <User className="w-4 h-4" />
-                <span>Account Profile & Dossier</span>
-              </button>
-            </div>
           </div>
 
           {/* Sign Out Action */}

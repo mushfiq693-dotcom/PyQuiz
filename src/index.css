@@ -206,83 +206,53 @@
 }
 
 /* ==============================================================================
-   SNAKE MASCOT LOGO ANIMATIONS
+   MINIMAL LOGO ANIMATIONS
    ============================================================================== */
 
-@keyframes snakeSlither {
-  0% {
-    transform: translateY(0px) rotate(0deg) scale(1);
-    filter: drop-shadow(0 2px 8px rgba(48, 105, 152, 0.25));
-  }
-  25% {
-    transform: translateY(-3px) rotate(1.5deg) scale(1.02);
-    filter: drop-shadow(0 6px 14px rgba(255, 212, 59, 0.35));
+@keyframes logoMinimalFloat {
+  0%, 100% {
+    transform: translateY(0px);
+    filter: drop-shadow(0 2px 6px rgba(184, 134, 11, 0.12));
   }
   50% {
-    transform: translateY(1.5px) rotate(-1deg) scale(0.99);
-    filter: drop-shadow(0 3px 10px rgba(48, 105, 152, 0.3));
-  }
-  75% {
-    transform: translateY(-2px) rotate(0.8deg) scale(1.025);
-    filter: drop-shadow(0 7px 16px rgba(255, 212, 59, 0.4));
-  }
-  100% {
-    transform: translateY(0px) rotate(0deg) scale(1);
-    filter: drop-shadow(0 2px 8px rgba(48, 105, 152, 0.25));
+    transform: translateY(-2px);
+    filter: drop-shadow(0 5px 12px rgba(184, 134, 11, 0.22));
   }
 }
 
-@keyframes bulbGlowPulse {
+@keyframes lightbulbSubtleTwinkle {
   0%, 100% {
-    opacity: 0.35;
-    transform: scale(0.85);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.25);
-  }
-}
-
-@keyframes orbitQuizCircuit {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes pythonAuraPulse {
-  0%, 100% {
-    opacity: 0.4;
+    opacity: 0.6;
     transform: scale(0.95);
   }
   50% {
-    opacity: 0.85;
+    opacity: 1;
     transform: scale(1.1);
   }
 }
 
-.animate-snake-slither {
-  animation: snakeSlither 4.5s ease-in-out infinite;
+@keyframes pythonSubtleAura {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.04);
+  }
+}
+
+.animate-logo-minimal {
+  animation: logoMinimalFloat 4s ease-in-out infinite;
   will-change: transform, filter;
 }
 
-.group:hover .animate-snake-slither,
-.animate-snake-slither:hover {
-  animation: snakeSlither 2s ease-in-out infinite;
+.animate-bulb-minimal {
+  animation: lightbulbSubtleTwinkle 3s ease-in-out infinite;
 }
 
-.animate-bulb-pulse {
-  animation: bulbGlowPulse 2.2s ease-in-out infinite;
-}
-
-.animate-orbit-circuit {
-  animation: orbitQuizCircuit 6s linear infinite;
-}
-
-.animate-python-aura {
-  animation: pythonAuraPulse 3.5s ease-in-out infinite;
+.animate-python-aura-minimal {
+  animation: pythonSubtleAura 4.5s ease-in-out infinite;
 }
 
 

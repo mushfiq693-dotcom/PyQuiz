@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  ArrowRight,
   Sparkles,
   ShieldCheck,
   Zap,
@@ -10,7 +9,9 @@ import {
   Clock,
   Award,
   GraduationCap,
-  LogIn,
+  TrendingUp,
+  BarChart3,
+  ArrowRight,
 } from 'lucide-react';
 import { allQuestions } from '../../data/questions';
 import { PyQuizLogo } from '../common/PyQuizLogo';
@@ -22,6 +23,7 @@ interface Props {
   onStartStudent: () => void;
   onStartPractice: () => void;
   onCreateQuiz: () => void;
+  onOpenAnalytics?: () => void;
   onRequireAuth: (tab?: 'signin' | 'signup', intendedRole?: UserRole) => void;
   activeSessionsCount: number;
 }
@@ -31,10 +33,11 @@ export const LandingPage: React.FC<Props> = ({
   onStartStudent,
   onStartPractice,
   onCreateQuiz,
+  onOpenAnalytics,
   onRequireAuth,
   activeSessionsCount,
 }) => {
-  const { isAuthenticated, user, isTeacher, isAdmin } = useAuth();
+  const { isAuthenticated, user, isTeacher, isAdmin, isStudent } = useAuth();
 
   const handleTeacherAction = () => {
     if (!isAuthenticated) {
@@ -68,6 +71,10 @@ export const LandingPage: React.FC<Props> = ({
     }
   };
 
+  // Shared identical button styling for UI consistency
+  const actionBtnClass =
+    'flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl border border-editorial-border bg-editorial-card hover:border-editorial-accent/70 hover:bg-editorial-muted/70 text-editorial-fg shadow-xs hover:shadow-editorial-md transition-all font-sans font-medium text-sm hover:-translate-y-0.5 active:translate-y-0 text-center min-w-[200px]';
+
   return (
     <div className="space-y-24 py-10 sm:py-16">
       {/* 1. HERO SECTION */}
@@ -80,7 +87,7 @@ export const LandingPage: React.FC<Props> = ({
           </span>
         </div>
 
-        {/* Brand Emblem Logo */}
+        {/* Brand Mascot Logo with Animated Snake Slither */}
         <div className="flex items-center justify-center mb-6">
           <PyQuizLogo size="xl" variant="emblem" className="shadow-xl" />
         </div>
@@ -98,32 +105,93 @@ export const LandingPage: React.FC<Props> = ({
           An editorial assessment and examination platform engineered for educators and computer science candidates. Featuring 4-quadrant standardized curriculum alignment, real-time live synchronization, Gemini AI calibration, and proctored anti-cheat evaluation.
         </p>
 
-        {/* Primary CTA Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-4">
-          <button
-            onClick={handleTeacherAction}
-            className="btn-primary-serif text-sm sm:text-base py-3.5 px-7 shadow-md"
-          >
-            <GraduationCap className="w-5 h-5" />
-            <span>Enter Instructor Console</span>
-            <ArrowRight className="w-4 h-4 ml-1" />
-          </button>
+        {/* PRIMARY CTA BUTTONS - UNIFIED MATCHING UI */}
+        <div className="flex flex-wrap items-center justify-center gap-3.5 max-w-3xl mx-auto">
+          {/* GUEST (UNAUTHENTICATED) HERO BUTTONS */}
+          {!isAuthenticated && (
+            <>
+              <button onClick={handleTeacherAction} className={actionBtnClass}>
+                <GraduationCap className="w-4 h-4 text-editorial-accent shrink-0" />
+                <span>Instructor Portal</span>
+              </button>
 
-          <button
-            onClick={handleStudentAction}
-            className="btn-secondary-serif text-sm sm:text-base py-3.5 px-7 shadow-sm"
-          >
-            <Users className="w-5 h-5 text-editorial-accent" />
-            <span>Candidate Live Portal</span>
-          </button>
+              <button onClick={handleStudentAction} className={actionBtnClass}>
+                <Users className="w-4 h-4 text-editorial-accent shrink-0" />
+                <span>Candidate Live Portal</span>
+              </button>
 
-          <button
-            onClick={handlePracticeAction}
-            className="btn-ghost-serif text-sm py-3 px-5 inline-flex items-center space-x-1.5"
-          >
-            <BookOpen className="w-4 h-4 text-editorial-accent" />
-            <span>Solo Practice Exam</span>
-          </button>
+              <button onClick={handlePracticeAction} className={actionBtnClass}>
+                <BookOpen className="w-4 h-4 text-editorial-accent shrink-0" />
+                <span>Solo Practice Exam</span>
+              </button>
+            </>
+          )}
+
+          {/* TEACHER LOGGED IN HERO BUTTONS (NO SOLO PRACTICE) */}
+          {isAuthenticated && isTeacher && (
+            <>
+              <button onClick={onStartTeacher} className={actionBtnClass}>
+                <GraduationCap className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <span>Enter Instructor Console</span>
+              </button>
+
+              <button onClick={onCreateQuiz} className={actionBtnClass}>
+                <Sparkles className="w-4 h-4 text-editorial-accent shrink-0" />
+                <span>Synthesize Custom Quiz</span>
+              </button>
+
+              {onOpenAnalytics && (
+                <button onClick={onOpenAnalytics} className={actionBtnClass}>
+                  <TrendingUp className="w-4 h-4 text-editorial-accent shrink-0" />
+                  <span>Student Analytics Dossier</span>
+                </button>
+              )}
+            </>
+          )}
+
+          {/* STUDENT LOGGED IN HERO BUTTONS */}
+          {isAuthenticated && isStudent && (
+            <>
+              <button onClick={onStartStudent} className={actionBtnClass}>
+                <Users className="w-4 h-4 text-editorial-accent shrink-0" />
+                <span>Candidate Portal & PIN</span>
+              </button>
+
+              <button onClick={onStartPractice} className={actionBtnClass}>
+                <BookOpen className="w-4 h-4 text-editorial-accent shrink-0" />
+                <span>Solo Practice Exam</span>
+              </button>
+
+              {onOpenAnalytics && (
+                <button onClick={onOpenAnalytics} className={actionBtnClass}>
+                  <TrendingUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span>My Performance Analytics</span>
+                </button>
+              )}
+            </>
+          )}
+
+          {/* ADMIN LOGGED IN HERO BUTTONS */}
+          {isAuthenticated && isAdmin && (
+            <>
+              <button onClick={onStartTeacher} className={actionBtnClass}>
+                <ShieldCheck className="w-4 h-4 text-purple-600 dark:text-purple-400 shrink-0" />
+                <span>Admin Governance Console</span>
+              </button>
+
+              {onOpenAnalytics && (
+                <button onClick={onOpenAnalytics} className={actionBtnClass}>
+                  <BarChart3 className="w-4 h-4 text-editorial-accent shrink-0" />
+                  <span>Platform Analytics Tracker</span>
+                </button>
+              )}
+
+              <button onClick={onCreateQuiz} className={actionBtnClass}>
+                <Sparkles className="w-4 h-4 text-editorial-accent shrink-0" />
+                <span>Synthesize Assessment</span>
+              </button>
+            </>
+          )}
         </div>
 
         {/* Guest Warning / Helper */}
@@ -263,7 +331,7 @@ export const LandingPage: React.FC<Props> = ({
         </div>
       </section>
 
-      {/* 4. CALL TO ACTION BANNER */}
+      {/* 4. CALL TO ACTION BANNER (ROLE SPECIFIC & BALANCED) */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="card-editorial accent-top p-8 sm:p-12 text-center relative overflow-hidden">
           <span className="small-caps text-editorial-accent block mb-3">
@@ -276,20 +344,44 @@ export const LandingPage: React.FC<Props> = ({
             Launch a proctored assessment room or configure custom curriculum questions in seconds.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <button
-              onClick={handleCreateQuizAction}
-              className="btn-primary-serif text-sm py-3 px-6"
-            >
-              <Sparkles className="w-4 h-4" />
-              <span>Create Custom Quiz</span>
-            </button>
-            <button
-              onClick={handleStudentAction}
-              className="btn-secondary-serif text-sm py-3 px-6"
-            >
-              <span>Join with Quiz PIN</span>
-            </button>
+          <div className="flex flex-wrap items-center justify-center gap-3.5">
+            {/* If Teacher */}
+            {isAuthenticated && isTeacher ? (
+              <>
+                <button onClick={handleCreateQuizAction} className={actionBtnClass}>
+                  <Sparkles className="w-4 h-4 text-editorial-accent shrink-0" />
+                  <span>Synthesize Custom Quiz</span>
+                </button>
+                <button onClick={onStartTeacher} className={actionBtnClass}>
+                  <GraduationCap className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span>Instructor Dashboard</span>
+                </button>
+              </>
+            ) : isAuthenticated && isStudent ? (
+              /* If Student */
+              <>
+                <button onClick={handleStudentAction} className={actionBtnClass}>
+                  <Users className="w-4 h-4 text-editorial-accent shrink-0" />
+                  <span>Join with Quiz PIN</span>
+                </button>
+                <button onClick={handlePracticeAction} className={actionBtnClass}>
+                  <BookOpen className="w-4 h-4 text-editorial-accent shrink-0" />
+                  <span>Solo Practice Exam</span>
+                </button>
+              </>
+            ) : (
+              /* If Guest / Admin */
+              <>
+                <button onClick={handleCreateQuizAction} className={actionBtnClass}>
+                  <Sparkles className="w-4 h-4 text-editorial-accent shrink-0" />
+                  <span>Create Custom Quiz</span>
+                </button>
+                <button onClick={handleStudentAction} className={actionBtnClass}>
+                  <Users className="w-4 h-4 text-editorial-accent shrink-0" />
+                  <span>Join with Quiz PIN</span>
+                </button>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -297,3 +389,4 @@ export const LandingPage: React.FC<Props> = ({
   );
 };
 
+export default LandingPage;
