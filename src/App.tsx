@@ -89,8 +89,11 @@ const MainAppContent: React.FC = () => {
 
   // Initialize view from URL hash if valid, otherwise landing
   const [currentView, _setCurrentView] = useState<ViewType>(() => {
-    const hash = window.location.hash.replace('#', '') as ViewType;
-    return VALID_VIEWS.includes(hash) ? hash : 'landing';
+    const rawHash = window.location.hash.replace('#', '');
+    if (rawHash.includes('access_token=') || rawHash.includes('error=')) {
+      return 'landing';
+    }
+    return VALID_VIEWS.includes(rawHash as ViewType) ? (rawHash as ViewType) : 'landing';
   });
 
   // History-aware view updater: Pushes state to browser history so Back/Forward buttons work seamlessly
@@ -147,8 +150,11 @@ const MainAppContent: React.FC = () => {
 
   // Initialize history state on load & listen for browser Back / Forward (popstate)
   useEffect(() => {
-    if (!window.history.state?.view) {
-      window.history.replaceState({ view: currentView }, '', window.location.hash || `#${currentView}`);
+    const rawHash = window.location.hash;
+    const isOAuthCallback = rawHash.includes('access_token=') || rawHash.includes('error=');
+
+    if (!isOAuthCallback && !window.history.state?.view) {
+      window.history.replaceState({ view: currentView }, '', rawHash || `#${currentView}`);
     }
 
     const handlePopState = (event: PopStateEvent) => {

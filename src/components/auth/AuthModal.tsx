@@ -146,6 +146,11 @@ export const AuthModal: React.FC<Props> = ({
     setSubmitting(false);
     if (!result.success) {
       setErrorMsg(result.error || 'Google authentication failed.');
+    } else {
+      if (result.profile) {
+        onClose();
+        if (onAuthSuccess) onAuthSuccess();
+      }
     }
   };
 
@@ -222,6 +227,30 @@ export const AuthModal: React.FC<Props> = ({
           </div>
         )}
 
+        {/* Prominent Google OAuth Button at Top */}
+        <div className="mb-5">
+          <button
+            type="button"
+            onClick={handleGoogleSignIn}
+            disabled={submitting}
+            className="w-full py-2.5 px-4 rounded-lg border-2 border-editorial-accent/30 bg-editorial-card hover:bg-editorial-muted hover:border-editorial-accent text-editorial-fg font-sans font-semibold text-xs flex items-center justify-center space-x-2.5 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 group"
+          >
+            <GoogleIcon />
+            <span className="tracking-wide">
+              {tab === 'signin' ? 'Continue with Google' : 'Sign up with Google'}
+            </span>
+          </button>
+
+          {/* Section Divider */}
+          <div className="mt-4 flex items-center justify-center space-x-3">
+            <div className="h-px flex-1 bg-editorial-border" />
+            <span className="text-[10px] uppercase font-mono tracking-widest text-editorial-muted-fg font-semibold">
+              or with email
+            </span>
+            <div className="h-px flex-1 bg-editorial-border" />
+          </div>
+        </div>
+
         {/* SIGN IN FORM */}
         {tab === 'signin' ? (
           <form onSubmit={handleSignIn} className="space-y-4">
@@ -268,54 +297,7 @@ export const AuthModal: React.FC<Props> = ({
         ) : (
           /* SIGN UP FORM */
           <form onSubmit={handleSignUp} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-editorial-fg mb-1.5 small-caps">
-                Full Name
-              </label>
-              <div className="relative">
-                <User className="w-4 h-4 absolute left-3 top-3 text-editorial-muted-fg" />
-                <input
-                  type="text"
-                  required
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-editorial-fg mb-1.5 small-caps">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="w-4 h-4 absolute left-3 top-3 text-editorial-muted-fg" />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-editorial-fg mb-1.5 small-caps">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="w-4 h-4 absolute left-3 top-3 text-editorial-muted-fg" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent"
-                />
-              </div>
-            </div>
-
-            {/* Role Selection */}
+            {/* Role Selection First */}
             <div>
               <label className="block text-xs font-semibold text-editorial-fg mb-1.5 small-caps">
                 Select Your Role
@@ -359,7 +341,24 @@ export const AuthModal: React.FC<Props> = ({
               </div>
             </div>
 
-            {/* Student ID for Student Role */}
+            {/* Full Name */}
+            <div>
+              <label className="block text-xs font-semibold text-editorial-fg mb-1.5 small-caps">
+                Full Name
+              </label>
+              <div className="relative">
+                <User className="w-4 h-4 absolute left-3 top-3 text-editorial-muted-fg" />
+                <input
+                  type="text"
+                  required
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent"
+                />
+              </div>
+            </div>
+
+            {/* Student ID immediately under Full Name for Students */}
             {role === 'student' && (
               <div className="animate-fadeIn">
                 <label className="block text-xs font-semibold text-editorial-fg mb-1.5 small-caps">
@@ -378,6 +377,39 @@ export const AuthModal: React.FC<Props> = ({
                 </div>
               </div>
             )}
+
+            {/* Email Address */}
+            <div>
+              <label className="block text-xs font-semibold text-editorial-fg mb-1.5 small-caps">
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail className="w-4 h-4 absolute left-3 top-3 text-editorial-muted-fg" />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent"
+                />
+              </div>
+            </div>
+
+            {/* Password */}
+            <div>
+              <label className="block text-xs font-semibold text-editorial-fg mb-1.5 small-caps">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="w-4 h-4 absolute left-3 top-3 text-editorial-muted-fg" />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 rounded-md border border-editorial-border bg-editorial-bg text-editorial-fg text-sm focus:outline-none focus:border-editorial-accent focus:ring-1 focus:ring-editorial-accent"
+                />
+              </div>
+            </div>
 
             {/* If Teacher Role selected, require application note */}
             {role === 'teacher' && (
@@ -408,26 +440,6 @@ export const AuthModal: React.FC<Props> = ({
             </button>
           </form>
         )}
-
-        {/* Social Auth Separator */}
-        <div className="my-5 flex items-center justify-center space-x-3">
-          <div className="h-px flex-1 bg-editorial-border" />
-          <span className="text-[10px] uppercase font-mono tracking-widest text-editorial-muted-fg">
-            or continue with
-          </span>
-          <div className="h-px flex-1 bg-editorial-border" />
-        </div>
-
-        {/* Google OAuth Button */}
-        <button
-          type="button"
-          onClick={handleGoogleSignIn}
-          disabled={submitting}
-          className="w-full py-2.5 px-4 rounded-md border border-editorial-border bg-editorial-muted/40 hover:bg-editorial-muted hover:border-editorial-accent/60 text-editorial-fg font-sans font-medium text-xs flex items-center justify-center space-x-2.5 transition-all shadow-xs"
-        >
-          <GoogleIcon />
-          <span>{tab === 'signin' ? 'Sign in with Google' : 'Sign up with Google'}</span>
-        </button>
       </div>
     </div>
   );

@@ -45,6 +45,75 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Helper to safely hydrate user profile from DB or OAuth session with automatic self-healing
+  const hydrateUserProfile = async (sessionUser: any): Promise<UserProfile> => {
+    let loaded: UserProfile | null = null;
+    const client = supabase;
+
+    if (isSupabaseConfigured() && client) {
+      try {
+        const { data: dbProfile, error: pErr } = await client
+          .from('profiles')
+          .select('*')
+          .eq('id', sessionUser.id)
+          .maybeSingle();
+
+        if (dbProfile) {
+          loaded = {
+            id: dbProfile.id,
+            email: dbProfile.email || sessionUser.email,
+            fullName: dbProfile.full_name || sessionUser.user_metadata?.full_name || sessionUser.user_metadata?.name || 'User',
+            role: dbProfile.role || 'student',
+            studentId: dbProfile.student_id,
+            avatarUrl: dbProfile.avatar_url || sessionUser.user_metadata?.avatar_url || sessionUser.user_metadata?.picture,
+            teacherStatus: dbProfile.teacher_status,
+            teacherNote: dbProfile.teacher_note,
+            customGeminiApiKey: dbProfile.custom_gemini_api_key,
+            createdAt: dbProfile.created_at || new Date().toISOString(),
+            updatedAt: dbProfile.updated_at,
+          };
+        }
+      } catch (err) {
+        console.warn('Profile lookup error, using OAuth fallback:', err);
+      }
+
+      // If no profile exists yet in DB (e.g. trigger didn't run), create one immediately!
+      if (!loaded) {
+        const oauthRole = (localStorage.getItem('pyquiz_oauth_role') as UserRole) || sessionUser.user_metadata?.role || 'student';
+        const fullName = sessionUser.user_metadata?.full_name || sessionUser.user_metadata?.name || sessionUser.email?.split('@')[0] || 'Google User';
+        const avatarUrl = sessionUser.user_metadata?.avatar_url || sessionUser.user_metadata?.picture || undefined;
+
+        loaded = {
+          id: sessionUser.id,
+          email: sessionUser.email,
+          fullName,
+          role: oauthRole,
+          avatarUrl,
+          teacherStatus: oauthRole === 'teacher' ? 'pending' : 'approved',
+          createdAt: new Date().toISOString(),
+        };
+
+        // Self-heal: insert profile into public.profiles in background
+        client
+          .from('profiles')
+          .upsert({
+            id: sessionUser.id,
+            email: sessionUser.email,
+            full_name: fullName,
+            role: oauthRole,
+            avatar_url: avatarUrl,
+            teacher_status: oauthRole === 'teacher' ? 'pending' : 'approved',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          .then(({ error }) => {
+            if (error) console.error('Self-healing profile creation error:', error);
+          });
+      }
+    }
+    return loaded!;
+  };
+
   // Initialize auth state
   useEffect(() => {
     const initializeAuth = async () => {
@@ -53,33 +122,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (isSupabaseConfigured() && supabase) {
           const { data: sessionData } = await supabase.auth.getSession();
           if (sessionData?.session?.user) {
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', sessionData.session.user.id)
-              .single();
-
-            if (profile) {
-              setUser({
-                id: profile.id,
-                email: profile.email,
-                fullName: profile.full_name,
-                role: profile.role,
-                studentId: profile.student_id,
-                avatarUrl: profile.avatar_url,
-                teacherStatus: profile.teacher_status,
-                teacherNote: profile.teacher_note,
-                customGeminiApiKey: profile.custom_gemini_api_key,
-                createdAt: profile.created_at,
-                updatedAt: profile.updated_at,
-              });
-            }
+            const profile = await hydrateUserProfile(sessionData.session.user);
+            setUser(profile);
           }
         } else {
           // Mock Session Fallback
           const mockSession = getMockCurrentSession();
           if (mockSession) {
-            // refresh from all profiles
             const all = getMockProfiles();
             const found = all.find((p) => p.id === mockSession.id || p.email.toLowerCase() === mockSession.email.toLowerCase());
             if (found) {
@@ -106,32 +155,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { data } = client.auth.onAuthStateChange(async (event, session) => {
         if (session?.user) {
           try {
-            const { data: profile } = await client
-              .from('profiles')
-              .select('*')
-              .eq('id', session.user.id)
-              .single();
+            const profile = await hydrateUserProfile(session.user);
+            setUser(profile);
+            setLoading(false);
 
-            if (profile) {
-              setUser({
-                id: profile.id,
-                email: profile.email,
-                fullName: profile.full_name,
-                role: profile.role,
-                studentId: profile.student_id,
-                avatarUrl: profile.avatar_url || session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture,
-                teacherStatus: profile.teacher_status,
-                teacherNote: profile.teacher_note,
-                customGeminiApiKey: profile.custom_gemini_api_key,
-                createdAt: profile.created_at,
-                updatedAt: profile.updated_at,
-              });
+            // Clean OAuth hash from URL if present
+            if (window.location.hash.includes('access_token=') || window.location.hash.includes('error=')) {
+              window.history.replaceState({}, document.title, window.location.pathname);
             }
           } catch (err) {
             console.error('Error hydrating profile on auth change:', err);
           }
         } else if (event === 'SIGNED_OUT') {
           setUser(null);
+          setLoading(false);
         }
       });
       authSubscription = data.subscription;
