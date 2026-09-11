@@ -8,6 +8,7 @@ export interface UserProfile {
   email: string;
   fullName: string;
   role: UserRole;
+  studentId?: string;
   avatarUrl?: string;
   teacherStatus?: TeacherApprovalStatus;
   teacherNote?: string;

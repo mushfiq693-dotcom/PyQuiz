@@ -14,6 +14,7 @@ interface SignUpData {
   password?: string;
   fullName: string;
   role: UserRole;
+  studentId?: string;
   teacherNote?: string;
 }
 
@@ -30,6 +31,7 @@ interface AuthContextType {
   loading: boolean;
   signIn: (email: string, password?: string) => Promise<{ success: boolean; error?: string; profile?: UserProfile }>;
   signUp: (data: SignUpData) => Promise<{ success: boolean; error?: string; profile?: UserProfile }>;
+  signInWithGoogle: (intendedRole?: UserRole) => Promise<{ success: boolean; error?: string; profile?: UserProfile }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
   adminSetTeacherStatus: (userId: string, newStatus: TeacherApprovalStatus) => Promise<void>;
@@ -63,6 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 email: profile.email,
                 fullName: profile.full_name,
                 role: profile.role,
+                studentId: profile.student_id,
                 avatarUrl: profile.avatar_url,
                 teacherStatus: profile.teacher_status,
                 teacherNote: profile.teacher_note,
@@ -95,6 +98,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     initializeAuth();
+
+    // Supabase Auth State Change Listener (handles OAuth redirects & token refreshes)
+    let authSubscription: { unsubscribe: () => void } | null = null;
+    const client = supabase;
+    if (isSupabaseConfigured() && client) {
+      const { data } = client.auth.onAuthStateChange(async (event, session) => {
+        if (session?.user) {
+          try {
+            const { data: profile } = await client
+              .from('profiles')
+              .select('*')
+              .eq('id', session.user.id)
+              .single();
+
+            if (profile) {
+              setUser({
+                id: profile.id,
+                email: profile.email,
+                fullName: profile.full_name,
+                role: profile.role,
+                studentId: profile.student_id,
+                avatarUrl: profile.avatar_url || session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture,
+                teacherStatus: profile.teacher_status,
+                teacherNote: profile.teacher_note,
+                customGeminiApiKey: profile.custom_gemini_api_key,
+                createdAt: profile.created_at,
+                updatedAt: profile.updated_at,
+              });
+            }
+          } catch (err) {
+            console.error('Error hydrating profile on auth change:', err);
+          }
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
+        }
+      });
+      authSubscription = data.subscription;
+    }
+
+    return () => {
+      authSubscription?.unsubscribe();
+    };
   }, []);
 
   const refreshProfile = async () => {
@@ -113,6 +158,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             email: profile.email,
             fullName: profile.full_name,
             role: profile.role,
+            studentId: profile.student_id,
             avatarUrl: profile.avatar_url,
             teacherStatus: profile.teacher_status,
             teacherNote: profile.teacher_note,
@@ -160,6 +206,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             email: profile.email,
             fullName: profile.full_name,
             role: profile.role,
+            studentId: profile.student_id,
             avatarUrl: profile.avatar_url,
             teacherStatus: profile.teacher_status,
             teacherNote: profile.teacher_note,
@@ -215,6 +262,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             data: {
               full_name: data.fullName.trim(),
               role: data.role,
+              student_id: data.studentId?.trim() || '',
               teacher_note: data.teacherNote || '',
             },
           },
@@ -228,6 +276,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             email: data.email.trim(),
             fullName: data.fullName.trim(),
             role: data.role,
+            studentId: data.studentId?.trim() || undefined,
             teacherStatus: initialTeacherStatus,
             teacherNote: data.teacherNote,
             createdAt: new Date().toISOString(),
@@ -249,6 +298,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           email: cleanEmail,
           fullName: data.fullName.trim(),
           role: data.role,
+          studentId: data.studentId?.trim() || undefined,
           teacherStatus: initialTeacherStatus,
           teacherNote: data.teacherNote,
           createdAt: new Date().toISOString(),
@@ -264,6 +314,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: 'Registration failed.' };
     } catch (err: any) {
       return { success: false, error: err.message || 'Registration failed' };
+    }
+  };
+
+  const signInWithGoogle = async (
+    intendedRole: UserRole = 'student'
+  ): Promise<{ success: boolean; error?: string; profile?: UserProfile }> => {
+    try {
+      if (isSupabaseConfigured() && supabase) {
+        // Store intended role in localStorage so trigger or fallback can align
+        localStorage.setItem('pyquiz_oauth_role', intendedRole);
+
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.origin,
+            queryParams: {
+              access_type: 'offline',
+              prompt: 'consent',
+            },
+          },
+        });
+
+        if (error) throw error;
+        return { success: true };
+      } else {
+        // Mock Google OAuth simulation
+        const mockEmail = `google.user.${Math.floor(Math.random() * 1000)}@gmail.com`;
+        const newGoogleUser: UserProfile = {
+          id: `google-${Date.now()}`,
+          email: mockEmail,
+          fullName: 'Google User',
+          role: intendedRole,
+          teacherStatus: intendedRole === 'teacher' ? 'pending' : 'approved',
+          createdAt: new Date().toISOString(),
+        };
+        const all = getMockProfiles();
+        saveMockProfiles([...all, newGoogleUser]);
+        setUser(newGoogleUser);
+        setMockCurrentSession(newGoogleUser);
+        return { success: true, profile: newGoogleUser };
+      }
+    } catch (err: any) {
+      console.error('Google sign in error:', err);
+      return { success: false, error: err.message || 'Google sign in failed' };
     }
   };
 
@@ -345,6 +439,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           email: p.email,
           fullName: p.full_name,
           role: p.role,
+          studentId: p.student_id,
           avatarUrl: p.avatar_url,
           teacherStatus: p.teacher_status,
           teacherNote: p.teacher_note,
@@ -385,6 +480,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loading,
         signIn,
         signUp,
+        signInWithGoogle,
         signOut,
         updateProfile,
         adminSetTeacherStatus,

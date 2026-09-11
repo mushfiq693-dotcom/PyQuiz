@@ -100,10 +100,32 @@ export const LandingPage: React.FC<Props> = ({
           "Unlocking Deep Python Mastery Through Live Quizzing"
         </p>
 
-        {/* Subtitle Description */}
-        <p className="text-base sm:text-lg text-editorial-muted-fg max-w-2xl mx-auto font-sans leading-relaxed mb-10">
-          An editorial assessment and examination platform engineered for educators and computer science candidates. Featuring 4-quadrant standardized curriculum alignment, real-time live synchronization, Gemini AI calibration, and proctored anti-cheat evaluation.
+        {/* Concise Subtitle Description */}
+        <p className="text-base sm:text-lg text-editorial-muted-fg max-w-xl mx-auto font-sans leading-relaxed mb-6">
+          Standardized assessment platform engineered for computer science educators and candidates.
         </p>
+
+        {/* Unified Editorial Specification Bar */}
+        <div className="max-w-xl mx-auto mb-10">
+          <div className="grid grid-cols-2 sm:grid-cols-4 rounded-lg border border-editorial-border bg-editorial-card/70 divide-x divide-y sm:divide-y-0 divide-editorial-border overflow-hidden text-xs font-mono shadow-xs">
+            <div className="flex items-center justify-center space-x-2 py-2.5 px-3">
+              <Zap className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+              <span className="text-editorial-fg font-medium tracking-tight">Live Sync</span>
+            </div>
+            <div className="flex items-center justify-center space-x-2 py-2.5 px-3">
+              <Layers className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+              <span className="text-editorial-fg font-medium tracking-tight">4 Quadrants</span>
+            </div>
+            <div className="flex items-center justify-center space-x-2 py-2.5 px-3">
+              <Sparkles className="w-3.5 h-3.5 text-purple-500 shrink-0" />
+              <span className="text-editorial-fg font-medium tracking-tight">Gemini AI</span>
+            </div>
+            <div className="flex items-center justify-center space-x-2 py-2.5 px-3">
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+              <span className="text-editorial-fg font-medium tracking-tight">Anti-Cheat</span>
+            </div>
+          </div>
+        </div>
 
         {/* PRIMARY CTA BUTTONS - UNIFIED MATCHING UI */}
         <div className="flex flex-wrap items-center justify-center gap-3.5 max-w-3xl mx-auto">

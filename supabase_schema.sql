@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     email TEXT UNIQUE NOT NULL,
     full_name TEXT NOT NULL,
     role user_role NOT NULL DEFAULT 'student',
+    student_id TEXT,
     teacher_status teacher_approval_status DEFAULT 'pending',
     teacher_note TEXT,
     custom_gemini_api_key TEXT,
@@ -203,6 +204,8 @@ RETURNS TRIGGER AS $$
 DECLARE
     assigned_role user_role;
     initial_status teacher_approval_status;
+    user_fullname TEXT;
+    user_avatar TEXT;
 BEGIN
     -- Determine role from metadata (defaults to student)
     assigned_role := COALESCE((new.raw_user_meta_data->>'role')::user_role, 'student'::user_role);
@@ -214,11 +217,23 @@ BEGIN
         initial_status := 'approved'::teacher_approval_status;
     END IF;
 
+    -- Extract name & avatar (supports Email/Password and Google OAuth metadata)
+    user_fullname := COALESCE(
+        new.raw_user_meta_data->>'full_name',
+        new.raw_user_meta_data->>'name',
+        split_part(new.email, '@', 1)
+    );
+    user_avatar := COALESCE(
+        new.raw_user_meta_data->>'avatar_url',
+        new.raw_user_meta_data->>'picture'
+    );
+
     INSERT INTO public.profiles (
         id,
         email,
         full_name,
         role,
+        student_id,
         teacher_status,
         teacher_note,
         avatar_url,
@@ -228,14 +243,21 @@ BEGIN
     VALUES (
         new.id,
         new.email,
-        COALESCE(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1)),
+        user_fullname,
         assigned_role,
+        new.raw_user_meta_data->>'student_id',
         initial_status,
         new.raw_user_meta_data->>'teacher_note',
-        new.raw_user_meta_data->>'avatar_url',
+        user_avatar,
         NOW(),
         NOW()
-    );
+    )
+    ON CONFLICT (id) DO UPDATE
+    SET
+        full_name = EXCLUDED.full_name,
+        avatar_url = COALESCE(EXCLUDED.avatar_url, public.profiles.avatar_url),
+        updated_at = NOW();
+
     RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
