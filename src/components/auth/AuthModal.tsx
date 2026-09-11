@@ -51,7 +51,7 @@ export const AuthModal: React.FC<Props> = ({
   intendedRole = 'student',
   onAuthSuccess,
 }) => {
-  const { signIn, signUp, signInWithGoogle } = useAuth();
+  const { signIn, signUp, signInWithGoogle, resendVerificationEmail } = useAuth();
 
   const [tab, setTab] = useState<'signin' | 'signup'>(defaultTab);
   const [email, setEmail] = useState('');
@@ -63,6 +63,8 @@ export const AuthModal: React.FC<Props> = ({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [verificationPendingEmail, setVerificationPendingEmail] = useState<string | null>(null);
+  const [resending, setResending] = useState(false);
 
   if (!isOpen) return null;
 
@@ -81,7 +83,12 @@ export const AuthModal: React.FC<Props> = ({
     setSubmitting(false);
 
     if (!result.success) {
-      setErrorMsg(result.error || 'Invalid credentials.');
+      if (result.error?.toLowerCase().includes('email not confirmed')) {
+        setErrorMsg('Your email address has not been confirmed yet. Please check your inbox and click the activation link.');
+        setVerificationPendingEmail(email.trim());
+      } else {
+        setErrorMsg(result.error || 'Invalid credentials.');
+      }
     } else {
       setSuccessMsg('Successfully signed in.');
       setTimeout(() => {
@@ -125,10 +132,8 @@ export const AuthModal: React.FC<Props> = ({
     if (!result.success) {
       setErrorMsg(result.error || 'Failed to create account.');
     } else {
-      if ((result as any).requiresEmailVerification) {
-        setSuccessMsg(
-          `Verification email sent to ${email.trim()}! Please check your inbox and click the confirmation link to activate your account.`
-        );
+      if (result.requiresEmailVerification) {
+        setVerificationPendingEmail(email.trim());
       } else if (role === 'teacher') {
         setSuccessMsg(
           'Teacher application submitted! Your account is pending administrator approval before instructor privileges are activated.'
@@ -144,6 +149,19 @@ export const AuthModal: React.FC<Props> = ({
           if (onAuthSuccess) onAuthSuccess();
         }, 1200);
       }
+    }
+  };
+
+  const handleResend = async () => {
+    if (!verificationPendingEmail) return;
+    setResending(true);
+    setErrorMsg(null);
+    const res = await resendVerificationEmail(verificationPendingEmail);
+    setResending(false);
+    if (res.success) {
+      setSuccessMsg(`Confirmation email resent to ${verificationPendingEmail}!`);
+    } else {
+      setErrorMsg(res.error || 'Failed to resend confirmation email.');
     }
   };
 
@@ -186,82 +204,112 @@ export const AuthModal: React.FC<Props> = ({
           </p>
         </div>
 
-        {/* Tab Switcher */}
-        <div className="grid grid-cols-2 p-1 bg-editorial-muted border border-editorial-border rounded-md mb-6">
-          <button
-            type="button"
-            onClick={() => {
-              setTab('signin');
-              setErrorMsg(null);
-              setSuccessMsg(null);
-            }}
-            className={`py-2 text-xs font-semibold rounded transition-all ${
-              tab === 'signin'
-                ? 'bg-editorial-card text-editorial-fg shadow-sm border border-editorial-border'
-                : 'text-editorial-muted-fg hover:text-editorial-fg'
-            }`}
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setTab('signup');
-              setErrorMsg(null);
-              setSuccessMsg(null);
-            }}
-            className={`py-2 text-xs font-semibold rounded transition-all ${
-              tab === 'signup'
-                ? 'bg-editorial-card text-editorial-fg shadow-sm border border-editorial-border'
-                : 'text-editorial-muted-fg hover:text-editorial-fg'
-            }`}
-          >
-            Create Account
-          </button>
-        </div>
-
-        {/* Feedback Messages */}
-        {errorMsg && (
-          <div className="mb-4 p-3 rounded-md bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 text-xs flex items-start space-x-2">
-            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-            <span>{errorMsg}</span>
+        {/* Email Verification Pending View */}
+        {verificationPendingEmail ? (
+          <div className="text-center py-4 space-y-4 animate-fadeIn">
+            <div className="w-14 h-14 mx-auto rounded-full bg-editorial-accent/10 border border-editorial-accent/30 flex items-center justify-center text-editorial-accent animate-pulse">
+              <Mail className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className="font-serif text-lg font-bold text-editorial-fg">
+                Check Your Email Inbox
+              </h3>
+              <p className="text-xs text-editorial-muted-fg mt-1">
+                We sent a secure verification link to:
+              </p>
+              <p className="font-mono text-xs font-semibold text-editorial-fg mt-1 bg-editorial-muted py-1 px-3 rounded-md inline-block border border-editorial-border">
+                {verificationPendingEmail}
+              </p>
+            </div>
+            <p className="text-xs text-editorial-muted-fg leading-relaxed max-w-sm mx-auto">
+              Please click the confirmation link in your email to activate your account. Once verified, you will be able to sign in immediately.
+            </p>
+            <div className="pt-2 flex flex-col space-y-2">
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={resending}
+                className="w-full py-2.5 px-4 rounded-md border border-editorial-border bg-editorial-muted hover:bg-editorial-card text-editorial-fg font-sans font-medium text-xs transition-all shadow-xs hover:border-editorial-accent"
+              >
+                {resending ? 'Resending Link...' : "Didn't receive the email? Resend"}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setVerificationPendingEmail(null);
+                  setTab('signin');
+                  setErrorMsg(null);
+                  setSuccessMsg(null);
+                }}
+                className="text-xs text-editorial-muted-fg hover:text-editorial-fg underline font-mono pt-1"
+              >
+                Back to Sign In
+              </button>
+            </div>
           </div>
-        )}
+        ) : (
+          <>
+            {/* Tab Switcher */}
+            <div className="grid grid-cols-2 p-1 bg-editorial-muted border border-editorial-border rounded-md mb-6">
+              <button
+                type="button"
+                onClick={() => {
+                  setTab('signin');
+                  setErrorMsg(null);
+                  setSuccessMsg(null);
+                }}
+                className={`py-2 text-xs font-semibold rounded transition-all ${
+                  tab === 'signin'
+                    ? 'bg-editorial-card text-editorial-fg shadow-sm border border-editorial-border'
+                    : 'text-editorial-muted-fg hover:text-editorial-fg'
+                }`}
+              >
+                Sign In
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setTab('signup');
+                  setErrorMsg(null);
+                  setSuccessMsg(null);
+                }}
+                className={`py-2 text-xs font-semibold rounded transition-all ${
+                  tab === 'signup'
+                    ? 'bg-editorial-card text-editorial-fg shadow-sm border border-editorial-border'
+                    : 'text-editorial-muted-fg hover:text-editorial-fg'
+                }`}
+              >
+                Create Account
+              </button>
+            </div>
 
-        {successMsg && (
-          <div className="mb-4 p-3 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs flex items-start space-x-2">
-            <CheckCircle className="w-4 h-4 shrink-0 mt-0.5" />
-            <span>{successMsg}</span>
-          </div>
-        )}
+            {/* Prominent Google OAuth Button at Top */}
+            <div className="mb-5">
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                disabled={submitting}
+                className="w-full py-2.5 px-4 rounded-lg border-2 border-editorial-accent/30 bg-editorial-card hover:bg-editorial-muted hover:border-editorial-accent text-editorial-fg font-sans font-semibold text-xs flex items-center justify-center space-x-2.5 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 group"
+              >
+                <GoogleIcon />
+                <span className="tracking-wide">
+                  {tab === 'signin' ? 'Continue with Google' : 'Sign up with Google'}
+                </span>
+              </button>
 
-        {/* Prominent Google OAuth Button at Top */}
-        <div className="mb-5">
-          <button
-            type="button"
-            onClick={handleGoogleSignIn}
-            disabled={submitting}
-            className="w-full py-2.5 px-4 rounded-lg border-2 border-editorial-accent/30 bg-editorial-card hover:bg-editorial-muted hover:border-editorial-accent text-editorial-fg font-sans font-semibold text-xs flex items-center justify-center space-x-2.5 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 group"
-          >
-            <GoogleIcon />
-            <span className="tracking-wide">
-              {tab === 'signin' ? 'Continue with Google' : 'Sign up with Google'}
-            </span>
-          </button>
+              {/* Section Divider */}
+              <div className="mt-4 flex items-center justify-center space-x-3">
+                <div className="h-px flex-1 bg-editorial-border" />
+                <span className="text-[10px] uppercase font-mono tracking-widest text-editorial-muted-fg font-semibold">
+                  or with email
+                </span>
+                <div className="h-px flex-1 bg-editorial-border" />
+              </div>
+            </div>
 
-          {/* Section Divider */}
-          <div className="mt-4 flex items-center justify-center space-x-3">
-            <div className="h-px flex-1 bg-editorial-border" />
-            <span className="text-[10px] uppercase font-mono tracking-widest text-editorial-muted-fg font-semibold">
-              or with email
-            </span>
-            <div className="h-px flex-1 bg-editorial-border" />
-          </div>
-        </div>
-
-        {/* SIGN IN FORM */}
-        {tab === 'signin' ? (
-          <form onSubmit={handleSignIn} className="space-y-4">
+            {/* SIGN IN FORM */}
+            {tab === 'signin' ? (
+              <form onSubmit={handleSignIn} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-editorial-fg mb-1.5 small-caps">
                 Email Address
@@ -438,15 +486,24 @@ export const AuthModal: React.FC<Props> = ({
               </div>
             )}
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={submitting}
               className="w-full btn-primary-serif py-3 text-sm flex items-center justify-center space-x-2 mt-2"
             >
-              <span>{submitting ? 'Registering...' : role === 'teacher' ? 'Submit Teacher Request' : 'Complete Registration'}</span>
+              <span>
+                {submitting
+                  ? 'Registering...'
+                  : role === 'teacher'
+                  ? 'Submit Teacher Request'
+                  : 'Complete Registration'}
+              </span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
+        )}
+          </>
         )}
       </div>
     </div>

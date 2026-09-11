@@ -32,6 +32,7 @@ interface AuthContextType {
   signIn: (email: string, password?: string) => Promise<{ success: boolean; error?: string; profile?: UserProfile }>;
   signUp: (data: SignUpData) => Promise<{ success: boolean; error?: string; profile?: UserProfile; requiresEmailVerification?: boolean }>;
   signInWithGoogle: (intendedRole?: UserRole) => Promise<{ success: boolean; error?: string; profile?: UserProfile }>;
+  resendVerificationEmail: (email: string) => Promise<{ success: boolean; error?: string }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
   adminSetTeacherStatus: (userId: string, newStatus: TeacherApprovalStatus) => Promise<void>;
@@ -395,6 +396,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const resendVerificationEmail = async (
+    email: string
+  ): Promise<{ success: boolean; error?: string }> => {
+    try {
+      if (isSupabaseConfigured() && supabase) {
+        const { error } = await supabase.auth.resend({
+          type: 'signup',
+          email: email.trim(),
+          options: {
+            emailRedirectTo: window.location.origin,
+          },
+        });
+        if (error) throw error;
+        return { success: true };
+      }
+      return { success: true };
+    } catch (err: any) {
+      console.error('Resend verification email error:', err);
+      return { success: false, error: err.message || 'Failed to resend confirmation email.' };
+    }
+  };
+
   const signOut = async () => {
     try {
       if (isSupabaseConfigured() && supabase) {
@@ -515,6 +538,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         signIn,
         signUp,
         signInWithGoogle,
+        resendVerificationEmail,
         signOut,
         updateProfile,
         adminSetTeacherStatus,
