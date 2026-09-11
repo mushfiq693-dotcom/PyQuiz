@@ -30,7 +30,7 @@ interface AuthContextType {
   isStudent: boolean;
   loading: boolean;
   signIn: (email: string, password?: string) => Promise<{ success: boolean; error?: string; profile?: UserProfile }>;
-  signUp: (data: SignUpData) => Promise<{ success: boolean; error?: string; profile?: UserProfile }>;
+  signUp: (data: SignUpData) => Promise<{ success: boolean; error?: string; profile?: UserProfile; requiresEmailVerification?: boolean }>;
   signInWithGoogle: (intendedRole?: UserRole) => Promise<{ success: boolean; error?: string; profile?: UserProfile }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
@@ -261,7 +261,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (
     data: SignUpData
-  ): Promise<{ success: boolean; error?: string; profile?: UserProfile }> => {
+  ): Promise<{ success: boolean; error?: string; profile?: UserProfile; requiresEmailVerification?: boolean }> => {
     try {
       const initialTeacherStatus: TeacherApprovalStatus = data.role === 'teacher' ? 'pending' : 'approved';
 
@@ -270,6 +270,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           email: data.email.trim(),
           password: data.password || '123456',
           options: {
+            emailRedirectTo: window.location.origin,
             data: {
               full_name: data.fullName.trim(),
               role: data.role,
@@ -282,6 +283,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (authErr) throw authErr;
 
         if (authData?.user) {
+          const requiresEmailVerification = !authData.session;
           const newProfile: UserProfile = {
             id: authData.user.id,
             email: data.email.trim(),
@@ -310,8 +312,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             console.warn('Profile direct insert notice:', dbErr);
           }
 
-          setUser(newProfile);
-          return { success: true, profile: newProfile };
+          if (authData.session) {
+            setUser(newProfile);
+          }
+
+          return { success: true, profile: newProfile, requiresEmailVerification };
         }
       } else {
         // Mock Signup

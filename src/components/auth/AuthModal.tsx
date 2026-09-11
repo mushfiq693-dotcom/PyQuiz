@@ -125,17 +125,25 @@ export const AuthModal: React.FC<Props> = ({
     if (!result.success) {
       setErrorMsg(result.error || 'Failed to create account.');
     } else {
-      if (role === 'teacher') {
+      if ((result as any).requiresEmailVerification) {
+        setSuccessMsg(
+          `Verification email sent to ${email.trim()}! Please check your inbox and click the confirmation link to activate your account.`
+        );
+      } else if (role === 'teacher') {
         setSuccessMsg(
           'Teacher application submitted! Your account is pending administrator approval before instructor privileges are activated.'
         );
+        setTimeout(() => {
+          onClose();
+          if (onAuthSuccess) onAuthSuccess();
+        }, 2000);
       } else {
         setSuccessMsg('Account created successfully!');
+        setTimeout(() => {
+          onClose();
+          if (onAuthSuccess) onAuthSuccess();
+        }, 1200);
       }
-      setTimeout(() => {
-        onClose();
-        if (onAuthSuccess) onAuthSuccess();
-      }, 1200);
     }
   };
 
