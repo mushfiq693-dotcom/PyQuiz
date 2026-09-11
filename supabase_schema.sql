@@ -33,6 +33,14 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Ensure all columns exist even if the table was previously created
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS student_id TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS teacher_note TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS custom_gemini_api_key TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS avatar_url TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS role user_role NOT NULL DEFAULT 'student';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS teacher_status teacher_approval_status DEFAULT 'pending';
+
 -- Index for role lookups and pending teacher approvals
 CREATE INDEX IF NOT EXISTS idx_profiles_role ON public.profiles(role);
 CREATE INDEX IF NOT EXISTS idx_profiles_teacher_status ON public.profiles(teacher_status);
@@ -236,35 +244,51 @@ BEGIN
         new.raw_user_meta_data->>'picture'
     );
 
-    INSERT INTO public.profiles (
-        id,
-        email,
-        full_name,
-        role,
-        student_id,
-        teacher_status,
-        teacher_note,
-        avatar_url,
-        created_at,
-        updated_at
-    )
-    VALUES (
-        new.id,
-        new.email,
-        user_fullname,
-        assigned_role,
-        new.raw_user_meta_data->>'student_id',
-        initial_status,
-        new.raw_user_meta_data->>'teacher_note',
-        user_avatar,
-        NOW(),
-        NOW()
-    )
-    ON CONFLICT (id) DO UPDATE
-    SET
-        full_name = EXCLUDED.full_name,
-        avatar_url = COALESCE(EXCLUDED.avatar_url, public.profiles.avatar_url),
-        updated_at = NOW();
+    BEGIN
+        INSERT INTO public.profiles (
+            id,
+            email,
+            full_name,
+            role,
+            student_id,
+            teacher_status,
+            teacher_note,
+            avatar_url,
+            created_at,
+            updated_at
+        )
+        VALUES (
+            new.id,
+            new.email,
+            user_fullname,
+            assigned_role,
+            new.raw_user_meta_data->>'student_id',
+            initial_status,
+            new.raw_user_meta_data->>'teacher_note',
+            user_avatar,
+            NOW(),
+            NOW()
+        )
+        ON CONFLICT (id) DO UPDATE
+        SET
+            full_name = EXCLUDED.full_name,
+            avatar_url = COALESCE(EXCLUDED.avatar_url, public.profiles.avatar_url),
+            role = COALESCE(EXCLUDED.role, public.profiles.role),
+            student_id = COALESCE(EXCLUDED.student_id, public.profiles.student_id),
+            updated_at = NOW();
+    EXCEPTION WHEN OTHERS THEN
+        -- If insert fails (e.g. duplicate email from earlier mock or test), update existing record
+        BEGIN
+            UPDATE public.profiles
+            SET id = new.id,
+                full_name = user_fullname,
+                avatar_url = COALESCE(user_avatar, public.profiles.avatar_url),
+                updated_at = NOW()
+            WHERE email = new.email;
+        EXCEPTION WHEN OTHERS THEN
+            NULL; -- Never fail user registration
+        END;
+    END;
 
     RETURN new;
 END;
