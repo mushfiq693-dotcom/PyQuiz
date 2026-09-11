@@ -37,6 +37,7 @@ export const StudentDashboard: React.FC<Props> = ({
   const [pinCode, setPinCode] = useState('');
   const [pinError, setPinError] = useState<string | null>(null);
   const [mySubmissions, setMySubmissions] = useState<UserSubmissionRecord[]>([]);
+  const [selectedModuleFilter, setSelectedModuleFilter] = useState<string>('all');
 
   useEffect(() => {
     if (user) {
@@ -244,62 +245,125 @@ export const StudentDashboard: React.FC<Props> = ({
         </section>
       )}
 
-      {/* 4. CURRICULUM PRACTICE MODULES (4 QUADRANTS) */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
+      {/* 4. CURRICULUM PRACTICE MODULES (4 QUADRANTS, 3 SETS EACH = 12 SETS TOTAL) */}
+      <section className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-editorial-border pb-3">
           <div className="flex items-center space-x-2">
             <BookOpen className="w-5 h-5 text-editorial-accent" />
-            <h2 className="font-serif text-xl font-bold text-editorial-fg">
-              Standardized Curriculum Quadrants
+            <h2 className="font-serif text-xl sm:text-2xl font-bold text-editorial-fg">
+              Standardized Curriculum Sets
             </h2>
           </div>
-          <span className="text-xs text-editorial-muted-fg font-serif italic">
-            Proctored Solo Practice Exams (30 Questions Each)
+          <span className="text-xs text-editorial-muted-fg font-mono">
+            4 Modules • 3 Sets Each (12 Practice Exams • 360 Questions)
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {syllabusSections.map((section, secIdx) => {
-            const firstSet = section.sets[0];
-            return (
+        {/* Module Filter Navigation Pills */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+          <button
+            type="button"
+            onClick={() => setSelectedModuleFilter('all')}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+              selectedModuleFilter === 'all'
+                ? 'bg-editorial-fg text-editorial-bg shadow-sm font-semibold'
+                : 'bg-editorial-muted text-editorial-muted-fg hover:text-editorial-fg hover:bg-editorial-border/60 border border-editorial-border'
+            }`}
+          >
+            All Modules (12 Sets)
+          </button>
+          {syllabusSections.map((section) => (
+            <button
+              key={section.id}
+              type="button"
+              onClick={() => setSelectedModuleFilter(section.id)}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+                selectedModuleFilter === section.id
+                  ? 'bg-editorial-accent text-editorial-bg shadow-sm font-semibold'
+                  : 'bg-editorial-muted text-editorial-muted-fg hover:text-editorial-fg hover:bg-editorial-border/60 border border-editorial-border'
+              }`}
+            >
+              {section.name}: {section.title}
+            </button>
+          ))}
+        </div>
+
+        {/* Modules & Sets List */}
+        <div className="space-y-8">
+          {syllabusSections
+            .map((section, secIdx) => ({ section, secIdx }))
+            .filter(
+              ({ section }) =>
+                selectedModuleFilter === 'all' || selectedModuleFilter === section.id
+            )
+            .map(({ section, secIdx }) => (
               <div
                 key={section.id}
-                className="card-editorial p-6 space-y-4 hover:border-editorial-accent/60 transition-all group"
+                className="card-editorial p-6 space-y-5 border border-editorial-border bg-editorial-card shadow-sm rounded-xl"
               >
-                <div className="flex items-start justify-between">
+                {/* Module Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-4 border-b border-editorial-border/60">
                   <div>
-                    <span className="small-caps text-[10px] text-editorial-accent font-semibold block mb-1">
-                      {section.name}
-                    </span>
-                    <h3 className="font-serif text-lg font-bold text-editorial-fg group-hover:text-editorial-accent transition-colors">
+                    <div className="flex items-center space-x-2">
+                      <span className="small-caps text-[11px] text-editorial-accent font-bold tracking-wider">
+                        {section.name}
+                      </span>
+                      <span className="text-editorial-muted-fg text-xs">•</span>
+                      <span className="text-xs font-mono text-editorial-muted-fg">
+                        3 Sets • 90 Questions Total
+                      </span>
+                    </div>
+                    <h3 className="font-serif text-xl font-bold text-editorial-fg mt-0.5">
                       {section.title}
                     </h3>
+                    <p className="text-xs text-editorial-muted-fg mt-1 leading-relaxed max-w-3xl">
+                      {section.description}
+                    </p>
                   </div>
-                  <span className="px-2 py-1 rounded text-[10px] font-mono bg-editorial-muted border border-editorial-border text-editorial-muted-fg">
-                    30 Questions
-                  </span>
                 </div>
 
-                <p className="text-xs text-editorial-muted-fg leading-relaxed">
-                  {section.description}
-                </p>
+                {/* 3 Sets Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {section.sets.map((set, setIdx) => (
+                    <div
+                      key={set.id}
+                      className="p-4 rounded-lg border border-editorial-border bg-editorial-muted/50 hover:bg-editorial-card hover:border-editorial-accent/60 transition-all flex flex-col justify-between space-y-4 group shadow-xs hover:shadow-md"
+                    >
+                      <div className="space-y-2.5">
+                        <div className="flex items-center justify-between">
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-editorial-accent/15 text-editorial-accent border border-editorial-accent/30 uppercase tracking-wider">
+                            {set.setName}
+                          </span>
+                          <span className="text-[11px] font-mono text-editorial-muted-fg">
+                            {set.questions.length} Qs
+                          </span>
+                        </div>
 
-                <div className="flex items-center justify-between pt-3 border-t border-editorial-border">
-                  <span className="text-[11px] font-mono text-editorial-muted-fg">
-                    Negative Marking: <strong className="text-editorial-fg">-0.25</strong>
-                  </span>
+                        <p className="text-xs font-medium text-editorial-fg leading-snug group-hover:text-editorial-accent transition-colors line-clamp-3">
+                          {set.description}
+                        </p>
+                      </div>
 
-                  <button
-                    onClick={() => onStartSoloPractice(secIdx, 0)}
-                    className="btn-primary-serif text-xs py-1.5 px-4 flex items-center space-x-1.5 shadow-sm"
-                  >
-                    <Play className="w-3.5 h-3.5 fill-current" />
-                    <span>Launch Exam</span>
-                  </button>
+                      <div className="pt-3 border-t border-editorial-border/60 space-y-3">
+                        <div className="flex items-center justify-between text-[10px] font-mono text-editorial-muted-fg">
+                          <span>20s / Question</span>
+                          <span>Neg: -0.25</span>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => onStartSoloPractice(secIdx, setIdx)}
+                          className="w-full btn-primary-serif text-xs py-2 px-3 flex items-center justify-center space-x-1.5 shadow-sm group-hover:bg-editorial-accent group-hover:text-editorial-bg"
+                        >
+                          <Play className="w-3.5 h-3.5 fill-current shrink-0" />
+                          <span>Launch {set.setName}</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            );
-          })}
+            ))}
         </div>
       </section>
 
