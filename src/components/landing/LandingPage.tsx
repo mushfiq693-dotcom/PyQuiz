@@ -10,14 +10,19 @@ import {
   Clock,
   Award,
   GraduationCap,
+  LogIn,
 } from 'lucide-react';
 import { allQuestions } from '../../data/questions';
+import { PyQuizLogo } from '../common/PyQuizLogo';
+import { useAuth } from '../../context/AuthContext';
+import { UserRole } from '../../types/quiz';
 
 interface Props {
   onStartTeacher: () => void;
   onStartStudent: () => void;
   onStartPractice: () => void;
   onCreateQuiz: () => void;
+  onRequireAuth: (tab?: 'signin' | 'signup', intendedRole?: UserRole) => void;
   activeSessionsCount: number;
 }
 
@@ -26,8 +31,43 @@ export const LandingPage: React.FC<Props> = ({
   onStartStudent,
   onStartPractice,
   onCreateQuiz,
+  onRequireAuth,
   activeSessionsCount,
 }) => {
+  const { isAuthenticated, user, isTeacher, isAdmin } = useAuth();
+
+  const handleTeacherAction = () => {
+    if (!isAuthenticated) {
+      onRequireAuth('signin', 'teacher');
+    } else {
+      onStartTeacher();
+    }
+  };
+
+  const handleStudentAction = () => {
+    if (!isAuthenticated) {
+      onRequireAuth('signin', 'student');
+    } else {
+      onStartStudent();
+    }
+  };
+
+  const handlePracticeAction = () => {
+    if (!isAuthenticated) {
+      onRequireAuth('signin', 'student');
+    } else {
+      onStartPractice();
+    }
+  };
+
+  const handleCreateQuizAction = () => {
+    if (!isAuthenticated) {
+      onRequireAuth('signup', 'teacher');
+    } else {
+      onCreateQuiz();
+    }
+  };
+
   return (
     <div className="space-y-24 py-10 sm:py-16">
       {/* 1. HERO SECTION */}
@@ -41,8 +81,8 @@ export const LandingPage: React.FC<Props> = ({
         </div>
 
         {/* Brand Emblem Logo */}
-        <div className="w-20 h-20 rounded-2xl bg-editorial-accent text-editorial-bg mx-auto flex items-center justify-center shadow-lg shadow-editorial-accent/20 mb-6 font-serif font-black text-4xl border border-editorial-accent-light/40">
-          <span>Ψ</span>
+        <div className="flex items-center justify-center mb-6">
+          <PyQuizLogo size="xl" variant="emblem" className="shadow-xl" />
         </div>
 
         {/* Product Name & Motto */}
@@ -61,7 +101,7 @@ export const LandingPage: React.FC<Props> = ({
         {/* Primary CTA Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-4">
           <button
-            onClick={onStartTeacher}
+            onClick={handleTeacherAction}
             className="btn-primary-serif text-sm sm:text-base py-3.5 px-7 shadow-md"
           >
             <GraduationCap className="w-5 h-5" />
@@ -70,7 +110,7 @@ export const LandingPage: React.FC<Props> = ({
           </button>
 
           <button
-            onClick={onStartStudent}
+            onClick={handleStudentAction}
             className="btn-secondary-serif text-sm sm:text-base py-3.5 px-7 shadow-sm"
           >
             <Users className="w-5 h-5 text-editorial-accent" />
@@ -78,13 +118,20 @@ export const LandingPage: React.FC<Props> = ({
           </button>
 
           <button
-            onClick={onStartPractice}
+            onClick={handlePracticeAction}
             className="btn-ghost-serif text-sm py-3 px-5 inline-flex items-center space-x-1.5"
           >
             <BookOpen className="w-4 h-4 text-editorial-accent" />
             <span>Solo Practice Exam</span>
           </button>
         </div>
+
+        {/* Guest Warning / Helper */}
+        {!isAuthenticated && (
+          <p className="text-xs text-editorial-muted-fg mt-4 italic font-serif">
+            * Authentication required to enter live evaluation rooms and launch exams.
+          </p>
+        )}
 
         {/* Live System Indicator Strip */}
         <div className="mt-12 pt-8 border-t border-editorial-border flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-editorial-muted-fg">
@@ -138,7 +185,7 @@ export const LandingPage: React.FC<Props> = ({
         </div>
       </section>
 
-      {/* 4. CORE PLATFORM CAPABILITIES */}
+      {/* 3. CORE PLATFORM CAPABILITIES */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="rule-divider mb-8">
           <span className="small-caps text-editorial-accent">Engineered for Academic Rigor</span>
@@ -216,7 +263,7 @@ export const LandingPage: React.FC<Props> = ({
         </div>
       </section>
 
-      {/* 5. CALL TO ACTION BANNER */}
+      {/* 4. CALL TO ACTION BANNER */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="card-editorial accent-top p-8 sm:p-12 text-center relative overflow-hidden">
           <span className="small-caps text-editorial-accent block mb-3">
@@ -231,14 +278,14 @@ export const LandingPage: React.FC<Props> = ({
 
           <div className="flex flex-wrap items-center justify-center gap-4">
             <button
-              onClick={onCreateQuiz}
+              onClick={handleCreateQuizAction}
               className="btn-primary-serif text-sm py-3 px-6"
             >
               <Sparkles className="w-4 h-4" />
               <span>Create Custom Quiz</span>
             </button>
             <button
-              onClick={onStartStudent}
+              onClick={handleStudentAction}
               className="btn-secondary-serif text-sm py-3 px-6"
             >
               <span>Join with Quiz PIN</span>
@@ -249,3 +296,4 @@ export const LandingPage: React.FC<Props> = ({
     </div>
   );
 };
+

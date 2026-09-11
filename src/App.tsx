@@ -1,34 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import { UserRole, QuizSessionConfig, StudentProfile, StudentAnswer, AntiCheatEvent } from './types/quiz';
+import {
+  UserRole,
+  QuizSessionConfig,
+  StudentProfile,
+  StudentAnswer,
+  AntiCheatEvent,
+  UserSubmissionRecord,
+} from './types/quiz';
 import { Question, QuizSet } from './data/questions/types';
-import { syllabusSections, getQuizSetById, generateCustomQuiz } from './data/questions';
+import { syllabusSections } from './data/questions';
 import { syncManager } from './utils/broadcast';
+import { calculateQuizScore } from './utils/scoring';
+import { saveMockSubmission } from './lib/supabase';
+import { AuthProvider, useAuth } from './context/AuthContext';
+
+// Common Components
 import { Header } from './components/common/Header';
 import { DevCreditWidget } from './components/common/DevCreditWidget';
+import { PyQuizLogo } from './components/common/PyQuizLogo';
+import { AuthModal } from './components/auth/AuthModal';
+import { UserProfileModal } from './components/profile/UserProfileModal';
 
-// Landing Page view
+// Landing Page View
 import { LandingPage } from './components/landing/LandingPage';
 
-// Teacher views
+// Admin Views
+import { AdminDashboard } from './components/admin/AdminDashboard';
+import { AdminAnalyticsView } from './components/admin/AdminAnalyticsView';
+
+// Teacher Views
 import { TeacherDashboard } from './components/teacher/TeacherDashboard';
+import { TeacherAnalyticsView } from './components/teacher/TeacherAnalyticsView';
+import { PendingApprovalScreen } from './components/teacher/PendingApprovalScreen';
 import { QuizCreator } from './components/teacher/QuizCreator';
 import { QuestionReviewer } from './components/teacher/QuestionReviewer';
 import { TeacherLiveRoom } from './components/teacher/TeacherLiveRoom';
 
-// Student views
+// Student Views
+import { StudentDashboard } from './components/student/StudentDashboard';
+import { StudentAnalyticsView } from './components/student/StudentAnalyticsView';
 import { StudentJoin } from './components/student/StudentJoin';
 import { StudentWaitingRoom } from './components/student/StudentWaitingRoom';
 
-// Quiz views
+// Quiz Execution Views
 import { QuizScreen } from './components/quiz/QuizScreen';
 import { ResultsScreen } from './components/quiz/ResultsScreen';
 import { ReviewScreen } from './components/quiz/ReviewScreen';
 
-export const App: React.FC = () => {
-  const [role, setRole] = useState<UserRole>('teacher');
+const MainAppContent: React.FC = () => {
+  const { user, isAuthenticated, isAdmin, isTeacher, isStudent, isPendingTeacher } = useAuth();
+
   const [currentView, setCurrentView] = useState<
     | 'landing'
+    | 'admin-dashboard'
+    | 'admin-analytics'
     | 'teacher-dashboard'
+    | 'teacher-analytics'
+    | 'teacher-pending'
+    | 'student-dashboard'
+    | 'student-analytics'
     | 'quiz-creator'
     | 'question-reviewer'
     | 'teacher-live-room'
@@ -39,6 +69,19 @@ export const App: React.FC = () => {
     | 'quiz-review'
   >('landing');
 
+  // Auth & Profile Modals
+  const [authModalConfig, setAuthModalConfig] = useState<{
+    isOpen: boolean;
+    defaultTab: 'signin' | 'signup';
+    intendedRole?: UserRole;
+  }>({
+    isOpen: false,
+    defaultTab: 'signin',
+    intendedRole: 'student',
+  });
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
+
+  // Active Sessions
   const [activeSessions, setActiveSessions] = useState<QuizSessionConfig[]>(() => {
     try {
       const saved = localStorage.getItem('pyquiz_active_sessions');
@@ -65,6 +108,7 @@ export const App: React.FC = () => {
   const [studentAnswers, setStudentAnswers] = useState<StudentAnswer[]>([]);
   const [studentAntiCheatEvents, setStudentAntiCheatEvents] = useState<AntiCheatEvent[]>([]);
 
+  // Sync active sessions with local storage
   useEffect(() => {
     try {
       localStorage.setItem('pyquiz_active_sessions', JSON.stringify(activeSessions));
@@ -73,6 +117,7 @@ export const App: React.FC = () => {
     }
   }, [activeSessions]);
 
+  // Listen to broadcast channel
   useEffect(() => {
     const unsubscribe = syncManager.subscribe((msg) => {
       if (msg.type === 'QUIZ_PUBLISHED') {
@@ -85,54 +130,140 @@ export const App: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleRoleChange = (newRole: UserRole) => {
-    setRole(newRole);
-    if (newRole === 'teacher') {
-      setCurrentView('teacher-dashboard');
-    } else if (newRole === 'student') {
-      setCurrentView('student-join');
-    } else if (newRole === 'practice') {
-      const set = syllabusSections[1].sets[0]; // Module 2: STL in Python
-      const practiceSession: QuizSessionConfig = {
-        quizId: `practice-${Date.now()}`,
-        quizTitle: 'Python STL & Collections Practice Exam',
-        sectionName: set.sectionName,
-        setName: set.setName,
-        joinCode: 'PRACTICE',
-        totalQuestions: 30,
-        timePerQuestion: 20,
-        negativeMarkingEnabled: true,
-        questions: set.questions,
-        createdAt: Date.now(),
-        status: 'active',
-      };
-      setCurrentSession(practiceSession);
-      setCurrentStudent({
-        id: `self-${Date.now()}`,
-        name: 'Practice Candidate',
-        joinedAt: Date.now(),
-        currentQuestionIndex: 0,
-        answers: [],
-        antiCheatEvents: [],
-        isCompleted: false,
-      });
-      setCurrentView('quiz-active');
+  // Open Auth Modal helper
+  const openAuthModal = (tab: 'signin' | 'signup' = 'signin', intendedRole: UserRole = 'student') => {
+    setAuthModalConfig({
+      isOpen: true,
+      defaultTab: tab,
+      intendedRole,
+    });
+  };
+
+  const closeAuthModal = () => {
+    setAuthModalConfig((prev) => ({ ...prev, isOpen: false }));
+  };
+
+  // Generic navigation handler called from Profile Dropdown & CTA buttons
+  const handleNavigate = (targetView: string) => {
+    if (!isAuthenticated && targetView !== 'landing') {
+      openAuthModal('signin');
+      return;
+    }
+
+    switch (targetView) {
+      case 'landing':
+        setCurrentView('landing');
+        break;
+      case 'admin-dashboard':
+        if (isAdmin) setCurrentView('admin-dashboard');
+        else openAuthModal('signin', 'teacher');
+        break;
+      case 'admin-analytics':
+        if (isAdmin) setCurrentView('admin-analytics');
+        break;
+      case 'teacher-dashboard':
+        if (isAdmin || (isTeacher && !isPendingTeacher)) setCurrentView('teacher-dashboard');
+        else if (isPendingTeacher) setCurrentView('teacher-pending');
+        else openAuthModal('signup', 'teacher');
+        break;
+      case 'teacher-analytics':
+        if (isAdmin || (isTeacher && !isPendingTeacher)) setCurrentView('teacher-analytics');
+        break;
+      case 'teacher-pending':
+        setCurrentView('teacher-pending');
+        break;
+      case 'student-dashboard':
+        setCurrentView('student-dashboard');
+        break;
+      case 'student-analytics':
+        setCurrentView('student-analytics');
+        break;
+      case 'practice':
+        handleStartSoloPractice(0, 0);
+        break;
+      default:
+        setCurrentView('landing');
     }
   };
 
+  // Launch Solo Practice Exam
+  const handleStartSoloPractice = (sectionIndex: number = 0, setIndex: number = 0) => {
+    if (!isAuthenticated) {
+      openAuthModal('signin', 'student');
+      return;
+    }
+
+    const sec = syllabusSections[sectionIndex] || syllabusSections[0];
+    const set = sec.sets[setIndex] || sec.sets[0];
+
+    const practiceSession: QuizSessionConfig = {
+      quizId: `practice-${Date.now()}`,
+      quizTitle: `${sec.name}: ${set.setName}`,
+      sectionId: sec.id,
+      sectionName: sec.name,
+      setName: set.setName,
+      joinCode: 'PRACTICE',
+      totalQuestions: set.questions.length,
+      timePerQuestion: 20,
+      negativeMarkingEnabled: true,
+      questions: set.questions,
+      createdAt: Date.now(),
+      status: 'active',
+    };
+
+    const student: StudentProfile = {
+      id: user ? user.id : `self-${Date.now()}`,
+      name: user ? user.fullName : 'Practice Candidate',
+      joinedAt: Date.now(),
+      currentQuestionIndex: 0,
+      answers: [],
+      antiCheatEvents: [],
+      isCompleted: false,
+    };
+
+    setCurrentSession(practiceSession);
+    setCurrentStudent(student);
+    setStudentAnswers([]);
+    setStudentAntiCheatEvents([]);
+    setCurrentView('quiz-active');
+  };
+
+  // Teacher Handlers
   const handleStartCreateQuiz = () => {
+    if (!isAuthenticated) {
+      openAuthModal('signin', 'teacher');
+      return;
+    }
+    if (isPendingTeacher) {
+      setCurrentView('teacher-pending');
+      return;
+    }
     setInitialSetForCreator(null);
-    setRole('teacher');
     setCurrentView('quiz-creator');
   };
 
   const handleExploreSet = (quizSet: QuizSet) => {
+    if (!isAuthenticated) {
+      openAuthModal('signin', 'teacher');
+      return;
+    }
+    if (isPendingTeacher) {
+      setCurrentView('teacher-pending');
+      return;
+    }
     setInitialSetForCreator(quizSet);
-    setRole('teacher');
     setCurrentView('quiz-creator');
   };
 
   const handleQuickStartSet = (quizSet: QuizSet) => {
+    if (!isAuthenticated) {
+      openAuthModal('signin', 'teacher');
+      return;
+    }
+    if (isPendingTeacher) {
+      setCurrentView('teacher-pending');
+      return;
+    }
     const randomPin = `PY-${Math.floor(1000 + Math.random() * 9000)}`;
     const newSession: QuizSessionConfig = {
       quizId: `session-${Date.now()}`,
@@ -151,7 +282,6 @@ export const App: React.FC = () => {
     setActiveSessions((prev) => [newSession, ...prev]);
     setCurrentSession(newSession);
     syncManager.publish({ type: 'QUIZ_PUBLISHED', payload: newSession });
-    setRole('teacher');
     setCurrentView('teacher-live-room');
   };
 
@@ -187,10 +317,10 @@ export const App: React.FC = () => {
     setActiveSessions((prev) => [newSession, ...prev]);
     setCurrentSession(newSession);
     syncManager.publish({ type: 'QUIZ_PUBLISHED', payload: newSession });
-    setRole('teacher');
     setCurrentView('teacher-live-room');
   };
 
+  // Student Handlers
   const handleStudentJoinSuccess = (data: {
     quizCode: string;
     studentName: string;
@@ -233,7 +363,7 @@ export const App: React.FC = () => {
     }
 
     const student: StudentProfile = {
-      id: `stu-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      id: user?.id || `stu-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
       name: data.studentName,
       studentId: data.studentId,
       joinedAt: Date.now(),
@@ -263,15 +393,58 @@ export const App: React.FC = () => {
   const handleFinishQuiz = (answers: StudentAnswer[], antiCheatEvents: AntiCheatEvent[]) => {
     setStudentAnswers(answers);
     setStudentAntiCheatEvents(antiCheatEvents);
+
+    // Persist score result record
+    if (currentSession) {
+      const score = calculateQuizScore(currentSession.questions, answers);
+      const submissionRecord: UserSubmissionRecord = {
+        id: `sub-${Date.now()}`,
+        sessionId: currentSession.quizId,
+        quizTitle: currentSession.quizTitle,
+        sectionName: currentSession.sectionName,
+        setName: currentSession.setName,
+        studentId: user?.id || currentStudent?.id || `guest-${Date.now()}`,
+        studentName: user?.fullName || currentStudent?.name || 'Candidate',
+        score,
+        answers,
+        antiCheatEvents,
+        submittedAt: Date.now(),
+      };
+      saveMockSubmission(submissionRecord);
+    }
+
+    setCurrentView('quiz-results');
+  };
+
+  const handleViewSubmissionReview = (record: UserSubmissionRecord) => {
+    const defaultSet = syllabusSections[0].sets[0];
+    const matchedSession: QuizSessionConfig = {
+      quizId: record.sessionId,
+      quizTitle: record.quizTitle,
+      sectionName: record.sectionName,
+      setName: record.setName,
+      joinCode: 'REVIEW',
+      totalQuestions: record.score.totalQuestions,
+      timePerQuestion: 20,
+      negativeMarkingEnabled: true,
+      questions: defaultSet.questions,
+      createdAt: record.submittedAt,
+      status: 'completed',
+    };
+    setCurrentSession(matchedSession);
+    setStudentAnswers(record.answers);
+    setStudentAntiCheatEvents(record.antiCheatEvents);
     setCurrentView('quiz-results');
   };
 
   return (
     <div className="min-h-screen bg-editorial-bg text-editorial-fg flex flex-col selection:bg-editorial-accent/20 selection:text-editorial-fg font-sans transition-colors duration-200">
+      {/* HEADER WITH INTEGRATED PROFILE DROPDOWN */}
       <Header
-        currentRole={currentView === 'landing' ? 'landing' : role}
-        onRoleChange={handleRoleChange}
+        onNavigate={handleNavigate}
         onGoLanding={() => setCurrentView('landing')}
+        onOpenAuthModal={(tab) => openAuthModal(tab || 'signin')}
+        onOpenProfileModal={() => setProfileModalOpen(true)}
         activeQuizCode={
           currentView === 'teacher-live-room' ||
           currentView === 'student-waiting-room' ||
@@ -282,35 +455,65 @@ export const App: React.FC = () => {
         isQuizActive={currentView === 'quiz-active'}
       />
 
+      {/* MAIN VIEW CONTROLLER */}
       <main className="flex-1 pb-12">
-        {/* LANDING PAGE VIEW */}
+        {/* 1. LANDING PAGE VIEW */}
         {currentView === 'landing' && (
           <LandingPage
-            onStartTeacher={() => {
-              setRole('teacher');
-              setCurrentView('teacher-dashboard');
-            }}
-            onStartStudent={() => {
-              setRole('student');
-              setCurrentView('student-join');
-            }}
-            onStartPractice={() => handleRoleChange('practice')}
+            onStartTeacher={() => handleNavigate('teacher-dashboard')}
+            onStartStudent={() => handleNavigate('student-dashboard')}
+            onStartPractice={() => handleStartSoloPractice(0, 0)}
             onCreateQuiz={handleStartCreateQuiz}
+            onRequireAuth={(tab, role) => openAuthModal(tab, role)}
             activeSessionsCount={activeSessions.length}
           />
         )}
 
-        {/* TEACHER VIEWS */}
+        {/* 2. ADMIN GOVERNANCE DASHBOARD */}
+        {currentView === 'admin-dashboard' && (
+          <AdminDashboard
+            activeSessions={activeSessions}
+            onExploreTeacherView={() => setCurrentView('teacher-dashboard')}
+            onExploreStudentView={() => setCurrentView('student-dashboard')}
+            onOpenAnalytics={() => setCurrentView('admin-analytics')}
+          />
+        )}
+
+        {/* 3. ADMIN PLATFORM ANALYTICS */}
+        {currentView === 'admin-analytics' && (
+          <AdminAnalyticsView
+            activeSessions={activeSessions}
+            onBackToConsole={() => setCurrentView('admin-dashboard')}
+          />
+        )}
+
+        {/* 4. TEACHER PENDING APPROVAL SCREEN */}
+        {currentView === 'teacher-pending' && (
+          <PendingApprovalScreen
+            onStudentPortal={() => setCurrentView('student-dashboard')}
+          />
+        )}
+
+        {/* 5. TEACHER INSTRUCTOR CONSOLE */}
         {currentView === 'teacher-dashboard' && (
           <TeacherDashboard
             activeSessions={activeSessions}
             onCreateNewQuiz={handleStartCreateQuiz}
             onExploreSet={handleExploreSet}
             onQuickStartSet={handleQuickStartSet}
+            onOpenStudentAnalytics={() => setCurrentView('teacher-analytics')}
             onSelectActiveSession={(session) => {
               setCurrentSession(session);
               setCurrentView('teacher-live-room');
             }}
+          />
+        )}
+
+        {/* 6. TEACHER STUDENT ANALYTICS & DOSSIER */}
+        {currentView === 'teacher-analytics' && (
+          <TeacherAnalyticsView
+            onBackToDashboard={() => setCurrentView('teacher-dashboard')}
+            onViewScorecard={handleViewSubmissionReview}
           />
         )}
 
@@ -339,30 +542,56 @@ export const App: React.FC = () => {
           <TeacherLiveRoom
             session={currentSession}
             onStartQuizSession={() => {}}
-            onOpenStudentTab={() => handleRoleChange('student')}
+            onOpenStudentTab={() => handleNavigate('student-dashboard')}
             onFinishSession={() => setCurrentView('teacher-dashboard')}
           />
         )}
 
-        {/* STUDENT VIEWS */}
+        {/* 7. STUDENT DEDICATED DASHBOARD */}
+        {currentView === 'student-dashboard' && (
+          <StudentDashboard
+            activeSessions={activeSessions}
+            onJoinLivePin={(pin) => {
+              handleStudentJoinSuccess({
+                quizCode: pin,
+                studentName: user?.fullName || 'Candidate',
+                studentId: user?.id || `stu-${Date.now()}`,
+              });
+            }}
+            onStartSoloPractice={handleStartSoloPractice}
+            onViewSubmissionReview={handleViewSubmissionReview}
+            onOpenAnalytics={() => setCurrentView('student-analytics')}
+          />
+        )}
+
+        {/* 8. STUDENT PERSONAL PERFORMANCE ANALYTICS */}
+        {currentView === 'student-analytics' && (
+          <StudentAnalyticsView
+            onBackToDashboard={() => setCurrentView('student-dashboard')}
+            onViewScorecard={handleViewSubmissionReview}
+          />
+        )}
+
+        {/* 9. STUDENT PIN JOIN FORM */}
         {currentView === 'student-join' && (
           <StudentJoin
             activeSessions={activeSessions}
             onJoinSuccess={handleStudentJoinSuccess}
-            onPracticeMode={() => handleRoleChange('practice')}
+            onPracticeMode={() => handleStartSoloPractice(0, 0)}
           />
         )}
 
+        {/* 10. STUDENT WAITING ROOM */}
         {currentView === 'student-waiting-room' && currentSession && currentStudent && (
           <StudentWaitingRoom
             session={currentSession}
             student={currentStudent}
             onQuizStart={handleStartActiveQuiz}
-            onExit={() => setCurrentView('student-join')}
+            onExit={() => setCurrentView('student-dashboard')}
           />
         )}
 
-        {/* ACTIVE QUIZ SCREEN */}
+        {/* 11. ACTIVE PROCTORED QUIZ SCREEN */}
         {currentView === 'quiz-active' && currentSession && (
           <QuizScreen
             quizTitle={currentSession.quizTitle}
@@ -371,15 +600,15 @@ export const App: React.FC = () => {
             questions={currentSession.questions}
             timePerQuestion={currentSession.timePerQuestion}
             onFinishQuiz={handleFinishQuiz}
-            onAbortQuiz={() => setCurrentView('teacher-dashboard')}
+            onAbortQuiz={() => setCurrentView(isStudent ? 'student-dashboard' : 'teacher-dashboard')}
           />
         )}
 
-        {/* RESULTS SCREEN */}
+        {/* 12. PERFORMANCE SCORECARD & RESULTS */}
         {currentView === 'quiz-results' && currentSession && (
           <ResultsScreen
             quizTitle={currentSession.quizTitle}
-            studentName={currentStudent?.name || 'Examinee'}
+            studentName={user?.fullName || currentStudent?.name || 'Examinee'}
             questions={currentSession.questions}
             answers={studentAnswers}
             antiCheatEvents={studentAntiCheatEvents}
@@ -389,11 +618,11 @@ export const App: React.FC = () => {
               setStudentAntiCheatEvents([]);
               setCurrentView('quiz-active');
             }}
-            onBackToDashboard={() => setCurrentView('teacher-dashboard')}
+            onBackToDashboard={() => setCurrentView(isStudent ? 'student-dashboard' : 'teacher-dashboard')}
           />
         )}
 
-        {/* QUESTION-BY-QUESTION REVIEW SCREEN */}
+        {/* 13. EDITORIAL CODE REVIEW SCREEN */}
         {currentView === 'quiz-review' && currentSession && (
           <ReviewScreen
             quizTitle={currentSession.quizTitle}
@@ -408,9 +637,7 @@ export const App: React.FC = () => {
       <footer className="py-8 border-t border-editorial-border bg-editorial-bg text-center">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
-            <div className="w-6 h-6 rounded bg-editorial-accent flex items-center justify-center font-serif font-black text-xs text-editorial-bg">
-              Ψ
-            </div>
+            <PyQuizLogo size="xs" variant="badge" />
             <span className="font-serif text-base font-bold tracking-tight text-editorial-fg">
               PyQuiz
             </span>
@@ -422,28 +649,28 @@ export const App: React.FC = () => {
 
           <div className="flex items-center space-x-4 text-xs font-mono text-editorial-muted-fg">
             <button
-              onClick={() => setCurrentView('landing')}
+              onClick={() => handleNavigate('landing')}
               className="hover:text-editorial-fg transition-colors"
             >
               Overview
             </button>
             <span>•</span>
             <button
-              onClick={() => handleRoleChange('teacher')}
+              onClick={() => handleNavigate(isAdmin ? 'admin-dashboard' : 'teacher-dashboard')}
               className="hover:text-editorial-fg transition-colors"
             >
               Instructor
             </button>
             <span>•</span>
             <button
-              onClick={() => handleRoleChange('student')}
+              onClick={() => handleNavigate('student-dashboard')}
               className="hover:text-editorial-fg transition-colors"
             >
               Candidate
             </button>
             <span>•</span>
             <button
-              onClick={() => handleRoleChange('practice')}
+              onClick={() => handleStartSoloPractice(0, 0)}
               className="hover:text-editorial-fg transition-colors"
             >
               Practice
@@ -455,11 +682,35 @@ export const App: React.FC = () => {
         </div>
       </footer>
 
+      {/* GLOBAL AUTHENTICATION MODAL */}
+      <AuthModal
+        isOpen={authModalConfig.isOpen}
+        defaultTab={authModalConfig.defaultTab}
+        intendedRole={authModalConfig.intendedRole}
+        onClose={closeAuthModal}
+        onAuthSuccess={() => {
+          closeAuthModal();
+        }}
+      />
+
+      {/* GLOBAL USER PROFILE MODAL */}
+      <UserProfileModal
+        isOpen={profileModalOpen}
+        onClose={() => setProfileModalOpen(false)}
+      />
+
       {/* GLOBAL DEVELOPER CREDIT WIDGET */}
       <DevCreditWidget />
     </div>
   );
 };
 
-export default App;
+export const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <MainAppContent />
+    </AuthProvider>
+  );
+};
 
+export default App;

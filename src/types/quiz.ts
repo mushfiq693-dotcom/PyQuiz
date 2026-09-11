@@ -1,6 +1,34 @@
 import { Question, Difficulty } from '../data/questions/types';
 
-export type UserRole = 'teacher' | 'student' | 'practice';
+export type UserRole = 'admin' | 'teacher' | 'student';
+export type TeacherApprovalStatus = 'pending' | 'approved' | 'rejected';
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  fullName: string;
+  role: UserRole;
+  avatarUrl?: string;
+  teacherStatus?: TeacherApprovalStatus;
+  teacherNote?: string;
+  customGeminiApiKey?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface UserSubmissionRecord {
+  id: string;
+  sessionId: string;
+  quizTitle: string;
+  sectionName?: string;
+  setName?: string;
+  studentId: string;
+  studentName: string;
+  score: ScoreResult;
+  answers: StudentAnswer[];
+  antiCheatEvents: AntiCheatEvent[];
+  submittedAt: number;
+}
 
 export interface StudentAnswer {
   questionId: string;

@@ -4,7 +4,7 @@ import { QuizSet } from '../../data/questions/types';
 import { QuizSessionConfig } from '../../types/quiz';
 import { DashboardStats } from './DashboardStats';
 import { SectionCard } from './SectionCard';
-import { Plus, Activity, ArrowRight } from 'lucide-react';
+import { Plus, Activity, ArrowRight, TrendingUp } from 'lucide-react';
 
 interface Props {
   activeSessions: QuizSessionConfig[];
@@ -12,6 +12,7 @@ interface Props {
   onExploreSet: (quizSet: QuizSet) => void;
   onQuickStartSet: (quizSet: QuizSet) => void;
   onSelectActiveSession: (session: QuizSessionConfig) => void;
+  onOpenStudentAnalytics?: () => void;
 }
 
 export const TeacherDashboard: React.FC<Props> = ({
@@ -20,6 +21,7 @@ export const TeacherDashboard: React.FC<Props> = ({
   onExploreSet,
   onQuickStartSet,
   onSelectActiveSession,
+  onOpenStudentAnalytics,
 }) => {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -39,14 +41,26 @@ export const TeacherDashboard: React.FC<Props> = ({
           </p>
         </div>
 
-        {/* Create Quiz CTA */}
-        <button
-          onClick={onCreateNewQuiz}
-          className="btn-primary-serif self-start sm:self-auto"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Synthesize Assessment</span>
-        </button>
+        {/* Action CTAs */}
+        <div className="flex items-center space-x-3 self-start sm:self-auto">
+          {onOpenStudentAnalytics && (
+            <button
+              onClick={onOpenStudentAnalytics}
+              className="btn-secondary-serif text-xs py-2.5 px-4 flex items-center space-x-1.5"
+            >
+              <TrendingUp className="w-4 h-4 text-editorial-accent" />
+              <span>Student Analytics</span>
+            </button>
+          )}
+
+          <button
+            onClick={onCreateNewQuiz}
+            className="btn-primary-serif text-xs py-2.5 px-4 flex items-center space-x-1.5"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Synthesize Assessment</span>
+          </button>
+        </div>
       </div>
 
       {/* Real Platform Stats */}
