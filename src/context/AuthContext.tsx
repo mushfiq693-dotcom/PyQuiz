@@ -159,8 +159,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(profile);
             setLoading(false);
 
-            // Clean OAuth hash from URL if present
-            if (window.location.hash.includes('access_token=') || window.location.hash.includes('error=')) {
+            // Clean OAuth parameters from URL after session is established
+            if (
+              window.location.hash.includes('access_token=') ||
+              window.location.hash.includes('error=') ||
+              window.location.search.includes('code=') ||
+              window.location.search.includes('error=')
+            ) {
               window.history.replaceState({}, document.title, window.location.pathname);
             }
           } catch (err) {

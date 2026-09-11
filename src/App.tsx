@@ -90,7 +90,13 @@ const MainAppContent: React.FC = () => {
   // Initialize view from URL hash if valid, otherwise landing
   const [currentView, _setCurrentView] = useState<ViewType>(() => {
     const rawHash = window.location.hash.replace('#', '');
-    if (rawHash.includes('access_token=') || rawHash.includes('error=')) {
+    const rawSearch = window.location.search;
+    if (
+      rawHash.includes('access_token=') ||
+      rawHash.includes('error=') ||
+      rawSearch.includes('code=') ||
+      rawSearch.includes('error=')
+    ) {
       return 'landing';
     }
     return VALID_VIEWS.includes(rawHash as ViewType) ? (rawHash as ViewType) : 'landing';
@@ -151,8 +157,14 @@ const MainAppContent: React.FC = () => {
   // Initialize history state on load & listen for browser Back / Forward (popstate)
   useEffect(() => {
     const rawHash = window.location.hash;
-    const isOAuthCallback = rawHash.includes('access_token=') || rawHash.includes('error=');
+    const rawSearch = window.location.search;
+    const isOAuthCallback =
+      rawHash.includes('access_token=') ||
+      rawHash.includes('error=') ||
+      rawSearch.includes('code=') ||
+      rawSearch.includes('error=');
 
+    // DO NOT touch URL state during OAuth callback so Supabase client can read & exchange tokens
     if (!isOAuthCallback && !window.history.state?.view) {
       window.history.replaceState({ view: currentView }, '', rawHash || `#${currentView}`);
     }

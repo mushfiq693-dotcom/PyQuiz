@@ -137,6 +137,11 @@ CREATE POLICY "Public profiles are viewable by authenticated users"
     TO authenticated
     USING (true);
 
+CREATE POLICY "Users can insert own profile"
+    ON public.profiles FOR INSERT
+    TO authenticated
+    WITH CHECK (auth.uid() = id);
+
 CREATE POLICY "Users can update own profile"
     ON public.profiles FOR UPDATE
     TO authenticated
@@ -206,14 +211,17 @@ DECLARE
     initial_status teacher_approval_status;
     user_fullname TEXT;
     user_avatar TEXT;
+    meta_role TEXT;
 BEGIN
-    -- Determine role from metadata (defaults to student)
-    assigned_role := COALESCE((new.raw_user_meta_data->>'role')::user_role, 'student'::user_role);
-    
-    -- If role is teacher, set status to pending; if student or admin, set approved
-    IF assigned_role = 'teacher' THEN
+    meta_role := new.raw_user_meta_data->>'role';
+    IF meta_role = 'teacher' THEN
+        assigned_role := 'teacher'::user_role;
         initial_status := 'pending'::teacher_approval_status;
+    ELSIF meta_role = 'admin' THEN
+        assigned_role := 'admin'::user_role;
+        initial_status := 'approved'::teacher_approval_status;
     ELSE
+        assigned_role := 'student'::user_role;
         initial_status := 'approved'::teacher_approval_status;
     END IF;
 
