@@ -1,0 +1,207 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #FAFAF8;
+  --foreground: #1A1A1A;
+  --muted: #F5F3F0;
+  --muted-foreground: #6B6B6B;
+  --accent: #B8860B;
+  --accent-secondary: #D4A84B;
+  --accent-muted: rgba(184, 134, 11, 0.08);
+  --border: #E8E4DF;
+  --border-hover: #D8D4CE;
+  --card: #FFFFFF;
+  --ring: #B8860B;
+  --shadow-color: rgba(26, 26, 26, 0.04);
+  --accent-glow: rgba(184, 134, 11, 0.25);
+  --code-bg: #FFFFFF;
+  --code-header-bg: #F5F3F0;
+}
+
+.dark {
+  --background: #141413;
+  --foreground: #F5F3F0;
+  --muted: #1E1E1C;
+  --muted-foreground: #9E9A93;
+  --accent: #D4A84B;
+  --accent-secondary: #E5C170;
+  --accent-muted: rgba(212, 168, 75, 0.15);
+  --border: #2E2E2A;
+  --border-hover: #42423C;
+  --card: #1C1C1A;
+  --ring: #D4A84B;
+  --shadow-color: rgba(0, 0, 0, 0.35);
+  --accent-glow: rgba(212, 168, 75, 0.25);
+  --code-bg: #161614;
+  --code-header-bg: #1C1C1A;
+}
+
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: "Source Sans 3", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.65;
+    letter-spacing: 0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.2s ease-out, color 0.2s ease-out;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Playfair Display", Georgia, Cambria, serif;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--foreground);
+  }
+
+  /* Refined Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+  }
+}
+
+/* Typography Utilities */
+.small-caps {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.serif-heading {
+  font-family: "Playfair Display", Georgia, serif;
+}
+
+/* Card & Surface Utilities */
+.card-editorial {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px var(--shadow-color), 0 1px 2px var(--shadow-color);
+  transition: all 0.2s ease-out;
+}
+
+.card-editorial:hover {
+  box-shadow: 0 4px 12px var(--shadow-color);
+  border-color: var(--border-hover);
+}
+
+.card-accent-top {
+  border-top: 2px solid var(--accent);
+}
+
+/* Buttons in Editorial Style */
+.btn-primary-serif {
+  background-color: var(--accent);
+  color: #1A1A1A;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px var(--shadow-color);
+  transition: all 0.2s ease-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  touch-action: manipulation;
+}
+
+.btn-primary-serif:hover {
+  background-color: var(--accent-secondary);
+  box-shadow: 0 4px 14px var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+.btn-primary-serif:active {
+  transform: translateY(0);
+}
+
+.btn-secondary-serif {
+  background-color: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  touch-action: manipulation;
+}
+
+.btn-secondary-serif:hover {
+  background-color: var(--muted);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-ghost-serif {
+  color: var(--muted-foreground);
+  background: transparent;
+  transition: all 0.2s ease-out;
+}
+
+.btn-ghost-serif:hover {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--accent);
+}
+
+/* Input Fields */
+.input-editorial {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  border-radius: 0.375rem;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  transition: all 0.15s ease-out;
+}
+
+.input-editorial:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-muted);
+}
+
+.input-editorial::placeholder {
+  color: var(--muted-foreground);
+  opacity: 0.6;
+}
+
+/* Rule divider with small-caps label */
+.rule-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.rule-divider::before,
+.rule-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--border);
+}
+
