@@ -235,27 +235,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (error) throw error;
         if (data?.user) {
-          const { data: profile, error: pErr } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', data.user.id)
-            .single();
-
-          if (pErr) throw pErr;
-
-          const loaded: UserProfile = {
-            id: profile.id,
-            email: profile.email,
-            fullName: profile.full_name,
-            role: profile.role,
-            studentId: profile.student_id,
-            avatarUrl: profile.avatar_url,
-            teacherStatus: profile.teacher_status,
-            teacherNote: profile.teacher_note,
-            customGeminiApiKey: profile.custom_gemini_api_key,
-            createdAt: profile.created_at,
-            updatedAt: profile.updated_at,
-          };
+          const loaded = await hydrateUserProfile(data.user);
           setUser(loaded);
           return { success: true, profile: loaded };
         }
@@ -263,30 +243,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Mock Auth Fallback
         const all = getMockProfiles();
         const cleanEmail = email.trim().toLowerCase();
-        let found = all.find((p) => p.email.toLowerCase() === cleanEmail);
+        const found = all.find((p) => p.email.toLowerCase() === cleanEmail);
 
         if (!found) {
-          // Auto-create as Student if logging in with unknown email
-          const newStudent: UserProfile = {
-            id: `user-${Date.now()}`,
-            email: cleanEmail,
-            fullName: cleanEmail.split('@')[0],
-            role: 'student',
-            teacherStatus: 'approved',
-            createdAt: new Date().toISOString(),
-          };
-          const updated = [...all, newStudent];
-          saveMockProfiles(updated);
-          found = newStudent;
+          return { success: false, error: 'No account found with this email. Please sign up.' };
         }
 
         setUser(found);
         setMockCurrentSession(found);
         return { success: true, profile: found };
       }
-      return { success: false, error: 'Sign in failed. Unknown response.' };
+      return { success: false, error: 'Invalid credentials' };
     } catch (err: any) {
-      return { success: false, error: err.message || 'Authentication failed' };
+      return { success: false, error: err.message || 'Sign in failed' };
     }
   };
 
@@ -323,6 +292,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             teacherNote: data.teacherNote,
             createdAt: new Date().toISOString(),
           };
+
+          // Save directly to public.profiles table
+          try {
+            await supabase.from('profiles').upsert({
+              id: authData.user.id,
+              email: data.email.trim(),
+              full_name: data.fullName.trim(),
+              role: data.role,
+              student_id: data.studentId?.trim() || null,
+              teacher_status: initialTeacherStatus,
+              teacher_note: data.teacherNote || null,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            });
+          } catch (dbErr) {
+            console.warn('Profile direct insert notice:', dbErr);
+          }
+
           setUser(newProfile);
           return { success: true, profile: newProfile };
         }
