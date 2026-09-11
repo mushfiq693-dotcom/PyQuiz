@@ -4,6 +4,7 @@ import { Question, QuizSet } from './data/questions/types';
 import { syllabusSections, getQuizSetById, generateCustomQuiz } from './data/questions';
 import { syncManager } from './utils/broadcast';
 import { Header } from './components/common/Header';
+import { DevCreditWidget } from './components/common/DevCreditWidget';
 
 // Landing Page view
 import { LandingPage } from './components/landing/LandingPage';
@@ -453,6 +454,9 @@ export const App: React.FC = () => {
           © {new Date().getFullYear()} PyQuiz • Academic & Competitive Python Evaluation Protocol
         </div>
       </footer>
+
+      {/* GLOBAL DEVELOPER CREDIT WIDGET */}
+      <DevCreditWidget />
     </div>
   );
 };
