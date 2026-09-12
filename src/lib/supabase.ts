@@ -28,6 +28,31 @@ export const supabase = isSupabaseConfigured()
   : null;
 
 // ==============================================================================
+// ADMIN EMAIL CONFIGURATION & DETECTION
+// ==============================================================================
+
+export const getAdminEmails = (): string[] => {
+  const envAdmins = (metaEnv.VITE_ADMIN_EMAILS || '')
+    .split(',')
+    .map((e: string) => e.trim().toLowerCase())
+    .filter(Boolean);
+
+  const builtInAdmins = [
+    'admin@pyquiz.com',
+    'mushfiq693@gmail.com',
+    'mushfiqo693@gmail.com',
+  ];
+
+  return Array.from(new Set([...builtInAdmins, ...envAdmins]));
+};
+
+export const isDesignatedAdminEmail = (email?: string | null): boolean => {
+  if (!email) return false;
+  const clean = email.trim().toLowerCase();
+  return getAdminEmails().includes(clean);
+};
+
+// ==============================================================================
 // LOCAL STORAGE & MOCK PERSISTENCE ENGINE (When Supabase is not yet configured)
 // ==============================================================================
 
@@ -40,6 +65,14 @@ const SEED_PROFILES: UserProfile[] = [
     id: 'user-admin-01',
     email: 'admin@pyquiz.com',
     fullName: 'Platform Administrator',
+    role: 'admin',
+    teacherStatus: 'approved',
+    createdAt: '2026-01-01T00:00:00.000Z',
+  },
+  {
+    id: 'user-admin-02',
+    email: 'mushfiq693@gmail.com',
+    fullName: 'Mushfiqur Rahman',
     role: 'admin',
     teacherStatus: 'approved',
     createdAt: '2026-01-01T00:00:00.000Z',

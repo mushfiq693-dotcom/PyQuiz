@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { UserProfile, TeacherApprovalStatus, QuizSessionConfig } from '../../types/quiz';
+import { UserProfile, UserRole, TeacherApprovalStatus, QuizSessionConfig } from '../../types/quiz';
 import {
   ShieldCheck,
   Users,
@@ -31,7 +31,7 @@ export const AdminDashboard: React.FC<Props> = ({
   onExploreStudentView,
   onOpenAnalytics,
 }) => {
-  const { getAllUsers, adminSetTeacherStatus, user: currentUser } = useAuth();
+  const { getAllUsers, adminSetTeacherStatus, adminSetUserRole, user: currentUser } = useAuth();
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
@@ -72,6 +72,19 @@ export const AdminDashboard: React.FC<Props> = ({
       await fetchUsers();
     } catch (err) {
       showToast('Failed to update status. Please try again.');
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
+
+  const handleUpdateRole = async (userId: string, newRole: UserRole, name: string) => {
+    setActionLoadingId(userId);
+    try {
+      await adminSetUserRole(userId, newRole);
+      showToast(`Role for ${name} updated to ${newRole.toUpperCase()}.`);
+      await fetchUsers();
+    } catch (err) {
+      showToast('Failed to update user role.');
     } finally {
       setActionLoadingId(null);
     }
@@ -432,25 +445,40 @@ export const AdminDashboard: React.FC<Props> = ({
                         </td>
 
                         <td className="py-3 px-4 text-right">
-                          {u.role === 'teacher' && u.teacherStatus !== 'approved' && (
-                            <button
-                              disabled={actionLoadingId === u.id}
-                              onClick={() => handleUpdateStatus(u.id, 'approved', u.fullName)}
-                              className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 hover:underline mr-3"
-                            >
-                              Approve
-                            </button>
-                          )}
+                          <div className="flex items-center justify-end space-x-2">
+                            {u.role === 'teacher' && u.teacherStatus !== 'approved' && (
+                              <button
+                                disabled={actionLoadingId === u.id}
+                                onClick={() => handleUpdateStatus(u.id, 'approved', u.fullName)}
+                                className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 hover:underline"
+                              >
+                                Approve
+                              </button>
+                            )}
 
-                          {u.role === 'teacher' && u.teacherStatus === 'approved' && (
-                            <button
-                              disabled={actionLoadingId === u.id}
-                              onClick={() => handleUpdateStatus(u.id, 'pending', u.fullName)}
-                              className="text-[11px] text-amber-600 dark:text-amber-400 hover:underline mr-3"
-                            >
-                              Revoke
-                            </button>
-                          )}
+                            {u.role === 'teacher' && u.teacherStatus === 'approved' && (
+                              <button
+                                disabled={actionLoadingId === u.id}
+                                onClick={() => handleUpdateStatus(u.id, 'pending', u.fullName)}
+                                className="text-[11px] text-amber-600 dark:text-amber-400 hover:underline"
+                              >
+                                Revoke
+                              </button>
+                            )}
+
+                            {!isSelf && (
+                              <select
+                                disabled={actionLoadingId === u.id}
+                                value={u.role}
+                                onChange={(e) => handleUpdateRole(u.id, e.target.value as UserRole, u.fullName)}
+                                className="text-[10px] font-sans py-1 px-1.5 rounded border border-editorial-border bg-editorial-bg text-editorial-fg focus:outline-none focus:border-editorial-accent cursor-pointer"
+                              >
+                                <option value="student">Student</option>
+                                <option value="teacher">Instructor</option>
+                                <option value="admin">Admin</option>
+                              </select>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     );
