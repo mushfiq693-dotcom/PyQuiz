@@ -334,14 +334,9 @@ export const ModuleTopicSelector: React.FC<Props> = ({ modules, onChange }) => {
             <Layers className="w-4 h-4" />
           </div>
           <div>
-            <div className="flex items-center space-x-2">
-              <h3 className="small-caps text-[10px] text-editorial-fg">
-                Curriculum Blueprint Architecture
-              </h3>
-              <span className="px-2 py-0.5 rounded font-mono text-[10px] font-medium bg-editorial-muted text-editorial-accent border border-editorial-border">
-                {activeModules}/{totalModules} Modules · {activeTopics}/{totalTopics} Topics Active
-              </span>
-            </div>
+            <h3 className="small-caps text-[10px] text-editorial-fg">
+              Curriculum Blueprint Architecture
+            </h3>
             <p className="text-xs text-editorial-muted-fg mt-0.5 font-sans">
               Click any module to toggle dropdown and configure topics.
             </p>
