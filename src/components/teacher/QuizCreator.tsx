@@ -383,51 +383,39 @@ export const QuizCreator: React.FC<Props> = ({
           {mode === 'ai' ? (
             /* ======================== AI GENERATION OPTIONS ======================== */
             <div className="space-y-8">
-              {/* 1. SYLLABUS ATTACHMENT UPLOADER (IMAGE OR PDF) */}
-              <div className="p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-3.5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <FileUp className="w-4 h-4 text-editorial-accent" />
-                    <label className="font-mono text-xs font-medium text-editorial-fg uppercase tracking-[0.15em]">
-                      Curriculum Document OCR (Image or PDF)
-                    </label>
-                  </div>
-                  <span className="font-mono text-[10px] text-editorial-muted-fg">
-                    PNG, JPG, WEBP, PDF
-                  </span>
-                </div>
-
+              {/* 1. COMPACT SYLLABUS ATTACHMENT UPLOADER (IMAGE OR PDF) */}
+              <div className="p-3 sm:p-3.5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-2">
                 {attachment ? (
-                  /* Attached File Card */
-                  <div className="p-4 rounded-md bg-editorial-card border border-editorial-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="flex items-center space-x-3.5">
+                  /* Compact Attached File Card */
+                  <div className="p-2.5 rounded-md bg-editorial-card border border-editorial-border flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                    <div className="flex items-center space-x-2.5 min-w-0">
                       {attachment.previewUrl ? (
                         <img
                           src={attachment.previewUrl}
                           alt="Syllabus Preview"
-                          className="w-12 h-12 object-cover rounded border border-editorial-border shrink-0"
+                          className="w-9 h-9 object-cover rounded border border-editorial-border shrink-0"
                         />
                       ) : (
-                        <div className="w-12 h-12 rounded bg-editorial-muted border border-editorial-border flex items-center justify-center text-editorial-accent shrink-0">
-                          <FileText className="w-6 h-6" />
+                        <div className="w-9 h-9 rounded bg-editorial-muted border border-editorial-border flex items-center justify-center text-editorial-accent shrink-0">
+                          <FileText className="w-4 h-4" />
                         </div>
                       )}
-                      <div>
-                        <span className="text-xs font-serif font-bold text-editorial-fg block truncate max-w-xs">
+                      <div className="min-w-0">
+                        <span className="text-xs font-serif font-bold text-editorial-fg block truncate max-w-xs sm:max-w-sm">
                           {attachment.name}
                         </span>
                         <span className="text-[10px] text-editorial-muted-fg font-mono">
-                          {(attachment.size / 1024).toFixed(1)} KB · Attached for OCR Calibration
+                          {(attachment.size / 1024).toFixed(1)} KB · OCR Ready
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 shrink-0">
                       <button
                         type="button"
                         onClick={handleExtractTopics}
                         disabled={isExtractingTopics}
-                        className="btn-primary-serif text-xs py-1.5 px-3.5 disabled:opacity-50"
+                        className="btn-primary-serif text-xs py-1 px-3 disabled:opacity-50 flex items-center space-x-1"
                       >
                         {isExtractingTopics ? (
                           <>
@@ -437,7 +425,7 @@ export const QuizCreator: React.FC<Props> = ({
                         ) : (
                           <>
                             <Sparkles className="w-3.5 h-3.5" />
-                            <span>Scan Curriculum Matrix</span>
+                            <span>Scan Matrix</span>
                           </>
                         )}
                       </button>
@@ -448,15 +436,15 @@ export const QuizCreator: React.FC<Props> = ({
                           setAttachment(null);
                           setExtractionMessage('');
                         }}
-                        className="p-1.5 rounded text-editorial-muted-fg hover:text-rose-600 hover:bg-rose-500/10 transition-colors"
+                        className="p-1 rounded text-editorial-muted-fg hover:text-rose-600 hover:bg-rose-500/10 transition-colors"
                         title="Remove attachment"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
                 ) : (
-                  /* Dropzone / Upload Area */
+                  /* Compact Dropzone */
                   <div
                     onClick={() => fileInputRef.current?.click()}
                     onDragOver={(e) => {
@@ -470,7 +458,7 @@ export const QuizCreator: React.FC<Props> = ({
                       const file = e.dataTransfer.files?.[0];
                       if (file) processUploadedFile(file);
                     }}
-                    className={`p-6 border-2 border-dashed rounded-md transition-all cursor-pointer text-center group ${
+                    className={`py-2 px-3 sm:py-2.5 sm:px-4 border border-dashed rounded-md transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-2 group ${
                       isDraggingFile
                         ? 'border-editorial-accent bg-editorial-accent/10'
                         : 'border-editorial-border hover:border-editorial-accent bg-editorial-card'
@@ -483,22 +471,27 @@ export const QuizCreator: React.FC<Props> = ({
                       onChange={handleFileUpload}
                       className="hidden"
                     />
-                    <div className="flex flex-col items-center justify-center space-y-1.5">
-                      <div className="p-2 rounded-md bg-editorial-muted text-editorial-accent group-hover:bg-editorial-accent group-hover:text-editorial-bg transition-colors">
-                        <Upload className="w-4 h-4" />
+                    <div className="flex items-center space-x-2.5 min-w-0">
+                      <div className="p-1.5 rounded bg-editorial-muted text-editorial-accent group-hover:bg-editorial-accent group-hover:text-editorial-bg transition-colors shrink-0">
+                        <Upload className="w-3.5 h-3.5" />
                       </div>
-                      <span className="text-xs font-serif font-bold text-editorial-fg mt-1">
-                        Upload Syllabus Outline or Module Image
-                      </span>
-                      <p className="text-[11px] text-editorial-muted-fg max-w-sm font-sans">
-                        Drag and drop your syllabus. Gemini OCR will automatically populate the 4-quadrant modules and topics below.
-                      </p>
+                      <div className="min-w-0">
+                        <span className="text-xs font-serif font-bold text-editorial-fg block truncate">
+                          Upload Syllabus Outline or Module Image
+                        </span>
+                        <p className="text-[10px] text-editorial-muted-fg font-sans hidden sm:block">
+                          Auto-extract modules & topics with Gemini OCR (PNG, JPG, PDF)
+                        </p>
+                      </div>
                     </div>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-editorial-muted text-editorial-accent border border-editorial-border shrink-0 self-start sm:self-auto font-medium">
+                      Browse Document
+                    </span>
                   </div>
                 )}
 
                 {extractionMessage && (
-                  <p className="text-xs text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 p-2.5 rounded-md flex items-center space-x-2 font-mono">
+                  <p className="text-xs text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 p-2 rounded-md flex items-center space-x-2 font-mono">
                     <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <span>{extractionMessage}</span>
                   </p>
@@ -508,12 +501,14 @@ export const QuizCreator: React.FC<Props> = ({
               {/* 2. CURRICULUM MODULES & TOPICS WORKSPACE (4-Quadrant Module Architecture) */}
               <ModuleTopicSelector modules={modules} onChange={setModules} />
 
-              {/* 3. Question Style & Keywords */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div className="p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-2">
-                  <label className="block font-mono text-xs font-medium text-editorial-muted-fg uppercase tracking-[0.15em]">
+              {/* 3. QUESTION PARADIGM (Compact Full-Width Bar) */}
+              <div className="p-3 sm:p-3.5 rounded-lg bg-editorial-muted/40 border border-editorial-border flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
+                <div className="flex items-center space-x-2 shrink-0">
+                  <label className="font-mono text-xs font-medium text-editorial-fg uppercase tracking-[0.15em]">
                     Question Paradigm
                   </label>
+                </div>
+                <div className="flex-1 sm:max-w-md w-full">
                   <EditorialSelect
                     value={questionStyle}
                     onChange={(val) => setQuestionStyle(val as any)}
@@ -525,22 +520,6 @@ export const QuizCreator: React.FC<Props> = ({
                       { value: 'edge-cases', label: 'Subtle Gotchas & Corner Cases', sublabel: 'Focus on tricky Python subtleties and traps.' },
                     ]}
                   />
-                </div>
-
-                <div className="p-5 rounded-lg bg-editorial-muted/40 border border-editorial-border space-y-2">
-                  <label className="block font-mono text-xs font-medium text-editorial-muted-fg uppercase tracking-[0.15em]">
-                    Specific Focus Keywords
-                  </label>
-                  <input
-                    type="text"
-                    value={customKeywords}
-                    onChange={(e) => setCustomKeywords(e.target.value)}
-                    placeholder="e.g. walrus, slicing, closures, mro"
-                    className="input-editorial w-full font-mono text-xs"
-                  />
-                  <p className="text-[11px] text-editorial-muted-fg font-sans">
-                    Optional: Comma-separated keywords to prioritize during generation.
-                  </p>
                 </div>
               </div>
 
