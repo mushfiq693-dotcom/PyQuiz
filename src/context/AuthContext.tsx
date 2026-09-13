@@ -53,7 +53,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     let loaded: UserProfile | null = null;
     const client = supabase;
     const cleanEmail = (sessionUser.email || '').trim().toLowerCase();
-    const isDesignatedAdmin = isDesignatedAdminEmail(cleanEmail);
 
     if (isSupabaseConfigured() && client) {
       try {
@@ -64,10 +63,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           .maybeSingle();
 
         if (dbProfile) {
-          const effectiveRole: UserRole = isDesignatedAdmin ? 'admin' : (dbProfile.role || 'student');
-          const effectiveStatus: TeacherApprovalStatus = isDesignatedAdmin
-            ? 'approved'
-            : (dbProfile.teacher_status || (effectiveRole === 'teacher' ? 'pending' : 'approved'));
+          // Supabase database is the single source of truth for user role & status
+          const effectiveRole: UserRole = dbProfile.role || 'student';
+          const effectiveStatus: TeacherApprovalStatus =
+            dbProfile.teacher_status || (effectiveRole === 'teacher' ? 'pending' : 'approved');
 
           loaded = {
             id: dbProfile.id,
@@ -82,21 +81,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             createdAt: dbProfile.created_at || new Date().toISOString(),
             updatedAt: dbProfile.updated_at,
           };
-
-          // Self-heal: If user is designated admin but DB has student/pending, sync DB record immediately!
-          if (isDesignatedAdmin && (dbProfile.role !== 'admin' || dbProfile.teacher_status !== 'approved')) {
-            client
-              .from('profiles')
-              .update({
-                role: 'admin',
-                teacher_status: 'approved',
-                updated_at: new Date().toISOString(),
-              })
-              .eq('id', sessionUser.id)
-              .then(({ error }) => {
-                if (error) console.warn('Admin self-healing sync error:', error);
-              });
-          }
         }
       } catch (err) {
         console.warn('Profile lookup error, using OAuth fallback:', err);
@@ -105,10 +89,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // If no profile exists yet in DB (e.g. trigger didn't run), create one immediately!
       if (!loaded) {
         const oauthRole = (localStorage.getItem('pyquiz_oauth_role') as UserRole) || sessionUser.user_metadata?.role || 'student';
-        const effectiveRole: UserRole = isDesignatedAdmin ? 'admin' : oauthRole;
-        const effectiveStatus: TeacherApprovalStatus = isDesignatedAdmin
-          ? 'approved'
-          : effectiveRole === 'teacher' ? 'pending' : 'approved';
+        const effectiveRole: UserRole = isDesignatedAdminEmail(cleanEmail) ? 'admin' : oauthRole;
+        const effectiveStatus: TeacherApprovalStatus =
+          effectiveRole === 'teacher' ? 'pending' : 'approved';
         const fullName = sessionUser.user_metadata?.full_name || sessionUser.user_metadata?.name || sessionUser.email?.split('@')[0] || 'User';
         const avatarUrl = sessionUser.user_metadata?.avatar_url || sessionUser.user_metadata?.picture || undefined;
 
@@ -144,14 +127,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const all = getMockProfiles();
       const found = all.find((p) => p.id === sessionUser.id || p.email.toLowerCase() === cleanEmail);
       if (found) {
-        if (isDesignatedAdmin && found.role !== 'admin') {
-          found.role = 'admin';
-          found.teacherStatus = 'approved';
-          saveMockProfiles(all);
-        }
         loaded = found;
       } else {
-        const effectiveRole: UserRole = isDesignatedAdmin ? 'admin' : 'student';
+        const effectiveRole: UserRole = isDesignatedAdminEmail(cleanEmail) ? 'admin' : 'student';
         loaded = {
           id: sessionUser.id || `user-${Date.now()}`,
           email: cleanEmail,
@@ -240,7 +218,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!user) return;
     try {
       const cleanEmail = (user.email || '').trim().toLowerCase();
-      const isAdminUser = isDesignatedAdminEmail(cleanEmail);
 
       if (isSupabaseConfigured() && supabase) {
         const { data: profile } = await supabase
@@ -250,10 +227,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           .single();
 
         if (profile) {
-          const effectiveRole: UserRole = isAdminUser ? 'admin' : (profile.role || 'student');
-          const effectiveStatus: TeacherApprovalStatus = isAdminUser
-            ? 'approved'
-            : (profile.teacher_status || (effectiveRole === 'teacher' ? 'pending' : 'approved'));
+          const effectiveRole: UserRole = profile.role || 'student';
+          const effectiveStatus: TeacherApprovalStatus =
+            profile.teacher_status || (effectiveRole === 'teacher' ? 'pending' : 'approved');
 
           setUser({
             id: profile.id,
@@ -273,11 +249,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const all = getMockProfiles();
         const found = all.find((p) => p.id === user.id || p.email.toLowerCase() === cleanEmail);
         if (found) {
-          if (isAdminUser && found.role !== 'admin') {
-            found.role = 'admin';
-            found.teacherStatus = 'approved';
-            saveMockProfiles(all);
-          }
           setUser(found);
           setMockCurrentSession(found);
         }
@@ -314,13 +285,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return { success: false, error: 'No account found with this email. Please sign up.' };
         }
 
-        const isAdminUser = isDesignatedAdminEmail(cleanEmail);
-        if (isAdminUser && found.role !== 'admin') {
-          found.role = 'admin';
-          found.teacherStatus = 'approved';
-          saveMockProfiles(all);
-        }
-
         setUser(found);
         setMockCurrentSession(found);
         return { success: true, profile: found };
@@ -336,11 +300,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   ): Promise<{ success: boolean; error?: string; profile?: UserProfile; requiresEmailVerification?: boolean }> => {
     try {
       const cleanEmail = data.email.trim().toLowerCase();
-      const isDesignatedAdmin = isDesignatedAdminEmail(cleanEmail);
-      const targetRole: UserRole = isDesignatedAdmin ? 'admin' : data.role;
-      const initialTeacherStatus: TeacherApprovalStatus = isDesignatedAdmin
-        ? 'approved'
-        : targetRole === 'teacher' ? 'pending' : 'approved';
+      const targetRole: UserRole = isDesignatedAdminEmail(cleanEmail) ? 'admin' : data.role;
+      const initialTeacherStatus: TeacherApprovalStatus =
+        targetRole === 'admin' ? 'approved' : targetRole === 'teacher' ? 'pending' : 'approved';
 
       if (isSupabaseConfigured() && supabase) {
         const { data: authData, error: authErr } = await supabase.auth.signUp({

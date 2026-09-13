@@ -39,8 +39,6 @@ export const getAdminEmails = (): string[] => {
 
   const builtInAdmins = [
     'admin@pyquiz.com',
-    'mushfiq693@gmail.com',
-    'mushfiqo693@gmail.com',
   ];
 
   return Array.from(new Set([...builtInAdmins, ...envAdmins]));
@@ -65,14 +63,6 @@ const SEED_PROFILES: UserProfile[] = [
     id: 'user-admin-01',
     email: 'admin@pyquiz.com',
     fullName: 'Platform Administrator',
-    role: 'admin',
-    teacherStatus: 'approved',
-    createdAt: '2026-01-01T00:00:00.000Z',
-  },
-  {
-    id: 'user-admin-02',
-    email: 'mushfiq693@gmail.com',
-    fullName: 'Mushfiqur Rahman',
     role: 'admin',
     teacherStatus: 'approved',
     createdAt: '2026-01-01T00:00:00.000Z',

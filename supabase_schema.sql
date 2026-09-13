@@ -222,7 +222,7 @@ DECLARE
     meta_role TEXT;
 BEGIN
     meta_role := new.raw_user_meta_data->>'role';
-    IF lower(new.email) IN ('admin@pyquiz.com', 'mushfiq693@gmail.com', 'mushfiqo693@gmail.com') OR meta_role = 'admin' THEN
+    IF meta_role = 'admin' OR lower(new.email) = 'admin@pyquiz.com' THEN
         assigned_role := 'admin'::user_role;
         initial_status := 'approved'::teacher_approval_status;
     ELSIF meta_role = 'teacher' THEN

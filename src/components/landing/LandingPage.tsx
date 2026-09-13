@@ -149,26 +149,12 @@ export const LandingPage: React.FC<Props> = ({
             </>
           )}
 
-          {/* TEACHER LOGGED IN HERO BUTTONS (NO SOLO PRACTICE) */}
+          {/* TEACHER LOGGED IN HERO BUTTON (ONLY CREATE QUIZ) */}
           {isAuthenticated && isTeacher && (
-            <>
-              <button onClick={onStartTeacher} className={actionBtnClass}>
-                <GraduationCap className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <span>Enter Instructor Console</span>
-              </button>
-
-              <button onClick={onCreateQuiz} className={actionBtnClass}>
-                <Sparkles className="w-4 h-4 text-editorial-accent shrink-0" />
-                <span>Synthesize Custom Quiz</span>
-              </button>
-
-              {onOpenAnalytics && (
-                <button onClick={onOpenAnalytics} className={actionBtnClass}>
-                  <TrendingUp className="w-4 h-4 text-editorial-accent shrink-0" />
-                  <span>Student Analytics Dossier</span>
-                </button>
-              )}
-            </>
+            <button onClick={onCreateQuiz} className={actionBtnClass}>
+              <Sparkles className="w-4 h-4 text-editorial-accent shrink-0" />
+              <span>Create Quiz</span>
+            </button>
           )}
 
           {/* STUDENT LOGGED IN HERO BUTTONS */}
@@ -369,16 +355,10 @@ export const LandingPage: React.FC<Props> = ({
           <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center gap-3 sm:gap-3.5">
             {/* If Teacher */}
             {isAuthenticated && isTeacher ? (
-              <>
-                <button onClick={handleCreateQuizAction} className={actionBtnClass}>
-                  <Sparkles className="w-4 h-4 text-editorial-accent shrink-0" />
-                  <span>Synthesize Custom Quiz</span>
-                </button>
-                <button onClick={onStartTeacher} className={actionBtnClass}>
-                  <GraduationCap className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span>Instructor Dashboard</span>
-                </button>
-              </>
+              <button onClick={handleCreateQuizAction} className={actionBtnClass}>
+                <Sparkles className="w-4 h-4 text-editorial-accent shrink-0" />
+                <span>Create Quiz</span>
+              </button>
             ) : isAuthenticated && isStudent ? (
               /* If Student */
               <>
